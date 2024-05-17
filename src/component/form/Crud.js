@@ -30,7 +30,7 @@ export default function Menu() {
   }, []);
 
   return (
-    <div className="flex flex-row gap-6">
+    <div className="flex flex-row gap-x-6 sm:w-[18.75rem] sm:h-[31.25rem] w-[12rem] h-[27rem]">
       {loading ? (
         <p>Loading...</p>
       ) : error ? (
@@ -38,7 +38,7 @@ export default function Menu() {
       ) : data ? (
         data.map((item, index) => (
           <div key={index}>
-            <div className="flex flex-col gap-3 sm:w-[18.75rem] sm:h-[31.25rem] w-[12rem] h-[23rem] shadow-xl rounded-lg">
+            <div className="flex flex-col gap-x-3 sm:w-[18.75rem] sm:h-[31.25rem] w-[12rem] h-[23rem] shadow-xl rounded-lg">
               <>
                 <div className="sm:w-[18.75rem] sm:h-[18.304rem] rounded-2xl">
                   <img className="sm:w-[18.75rem] sm:h-[18.304rem] rounded-2xl" src={`https://development.verni.yt/image/${item.gambar}`} alt="Product" />

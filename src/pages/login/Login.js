@@ -1,11 +1,10 @@
 import { useContext, useState } from "react";
-import { jwtDecode } from 'jwt-decode';
 import axios from "axios";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import Logo from "../../assets/Logo.png";
 import Button from "../../component/button/Button";
-import { Link, useNavigate } from "react-router-dom";
-import { useTypewriter, Cursor } from "react-simple-typewriter";
+import { useNavigate } from "react-router-dom";
+import { useTypewriter } from "react-simple-typewriter";
 import AuthContext from "../../component/context/AuthProvider"; // Check if this path is correct
 
 export default function Login() {
@@ -16,21 +15,23 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { _Login } = useContext(AuthContext);
+
   const buttonPass = (e) => {
     e.preventDefault(); // Prevent default form submission behavior
     setShowPass((prevState) => !prevState);
   };
+
   const handleLogin = async (e) => {
     e.preventDefault();
-  
+
     if (!username || !password) {
       setError("Mohon isi email dan password Anda");
       return;
     }
-  
+
     try {
       setLoading(true);
-  
+
       const response = await axios.post(
         "https://development.verni.yt/auth/login/mitra",
         {
@@ -38,13 +39,13 @@ export default function Login() {
           password,
         }
       );
-  
+
       const accessToken = response.data.access_token; // Define accessToken here
-  
+
       // Move the decoding logic here
       const decoded = jwtDecode(accessToken);
       console.log(decoded.payload);
-  
+
       localStorage.setItem("authToken", accessToken);
       _Login(accessToken);
       navigate("/dashboard");
@@ -55,17 +56,17 @@ export default function Login() {
       setLoading(false);
     }
   };
-  
+
   function jwtDecode(token) {
     let decodedToken = {};
     decodedToken.raw = token;
-  
+
     // Split the token into header and payload
     const [headerBase64, payloadBase64] = token.split(".");
-  
+
     decodedToken.header = JSON.parse(window.atob(headerBase64));
     decodedToken.payload = JSON.parse(window.atob(payloadBase64));
-  
+
     return decodedToken;
   }
 
@@ -75,6 +76,7 @@ export default function Login() {
     typeSpeed: 80,
     deleteSpeed: 40,
   });
+
   return (
     <div className="w-full h-full bg-[#F6F5F5]">
       <div className="flex justify-center items-center h-screen">
@@ -127,8 +129,10 @@ export default function Login() {
                     txtColor="text-white"
                     txtSize="sm:w-[27.125rem] w-[19rem] h-[2.938rem]"
                     position="sm:flex sm:justify-center sm:items-center flex justify-center items-center"
+                    onClick={handleLogin}
                   />
                 </div>
+                {error && <p className="text-red-500">{error}</p>}
               </form>
             </div>
           </div>
