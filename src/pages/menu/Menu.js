@@ -53,34 +53,37 @@ export default function Menu() {
       <h1 className="text-[2rem] pl-[1.875rem] pt-[2.125rem] font-semibold">
         Data Menu
       </h1>
-      <div className="sm:fixed sm:bottom-[3.5rem] sm:left-[88rem] fixed bottom-[6.5rem] left-[17rem]">
-        <div className="sm:w-[5.25rem] w-[3.5rem] h-[3.5rem] sm:h-[5.25rem] sm:mt-[4.5rem] mt-[1.5rem] ml-[1.875rem] rounded-full bg-gradient-to-b from-[#9b59b6] to-[#e74c3c] shadow-xl">
+      <div className="fixed sm:bottom-[3.5rem] sm:left-[88rem] bottom-[6.5rem] left-[17rem] z-30">
+        <button
+          onClick={() => setIsPopUpOpen(true)}
+          className="sm:w-[5.25rem] w-[3.5rem] h-[3.5rem] sm:h-[5.25rem] sm:mt-[4.5rem] mt-[1.5rem] ml-[1.875rem] rounded-full bg-gradient-to-b from-[#9b59b6] to-[#e74c3c] shadow-xl"
+        >
           <div className="sm:w-[5.25rem] w-[3.5rem] h-[3.5rem] sm:h-[5.25rem] flex flex-row justify-center items-center gap-6">
-            <button onClick={() => setIsPopUpOpen(true)}>
-              <FaPlus size={30} color="white" />
-            </button>
+            <FaPlus size={30} color="white" />
           </div>
-        </div>
+        </button>
       </div>
-      <Add isOpen={isPopUpOpen} onClose={() => setIsPopUpOpen(false)} />
-      <div className="sm:flex flex sm:justify-between justify-between items-center mx-[1rem]">
+      <div className="z-20">
+        <Add isOpen={isPopUpOpen} onClose={() => setIsPopUpOpen(false)} />
+      </div>
+      <div className="sm:flex flex sm:justify-between justify-between items-center lg:mx-[1rem] mx-[0.3rem]">
         {canScrollLeft && (
           <button
-            className="sm:flex flex sm:justify-center justify-center items-center sm:w-[3.25rem] w-[3.5rem] h-[3.5rem] sm:h-[2.5rem] bg-gradient-to-b from-[#9b59b6] to-[#e74c3c] rounded-full"
+            className="sm:relative relative sm:left-2 left-3 sm:flex flex sm:justify-center justify-center items-center sm:w-[3.25rem] w-[4rem] h-[4rem] sm:h-[2.5rem] bg-gradient-to-b from-[#9b59b6] to-[#e74c3c] rounded-full"
             onClick={handleScrollLeft}
           >
             <FaChevronLeft color="white" size={24} />
           </button>
         )}
         <div
-          className="sm:flex flex justify-between sm:w-[74rem] w-[24.4rem] overflow-x-auto mx-[1.875rem] pt-[2.125rem]"
+          className=" sm:flex flex justify-between sm:w-[75rem] w-[28.4rem] overflow-x-scroll ml-2 pt-[2.125rem] pb-[1.125rem]"
           ref={scrollableDivRef}
         >
           <Crud />
         </div>
         {canScrollRight && (
           <button
-            className="sm:flex flex sm:justify-center justify-center items-center sm:w-[3.25rem] w-[3.5rem] h-[3.5rem] sm:h-[2.5rem] bg-gradient-to-b from-[#9b59b6] to-[#e74c3c] rounded-full"
+            className=" sm:relative relative sm:right-4 right-4 sm:flex flex sm:justify-center justify-center items-center sm:w-[3.25rem] w-[4rem] h-[4rem] sm:h-[2.5rem] bg-gradient-to-b from-[#9b59b6] to-[#e74c3c] rounded-full"
             onClick={handleScrollRight}
           >
             <FaChevronRight color="white" size={24} />

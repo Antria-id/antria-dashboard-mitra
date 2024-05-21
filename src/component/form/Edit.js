@@ -1,22 +1,26 @@
 import React, { useState } from "react";
+import { useParams } from 'react-router-dom';
 import { IoMdClose } from "react-icons/io";
 import { MdDriveFolderUpload, MdDelete } from "react-icons/md";
 import axios from "axios";
 
 export default function Edit({ isOpen, onClose }) {
+  const { id } = useParams();
   const [selectedImage, setSelectedImage] = useState(null);
   const [formData, setFormData] = useState({
     nama_produk: "",
     deskripsi_produk: "",
     harga: "",
+    gambar: "",
   });
 
   const handleClose = () => {
-    setSelectedImage(null);
+    setSelectedImage("");
     setFormData({
       nama_produk: "",
       deskripsi_produk: "",
       harga: "",
+      gambar: "",
     });
     if (typeof onClose === "function") {
       onClose();
@@ -30,43 +34,64 @@ export default function Edit({ isOpen, onClose }) {
       setSelectedImage(imageUrl);
       setFormData((prevFormData) => ({
         ...prevFormData,
-        gambar: imageUrl,
+        gambar: file,
       }));
     }
   };
 
   const handleDeleteImage = () => {
-    setSelectedImage(null);
+    setSelectedImage("");
     document.getElementById("file-upload").value = "";
     setFormData((prevFormData) => ({
       ...prevFormData,
-      gambar: null,
+      gambar: "",
     }));
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    formData.harga = parseInt(formData.harga);
-    const formDataWithMitra = {
-      ...formData,
-      mitraId: 2,
-    };
-
+  
     try {
-      const response = await axios.post(
-        "https://development.verni.yt/produk",
-        formDataWithMitra
+      const formDataToSend = {
+        nama_produk: formData.nama_produk,
+        deskripsi_produk: formData.deskripsi_produk,
+        harga: parseInt(formData.harga, 10),
+        mitraId: 2,
+      };
+  
+      if (formData.gambar) {
+        console.warn('Image upload is not handled in this request');
+      }
+  
+      console.log('Payload to send:', formDataToSend);
+  
+      const response = await axios.put(
+        `https://development.verni.yt/produk/${id}`,
+        formDataToSend,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
-      console.log(formDataWithMitra);
-      console.log(response.data);
-      console.log("Data submitted successfully");
+      console.log("Data submitted successfully:", response.data);
       handleClose();
     } catch (error) {
       console.error("Error submitting data:", error);
-      alert("Failed to submit data. Please try again later.");
+  
+      if (error.response) {
+        console.error("Error details:", error.response.data);
+        alert(
+          `Failed to submit data. Server responded with: ${
+            error.response.data.message || JSON.stringify(error.response.data)
+          }`
+        );
+      } else {
+        alert(`Failed to submit data. Error: ${error.message}`);
+      }
     }
   };
-
+  
   if (!isOpen) {
     return null;
   }
@@ -95,7 +120,12 @@ export default function Edit({ isOpen, onClose }) {
         >
           <IoMdClose size={30} color="white" />
         </button>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4" encType="multipart/form-data">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-4"
+          encType="multipart/form-data"
+          key={formData.id}
+        >
           <div className="w-full">
             <h2 className="text-white font-semibold">Nama Produk</h2>
             <input

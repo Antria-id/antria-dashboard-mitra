@@ -9,6 +9,7 @@ export default function Add({ isOpen, onClose }) {
     nama_produk: "",
     deskripsi_produk: "",
     harga: "",
+    gambar: "",
   });
 
   const handleClose = () => {
@@ -17,6 +18,7 @@ export default function Add({ isOpen, onClose }) {
       nama_produk: "",
       deskripsi_produk: "",
       harga: "",
+      gambar: "",
     });
     if (typeof onClose === "function") {
       onClose();
@@ -36,11 +38,11 @@ export default function Add({ isOpen, onClose }) {
   };
 
   const handleDeleteImage = () => {
-    setSelectedImage(null);
+    setSelectedImage("");
     document.getElementById("file-upload").value = "";
     setFormData((prevFormData) => ({
       ...prevFormData,
-      gambar: null,
+      gambar: "",
     }));
   };
 
@@ -142,7 +144,7 @@ export default function Add({ isOpen, onClose }) {
               {selectedImage ? (
                 <div className="relative">
                   <img
-                    src={selectedImage}
+                    src={`https://development.verni.yt/image/${selectedImage}`}
                     alt="Selected"
                     className="w-full h-48 object-cover rounded-lg"
                   />

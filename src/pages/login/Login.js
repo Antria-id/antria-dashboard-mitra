@@ -5,7 +5,7 @@ import Logo from "../../assets/Logo.png";
 import Button from "../../component/button/Button";
 import { useNavigate } from "react-router-dom";
 import { useTypewriter } from "react-simple-typewriter";
-import AuthContext from "../../component/context/AuthProvider"; // Check if this path is correct
+import AuthContext from "../../component/context/AuthProvider"; 
 
 export default function Login() {
   const [showPass, setShowPass] = useState(true);
@@ -17,7 +17,7 @@ export default function Login() {
   const { _Login } = useContext(AuthContext);
 
   const buttonPass = (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
+    e.preventDefault();
     setShowPass((prevState) => !prevState);
   };
 
@@ -40,9 +40,8 @@ export default function Login() {
         }
       );
 
-      const accessToken = response.data.access_token; // Define accessToken here
-
-      // Move the decoding logic here
+      const accessToken = response.data.access_token;
+      localStorage.setItem('authToken', accessToken );
       const decoded = jwtDecode(accessToken);
       console.log(decoded.payload);
 
