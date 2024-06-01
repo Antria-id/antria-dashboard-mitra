@@ -33,15 +33,22 @@ export default function Edit() {
   };
 
   const handleUpdate = async () => {
-    
     try {
+      // Mengonversi harga ke tipe data integer
+      const hargaInt = parseInt(dataItem.harga);
+
+      // Memastikan harga sudah diubah menjadi integer
+      if (isNaN(hargaInt)) {
+        console.error("Invalid price value");
+        return;
+      }
+
       const response = await axios.put(
         `https://development.verni.yt/produk/${id}`,
         {
           nama_produk: dataItem.nama_produk,
           deskripsi_produk: dataItem.deskripsi_produk,
-          harga: dataItem.harga,
-         
+          harga: hargaInt,
           gambar: dataItem.gambar,
         }
       );
@@ -119,7 +126,7 @@ export default function Edit() {
                 }
               />
             </div>
-            
+
             <div className="w-[30rem] flex flex-col gap-y-2">
               <h2 className="font-semibold">Foto Produk</h2>
               <label htmlFor="file-upload" className="cursor-pointer">
@@ -200,7 +207,6 @@ export default function Edit() {
               />
             </div>
           </div>
-          
         </div>
       )}
     </aside>
