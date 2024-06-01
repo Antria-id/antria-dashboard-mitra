@@ -6,7 +6,7 @@ export default function Button(props) {
     <button
       className={` ${props.bgColor} ${props.size} rounded-xl shadow-white bg-transparent hover:shadow-xl`}
       type="submit"
-    //   onClick={() => props.onClick()}
+      onClick={props.onClick}
     >
       <h1
         className={`${props.txtColor}

@@ -6,10 +6,11 @@ import {
   FaChevronLeft,
   FaChevronRight,
 } from "react-icons/fa";
-import { MdDashboard, MdOutlineMenuBook } from "react-icons/md";
+import { MdOutlineMenuBook } from "react-icons/md";
 import { GrMoney } from "react-icons/gr";
 import Logo from "../../assets/Logo.png";
 import Button from "../button/Button";
+import { IoAnalytics } from "react-icons/io5";
 
 export default function Navigation({ onToggle }) {
   const handleLogout = () => {
@@ -20,7 +21,7 @@ export default function Navigation({ onToggle }) {
     {
       to: "/dashboard",
       text: "Dashboard",
-      icon: <MdDashboard size={22} />,
+      icon: <IoAnalytics size={22} />,
     },
     {
       to: "/data-akun",
@@ -42,7 +43,7 @@ export default function Navigation({ onToggle }) {
     {
       to: "/dashboard",
       text: "Dashboard",
-      icon: <MdDashboard color="white" size={22} />,
+      icon: <IoAnalytics color="white" size={22} />,
     },
     {
       to: "/data-akun",
@@ -206,17 +207,22 @@ export default function Navigation({ onToggle }) {
         {/* Bottom Navigation Content */}
         <nav className="flex justify-evenly items-center h-full">
           {menuBottom.map((menuItem, index) => (
-            <Link key={index} to={menuItem.to} className="relative">
+            <Link key={index} to={menuItem.to} className="relative group">
               <Button
                 icon={menuItem.icon}
                 size="w-full"
                 position="flex flex-col justify-center items-center"
+                bgColor="group-hover:bg-white group-hover:text-[#9b59b6] transition-all duration-300 ease-in-out"
               />
             </Link>
           ))}
-          <button>
+          <button className="group">
             <Link to="/Login">
-              <FaSignOutAlt size={22} color="white" />
+              <FaSignOutAlt
+                size={22}
+                color="white"
+                className="group-hover:text-[#9b59b6] transition-all duration-300 ease-in-out"
+              />
             </Link>
           </button>
         </nav>

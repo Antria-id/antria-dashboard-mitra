@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import { MdDriveFolderUpload, MdDelete } from "react-icons/md";
 import axios from "axios";
 
 export default function Add({ isOpen, onClose }) {
   const [selectedImage, setSelectedImage] = useState(null);
+  const fileUploadRef = useRef();
   const [formData, setFormData] = useState({
     nama_produk: "",
     deskripsi_produk: "",
@@ -25,21 +26,23 @@ export default function Add({ isOpen, onClose }) {
     }
   };
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setSelectedImage(imageUrl);
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        gambar: imageUrl,
-      }));
-    }
+  const handleImageUpload = (event) => {
+    event.preventDefault();
+    fileUploadRef.current.click();
+  };
+
+  const uploadImageDisplay = (event) => {
+    const uploadedFile = event.target.files[0];
+    setSelectedImage(URL.createObjectURL(uploadedFile));
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      gambar: uploadedFile,
+    }));
   };
 
   const handleDeleteImage = () => {
-    setSelectedImage("");
-    document.getElementById("file-upload").value = "";
+    setSelectedImage(null);
+    fileUploadRef.current.value = "";
     setFormData((prevFormData) => ({
       ...prevFormData,
       gambar: "",
@@ -48,21 +51,26 @@ export default function Add({ isOpen, onClose }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    formData.harga = parseInt(formData.harga);
-    const formDataWithMitra = {
-      ...formData,
-      mitraId: 2,
-    };
+    const formDataToSend = new FormData();
+    formDataToSend.append("nama_produk", formData.nama_produk);
+    formDataToSend.append("deskripsi_produk", formData.deskripsi_produk);
+    formDataToSend.append("harga", formData.harga);
+    formDataToSend.append("gambar", formData.gambar);
+    formDataToSend.append("mitraId", 2);
 
     try {
       const response = await axios.post(
         "https://development.verni.yt/produk",
-        formDataWithMitra
+        formDataToSend,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
-      console.log(formDataWithMitra);
-      console.log(response.data);
-      console.log("Data submitted successfully");
+      console.log("Data submitted successfully", response.data);
       handleClose();
+      window.location.reload();
     } catch (error) {
       console.error("Error submitting data:", error);
       alert("Failed to submit data. Please try again later.");
@@ -97,7 +105,11 @@ export default function Add({ isOpen, onClose }) {
         >
           <IoMdClose size={30} color="white" />
         </button>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4" encType="multipart/form-data">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-4"
+          encType="multipart/form-data"
+        >
           <div className="w-full">
             <h2 className="text-white font-semibold">Nama Produk</h2>
             <input
@@ -132,34 +144,39 @@ export default function Add({ isOpen, onClose }) {
           </div>
           <div className="w-full">
             <h2 className="text-white font-semibold">Foto Produk</h2>
-            <label htmlFor="file-upload" className="cursor-pointer">
+            <label>
               <input
                 id="file-upload"
                 name="gambar"
                 type="file"
                 accept=".png,.jpg,.jpeg"
                 className="hidden"
-                onChange={handleFileChange}
+                ref={fileUploadRef}
+                onChange={uploadImageDisplay}
               />
               {selectedImage ? (
                 <div className="relative">
                   <img
-                    src={`https://development.verni.yt/image/${selectedImage}`}
+                    src={selectedImage}
                     alt="Selected"
                     className="w-full h-48 object-cover rounded-lg"
                   />
                   <button
                     className="absolute top-0 right-0 mt-1 mr-1"
+                    type="button"
                     onClick={handleDeleteImage}
                   >
                     <MdDelete size={24} color="white" />
                   </button>
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center w-full sm:h-48 h-[14rem] bg-white rounded-lg">
+                <button
+                  className="flex flex-col items-center justify-center w-full sm:h-48 h-[14rem] bg-white rounded-lg cursor-pointer"
+                  onClick={handleImageUpload}
+                >
                   <MdDriveFolderUpload size={48} color="black" />
                   <p>Unggah Foto</p>
-                </div>
+                </button>
               )}
             </label>
           </div>

@@ -16,14 +16,11 @@ export default function Login() {
   const navigate = useNavigate();
   const { _Login } = useContext(AuthContext);
 
-  const buttonPass = (e) => {
-    e.preventDefault();
+  const buttonPass = () => {
     setShowPass((prevState) => !prevState);
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-
+  const handleLogin = async () => {
     if (!username || !password) {
       setError("Mohon isi email dan password Anda");
       return;
@@ -90,7 +87,7 @@ export default function Login() {
             </h2>
             <div className="sm:flex sm:flex-col sm:justify-center justify-center ml-[1.4rem] mt-[1.188rem]">
               <h1 className="text-[0.75rem] font-bold">Username</h1>
-              <form onSubmit={handleLogin}>
+              <div>
                 <input
                   className="md:w-[27.125rem] w-[19rem] h-[3.438rem] bg-white shadow-xl py-3 px-3 rounded-xl"
                   type="username"
@@ -132,7 +129,7 @@ export default function Login() {
                   />
                 </div>
                 {error && <p className="text-red-500">{error}</p>}
-              </form>
+              </div>
             </div>
           </div>
         </div>
