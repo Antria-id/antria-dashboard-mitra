@@ -41,7 +41,7 @@ export default function Edit() {
           nama_produk: dataItem.nama_produk,
           deskripsi_produk: dataItem.deskripsi_produk,
           harga: dataItem.harga,
-          kuantitas: dataItem.kuantitas,
+         
           gambar: dataItem.gambar,
         }
       );
@@ -119,20 +119,7 @@ export default function Edit() {
                 }
               />
             </div>
-            <div className="w-[30rem] flex flex-col gap-y-2">
-              <h2 className="font-semibold">Kuantitas</h2>
-              <input
-                className="w-full border-2 border-neutral-700 h-10 px-3 py-2 bg-white rounded-lg"
-                name="kuantitas"
-                type="number"
-                min="0"
-                placeholder="Masukkan Kuantitas Produk"
-                value={dataItem.kuantitas || ""}
-                onChange={(e) =>
-                  setDataItem({ ...dataItem, kuantitas: e.target.value })
-                }
-              />
-            </div>
+            
             <div className="w-[30rem] flex flex-col gap-y-2">
               <h2 className="font-semibold">Foto Produk</h2>
               <label htmlFor="file-upload" className="cursor-pointer">
@@ -178,7 +165,7 @@ export default function Edit() {
                 </div>
               ) : (
                 <div key={dataItem.id}>
-                  <div className="flex flex-col gap-x-3 sm:w-[18.75rem] sm:h-[31.25rem] w-[12rem] h-[23rem] shadow-xl rounded-lg">
+                  <div className="flex flex-col gap-x-3 sm:w-[18.75rem] sm:h-[28.25rem] w-[12rem] h-[23rem] shadow-xl rounded-lg">
                     <div className="sm:w-[18.75rem] sm:h-[18rem] rounded-2xl">
                       <img
                         className="sm:w-[18.75rem] sm:h-[18rem] rounded-[1.4rem]"
@@ -201,7 +188,7 @@ export default function Edit() {
                 </div>
               )}
             </div>
-            <div className="flex flex-row gap-x-[2rem] pt-[3rem]">
+            <div className="flex flex-row gap-x-[2rem] pt-[1rem]">
               <Button
                 txtColor="text-white"
                 txtSize=" sm:w-[18.75rem] w-[19rem] h-[2.938rem]"
