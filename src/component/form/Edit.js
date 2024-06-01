@@ -11,6 +11,7 @@ export default function Edit() {
     nama_produk: "",
     deskripsi_produk: "",
     harga: "",
+    kuantitas: "",
     gambar: "",
   });
   const [loading, setLoading] = useState(false);
@@ -24,37 +25,53 @@ export default function Edit() {
 
   const fetchProductDataItem = async () => {
     try {
-      const response = await fetch(`https://development.verni.yt/produk/${id}`);
-      const data = await response.json();
-      setDataItem(data);
+      const response = await axios.get(
+        `https://development.verni.yt/produk/${id}`
+      );
+      setDataItem(response.data);
+      if (response.data.gambar) {
+        setSelectedImage(
+          `https://development.verni.yt/image/${response.data.gambar}`
+        );
+      }
     } catch (error) {
       console.error("Error fetching product data:", error);
+      setError("Failed to fetch product data.");
     }
   };
 
   const handleUpdate = async () => {
-    
+    setLoading(true);
+    setError(null);
+
+    const formData = new FormData();
+    formData.append("nama_produk", dataItem.nama_produk);
+    formData.append("deskripsi_produk", dataItem.deskripsi_produk);
+    formData.append("harga", dataItem.harga);
+    formData.append("kuantitas", dataItem.kuantitas);
+    if (selectedImage && typeof selectedImage === "object") {
+      formData.append("gambar", selectedImage);
+    }
+
     try {
-      const response = await axios.put(
-        `https://development.verni.yt/produk/${id}`,
-        {
-          nama_produk: dataItem.nama_produk,
-          deskripsi_produk: dataItem.deskripsi_produk,
-          harga: dataItem.harga,
-          kuantitas: dataItem.kuantitas,
-          gambar: dataItem.gambar,
-        }
-      );
-      console.log(response);
+      await axios.put(`https://development.verni.yt/produk/${id}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       navigate("/data-menu");
     } catch (error) {
       console.error("Error updating product", error);
+      setError("Failed to update product.");
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleFileChange = (event) => {
-    setSelectedImage(URL.createObjectURL(event.target.files[0]));
-    setDataItem({ ...dataItem, gambar: event.target.files[0].name });
+    const file = event.target.files[0];
+    setSelectedImage(file);
+    setDataItem({ ...dataItem, gambar: file.name });
   };
 
   const handleDeleteImage = () => {
@@ -68,22 +85,20 @@ export default function Edit() {
   };
 
   return (
-    <aside
-      className={`bg-white mt-[1.5rem] rounded-xl shadow-2xl z-0 transition-all mx-auto duration-300 sm:w-[77rem] w-[24.4rem] sm:h-[51.563rem] h-[43.2rem]`}
-    >
-      <div className="flex flex-row pl-[1.875rem] pt-[2.125rem] gap-4">
+    <aside className="bg-white mt-6 rounded-xl shadow-2xl z-0 transition-all mx-auto duration-300 max-w-7xl w-full px-4">
+      <div className="flex flex-row items-center pl-4 pt-8 gap-4">
         <Link
           to="/data-menu"
-          className="flex justify-center items-center mt-[0.5rem] w-[2rem] h-[2rem] rounded-full bg-gradient-to-r from-[#9b59b6] to-[#e74c3c]"
+          className="flex justify-center items-center w-8 h-8 rounded-full bg-gradient-to-r from-purple-600 to-red-600"
         >
           <IoIosArrowBack color="white" size={20} />
         </Link>
-        <h1 className="text-[2rem] font-semibold">Edit Product</h1>
+        <h1 className="text-2xl font-semibold">Edit Product</h1>
       </div>
       {Object.keys(dataItem).length > 0 && (
-        <div className="flex flex-row pl-[1.875rem] pt-[2.125rem] gap-x-[2rem] px-4">
-          <div className="flex flex-col gap-y-5">
-            <div className="w-[30rem] flex flex-col gap-y-2">
+        <div className="flex flex-col lg:flex-row pl-4 pt-8 gap-8 px-4">
+          <div className="flex flex-col gap-6 w-full lg:w-1/2">
+            <div className="flex flex-col gap-2">
               <h2 className="font-semibold">Nama Produk</h2>
               <input
                 className="w-full border-2 border-neutral-700 h-10 px-3 py-2 bg-white rounded-lg"
@@ -93,10 +108,10 @@ export default function Edit() {
                 onChange={handleInputChange}
               />
             </div>
-            <div className="w-[30rem] flex flex-col gap-y-2">
+            <div className="flex flex-col gap-2">
               <h2 className="font-semibold">Deskripsi Produk</h2>
               <textarea
-                className="w-full border-2 border-neutral-700 sm:h-24 h-[7rem] px-3 py-2 bg-white rounded-lg"
+                className="w-full border-2 border-neutral-700 h-24 px-3 py-2 bg-white rounded-lg"
                 name="deskripsi_produk"
                 placeholder="Masukkan Keterangan Produk"
                 value={dataItem.deskripsi_produk}
@@ -105,7 +120,7 @@ export default function Edit() {
                 }
               />
             </div>
-            <div className="w-[30rem] flex flex-col gap-y-2">
+            <div className="flex flex-col gap-2">
               <h2 className="font-semibold">Harga</h2>
               <input
                 className="w-full border-2 border-neutral-700 h-10 px-3 py-2 bg-white rounded-lg"
@@ -119,7 +134,7 @@ export default function Edit() {
                 }
               />
             </div>
-            <div className="w-[30rem] flex flex-col gap-y-2">
+            <div className="flex flex-col gap-2">
               <h2 className="font-semibold">Kuantitas</h2>
               <input
                 className="w-full border-2 border-neutral-700 h-10 px-3 py-2 bg-white rounded-lg"
@@ -133,7 +148,7 @@ export default function Edit() {
                 }
               />
             </div>
-            <div className="w-[30rem] flex flex-col gap-y-2">
+            <div className="flex flex-col gap-2">
               <h2 className="font-semibold">Foto Produk</h2>
               <label htmlFor="file-upload" className="cursor-pointer">
                 <input
@@ -147,7 +162,11 @@ export default function Edit() {
                 {selectedImage ? (
                   <div className="relative">
                     <img
-                      src={selectedImage}
+                      src={
+                        typeof selectedImage === "string"
+                          ? selectedImage
+                          : URL.createObjectURL(selectedImage)
+                      }
                       alt="Selected"
                       className="w-full border-2 border-neutral-700 h-48 object-cover rounded-lg"
                     />
@@ -168,52 +187,50 @@ export default function Edit() {
               </label>
             </div>
           </div>
-          <div className="flex flex-col gap-y-2">
-            <div className="flex flex-row gap-x-[2rem] pt-[2.125rem]">
+          <div className="flex flex-col gap-6 w-full lg:w-1/2">
+            <div className="flex justify-center">
               {loading ? (
                 <p>Loading...</p>
               ) : error ? (
-                <div className="sm:flex sm:flex-col sm:justify-center sm:items-center sm:w-[70.75rem] w-[12rem]">
-                  <p className="text-[2rem] font-bold text-red-500">{error}</p>
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-red-500">{error}</p>
                 </div>
               ) : (
-                <div key={dataItem.id}>
-                  <div className="flex flex-col gap-x-3 sm:w-[18.75rem] sm:h-[31.25rem] w-[12rem] h-[23rem] shadow-xl rounded-lg">
-                    <div className="sm:w-[18.75rem] sm:h-[18rem] rounded-2xl">
+                <div
+                  key={dataItem.id}
+                  className="flex flex-col items-center gap-6"
+                >
+                  <div className="w-full max-w-md shadow-xl rounded-lg">
+                    <div className="w-full h-48 rounded-2xl overflow-hidden">
                       <img
-                        className="sm:w-[18.75rem] sm:h-[18rem] rounded-[1.4rem]"
+                        className="w-full h-full object-cover"
                         src={`https://development.verni.yt/image/${dataItem.gambar}`}
                         alt="Product"
                       />
                     </div>
-                    <div className="sm:flex sm:flex-col flex flex-col sm:gap-y-[1rem] gap-y-3 sm:ml-0 ml-3">
-                      <h1 className="sm:w-[14.956rem] sm:h-[0.935] sm:flex sm:justify-start sm:pl-[0.9rem] text-[1.2rem] font-semibold">
+                    <div className="flex flex-col gap-3 p-4">
+                      <h1 className="text-lg font-semibold">
                         {dataItem.nama_produk}
                       </h1>
-                      <h2 className="sm:w-[14.956rem] sm:h-[0.935] sm:flex sm:justify-start sm:pl-[0.9rem] text-[1rem]">
-                        {dataItem.deskripsi_produk}
-                      </h2>
-                      <h2 className="sm:w-[14.956rem] sm:h-[0.935] sm:flex sm:justify-start sm:pl-[0.9rem] text-[1.2rem] font-bold">
-                        Rp{dataItem.harga}
-                      </h2>
+                      <h2 className="text-base">{dataItem.deskripsi_produk}</h2>
+                      <h2 className="text-xl font-bold">Rp{dataItem.harga}</h2>
                     </div>
                   </div>
                 </div>
               )}
             </div>
-            <div className="flex flex-row gap-x-[2rem] pt-[3rem]">
+            <div className="flex justify-center">
               <Button
                 txtColor="text-white"
-                txtSize=" sm:w-[18.75rem] w-[19rem] h-[2.938rem]"
-                position="sm:flex sm:justify-center sm:items-center flex justify-center items-center"
+                txtSize="sm:w-72 w-80 h-10"
+                position="flex justify-center items-center"
                 text="Update"
-                size=" sm:w-[18.75rem] w-[19rem] h-[2.938rem]"
-                bgColor="bg-gradient-to-r from-[#9b59b6] to-[#e74c3c]"
+                size="sm:w-72 w-80 h-10"
+                bgColor="bg-gradient-to-r from-purple-600 to-red-600"
                 onClick={handleUpdate}
               />
             </div>
           </div>
-          
         </div>
       )}
     </aside>
