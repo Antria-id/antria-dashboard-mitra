@@ -85,7 +85,7 @@ export default function Edit() {
   };
 
   return (
-    <aside className="bg-white mt-6 rounded-xl shadow-2xl z-0 transition-all mx-auto duration-300 max-w-7xl w-full px-4">
+    <aside className="bg-white mt-6 rounded-xl shadow-2xl z-0 transition-all mx-auto duration-300 max-w-7xl w-full sm:h-[51.563rem] px-4">
       <div className="flex flex-row items-center pl-4 pt-8 gap-4">
         <Link
           to="/data-menu"
