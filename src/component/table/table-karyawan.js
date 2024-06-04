@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ArrowBackIosSharpIcon from "@mui/icons-material/ArrowBackIosSharp";
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
-import { BsSearch } from "react-icons/bs";
 import { ThreeDots } from "react-loader-spinner";
 import Profile from "../../assets/Profile.png";
+import { FaRegAddressCard } from "react-icons/fa6";
 import "../../index.css";
+import Button from "../button/Button";
 
 export default function Tabel() {
   const [data, setData] = useState([]);
@@ -78,13 +79,24 @@ export default function Tabel() {
   return (
     <div className="overflow-auto">
       <div className="flex justify-between mb-3">
-        <input
-          className="px-4 py-2 border border-gray-500 rounded-lg text-black focus:outline-none placeholder-gray-400"
-          type="text"
-          placeholder="Masukkan Username"
-          onChange={handleFilter}
+        <div>
+          <input
+            className="px-4 py-2 border border-gray-500 rounded-lg text-black focus:outline-none placeholder-gray-400"
+            type="text"
+            placeholder="Masukkan Username"
+            onChange={handleFilter}
+          />
+        </div>
+
+        <Button 
+          text="Tambah Karyawan"
+          txtColor="text-white font"
+          txtSize="w-[12rem] h-[3rem]"
+          icon={<FaRegAddressCard color="white" size={25}/>}
+          bgColor="bg-gradient-to-r from-[#9b59b6] to-[#e74c3c]"
+          position="flex flex-row-reverse justify-center items-center gap-3"
+          size="w-[12rem] h-[3rem]"
         />
-        <BsSearch className="relative right-6 text-white top-2" size={20} />
       </div>
 
       {loading ? (

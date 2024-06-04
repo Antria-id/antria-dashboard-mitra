@@ -14,7 +14,6 @@ export default function Button(props) {
         ${props.position}
         font-extralight
         hover:font-bold
-        
         rounded-xl
         text-[1rem]`}
       >

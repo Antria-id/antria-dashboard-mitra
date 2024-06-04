@@ -34,15 +34,11 @@ export default function Edit() {
 
   const handleUpdate = async () => {
     try {
-      // Mengonversi harga ke tipe data integer
       const hargaInt = parseInt(dataItem.harga);
-
-      // Memastikan harga sudah diubah menjadi integer
       if (isNaN(hargaInt)) {
         console.error("Invalid price value");
         return;
       }
-
       const response = await axios.put(
         `https://development.verni.yt/produk/${id}`,
         {
@@ -50,7 +46,7 @@ export default function Edit() {
           deskripsi_produk: dataItem.deskripsi_produk,
           harga: hargaInt,
           gambar: dataItem.gambar,
-        }
+        },
       );
       console.log(response);
       navigate("/data-menu");
@@ -61,7 +57,7 @@ export default function Edit() {
 
   const handleFileChange = (event) => {
     setSelectedImage(URL.createObjectURL(event.target.files[0]));
-    setDataItem({ ...dataItem, gambar: event.target.files[0].name });
+    setDataItem({ ...dataItem, gambar: event.target.files[0].name});
   };
 
   const handleDeleteImage = () => {
@@ -75,22 +71,20 @@ export default function Edit() {
   };
 
   return (
-    <aside
-      className={`bg-white mt-[1.5rem] rounded-xl shadow-2xl z-0 transition-all mx-auto duration-300 sm:w-[77rem] w-[24.4rem] sm:h-[51.563rem] h-[43.2rem]`}
-    >
-      <div className="flex flex-row pl-[1.875rem] pt-[2.125rem] gap-4">
+    <aside className="bg-white mt-6 rounded-xl shadow-2xl z-0 transition-all mx-auto duration-300 max-w-7xl w-full sm:h-[51.563rem] px-4">
+      <div className="flex flex-row items-center pl-4 pt-8 gap-4">
         <Link
           to="/data-menu"
-          className="flex justify-center items-center mt-[0.5rem] w-[2rem] h-[2rem] rounded-full bg-gradient-to-r from-[#9b59b6] to-[#e74c3c]"
+          className="flex justify-center items-center w-8 h-8 rounded-full bg-gradient-to-r from-purple-600 to-red-600"
         >
-          <IoIosArrowBack color="white" size={20} />
+          <IoIosArrowBack color="white" size={22} />
         </Link>
-        <h1 className="text-[2rem] font-semibold">Edit Product</h1>
+        <h1 className="text-2xl font-semibold">Edit Product</h1>
       </div>
       {Object.keys(dataItem).length > 0 && (
-        <div className="flex flex-row pl-[1.875rem] pt-[2.125rem] gap-x-[2rem] px-4">
-          <div className="flex flex-col gap-y-5">
-            <div className="w-[30rem] flex flex-col gap-y-2">
+        <div className="flex flex-col lg:flex-row pl-4 pt-8 gap-8 px-4">
+          <div className="flex flex-col gap-6 w-full lg:w-1/2">
+            <div className="flex flex-col gap-2">
               <h2 className="font-semibold">Nama Produk</h2>
               <input
                 className="w-full border-2 border-neutral-700 h-10 px-3 py-2 bg-white rounded-lg"
@@ -100,10 +94,10 @@ export default function Edit() {
                 onChange={handleInputChange}
               />
             </div>
-            <div className="w-[30rem] flex flex-col gap-y-2">
+            <div className="flex flex-col gap-2">
               <h2 className="font-semibold">Deskripsi Produk</h2>
               <textarea
-                className="w-full border-2 border-neutral-700 sm:h-24 h-[7rem] px-3 py-2 bg-white rounded-lg"
+                className="w-full border-2 border-neutral-700 h-[7rem] px-3 py-2 bg-white rounded-lg"
                 name="deskripsi_produk"
                 placeholder="Masukkan Keterangan Produk"
                 value={dataItem.deskripsi_produk}
@@ -112,7 +106,7 @@ export default function Edit() {
                 }
               />
             </div>
-            <div className="w-[30rem] flex flex-col gap-y-2">
+            <div className="flex flex-col gap-2">
               <h2 className="font-semibold">Harga</h2>
               <input
                 className="w-full border-2 border-neutral-700 h-10 px-3 py-2 bg-white rounded-lg"
@@ -127,7 +121,7 @@ export default function Edit() {
               />
             </div>
 
-            <div className="w-[30rem] flex flex-col gap-y-2">
+            <div className="sm:w-full w-full flex flex-col gap-y-2">
               <h2 className="font-semibold">Foto Produk</h2>
               <label htmlFor="file-upload" className="cursor-pointer">
                 <input
@@ -135,7 +129,7 @@ export default function Edit() {
                   name="gambar"
                   type="file"
                   accept=".png,.jpg,.jpeg"
-                  className="hidden"
+                  className="w-full border-2 border-neutral-700 h-10 px-3 py-2 bg-white rounded-lg hidden"
                   onChange={handleFileChange}
                 />
                 {selectedImage ? (
@@ -154,7 +148,7 @@ export default function Edit() {
                     </button>
                   </div>
                 ) : (
-                  <div className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-neutral-700 bg-white rounded-lg">
+                  <div className="flex flex-col items-center justify-center w-full sm:h-[14.4rem] h-[18rem] border-2 border-dashed border-neutral-700 bg-white rounded-lg">
                     <MdDriveFolderUpload size={48} color="black" />
                     <p>Unggah Foto</p>
                   </div>
@@ -172,7 +166,7 @@ export default function Edit() {
                 </div>
               ) : (
                 <div key={dataItem.id}>
-                  <div className="flex flex-col gap-x-3 sm:w-[18.75rem] sm:h-[28.25rem] w-[12rem] h-[23rem] shadow-xl rounded-lg">
+                  <div className="flex flex-col gap-x-3 sm:w-[18.75rem] sm:h-[31.25rem] w-[20rem] h-[29rem] shadow-xl rounded-lg">
                     <div className="sm:w-[18.75rem] sm:h-[18rem] rounded-2xl">
                       <img
                         className="sm:w-[18.75rem] sm:h-[18rem] rounded-[1.4rem]"
@@ -195,11 +189,11 @@ export default function Edit() {
                 </div>
               )}
             </div>
-            <div className="flex flex-row gap-x-[2rem] pt-[1rem]">
+            <div className="flex flex-row gap-x-[2rem] sm:mt-[1rem] mt-3 sm:mb-[3rem] mb-[2rem] h-full  ">
               <Button
                 txtColor="text-white"
-                txtSize=" sm:w-[18.75rem] w-[19rem] h-[2.938rem]"
-                position="sm:flex sm:justify-center sm:items-center flex justify-center items-center"
+                txtSize="sm:w-72 w-80 sm:h-10"
+                position="flex justify-center items-center"
                 text="Update"
                 size=" sm:w-[18.75rem] w-[19rem] h-[2.938rem]"
                 bgColor="bg-gradient-to-r from-[#9b59b6] to-[#e74c3c]"
