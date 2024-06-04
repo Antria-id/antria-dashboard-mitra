@@ -69,21 +69,21 @@ export default function Menu() {
       <div className="sm:flex flex sm:justify-between justify-between items-center lg:mx-[1rem] mx-[0.3rem]">
         {canScrollLeft && (
           <button
-            className="sm:relative relative sm:left-2 left-3 sm:flex flex sm:justify-center justify-center items-center sm:w-[3.25rem] w-[4rem] h-[4rem] sm:h-[2.5rem] bg-gradient-to-b from-[#9b59b6] to-[#e74c3c] rounded-full"
+            className="sm:z-0 z-0 sm:relative relative sm:left-2 left-3 sm:flex flex sm:justify-center justify-center items-center sm:w-[3.25rem] w-[4rem] h-[4rem] sm:h-[2.5rem] bg-gradient-to-b from-[#9b59b6] to-[#e74c3c] rounded-full"
             onClick={handleScrollLeft}
           >
             <FaChevronLeft color="white" size={24} />
           </button>
         )}
         <div
-          className=" sm:flex flex justify-between sm:w-[75rem] w-[28.4rem] overflow-x-scroll ml-2 pt-[2.125rem] pb-[1.125rem]"
+          className="sm:flex flex justify-between sm:w-[75rem] w-[28.4rem] overflow-x-scroll ml-2 pt-[2.125rem] pb-[1.125rem]"
           ref={scrollableDivRef}
         >
           <Crud />
         </div>
         {canScrollRight && (
           <button
-            className=" sm:relative relative sm:right-4 right-4 sm:flex flex sm:justify-center justify-center items-center sm:w-[3.25rem] w-[4rem] h-[4rem] sm:h-[2.5rem] bg-gradient-to-b from-[#9b59b6] to-[#e74c3c] rounded-full"
+            className=" sm:z-0 z-0 sm:relative relative sm:right-4 right-4 sm:flex flex sm:justify-center justify-center items-center sm:w-[3.25rem] w-[4rem] h-[4rem] sm:h-[2.5rem] bg-gradient-to-b from-[#9b59b6] to-[#e74c3c] rounded-full"
             onClick={handleScrollRight}
           >
             <FaChevronRight color="white" size={24} />

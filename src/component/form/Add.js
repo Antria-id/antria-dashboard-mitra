@@ -90,7 +90,7 @@ export default function Add({ isOpen, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 sm:flex flex justify-center sm:justify-center sm:items-center">
+    <div className="z-10 fixed inset-0 sm:flex flex justify-center sm:justify-center sm:items-center">
       <div
         className="absolute inset-0 bg-gray-600 opacity-60"
         onClick={handleClose}
