@@ -4,23 +4,33 @@ import { MdDriveFolderUpload, MdDelete } from "react-icons/md";
 import axios from "axios";
 import Button from "../button/Button";
 
-export default function Add({ isOpen, onClose }) {
+export default function AddUser({ isOpen, onClose }) {
   const [selectedImage, setSelectedImage] = useState(null);
   const fileUploadRef = useRef();
   const [formData, setFormData] = useState({
-    nama_produk: "",
-    deskripsi_produk: "",
-    harga: "",
-    gambar: "",
+    username: "",
+    password: "",
+    email: "",
+    profile_picture: "",
+    nama: "",
+    handphone: "",
+    alamat: "",
+    isOwner: false,
+    mitraId: 2
   });
 
   const handleClose = () => {
     setSelectedImage(null);
     setFormData({
-      nama_produk: "",
-      deskripsi_produk: "",
-      harga: "",
-      gambar: "",
+      username: "",
+      password: "",
+      email: "",
+      profile_picture: "",
+      nama: "",
+      handphone: "",
+      alamat: "",
+      isOwner: false,
+      mitraId: 2
     });
     if (typeof onClose === "function") {
       onClose();
@@ -34,11 +44,15 @@ export default function Add({ isOpen, onClose }) {
 
   const uploadImageDisplay = (event) => {
     const uploadedFile = event.target.files[0];
-    setSelectedImage(URL.createObjectURL(uploadedFile));
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      gambar: uploadedFile,
-    }));
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setSelectedImage(reader.result);
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        profile_picture: reader.result,
+      }));
+    };
+    reader.readAsDataURL(uploadedFile);
   };
 
   const handleDeleteImage = () => {
@@ -46,25 +60,34 @@ export default function Add({ isOpen, onClose }) {
     fileUploadRef.current.value = "";
     setFormData((prevFormData) => ({
       ...prevFormData,
-      gambar: "",
+      profile_picture: "",
     }));
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const formDataToSend = new FormData();
-    formDataToSend.append("nama_produk", formData.nama_produk);
-    formDataToSend.append("deskripsi_produk", formData.deskripsi_produk);
-    formDataToSend.append("harga", formData.harga);
-    formDataToSend.append("gambar", formData.gambar);
-    formDataToSend.append("mitraId", 2);
+    const payload = {
+      username: formData.username,
+      password: formData.password,
+      email: formData.email,
+      profile_picture: formData.profile_picture,
+      nama: formData.nama,
+      handphone: formData.handphone,
+      alamat: formData.alamat,
+      isOwner: formData.isOwner,
+      mitra: {
+        connect: {
+          id: formData.mitraId,
+        },
+      },
+    };
     try {
       const response = await axios.post(
-        "https://development.verni.yt/produk",
-        formDataToSend,
+        "https://development.verni.yt/karyawan",
+        payload,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            'Content-Type': 'application/json',
           },
         }
       );
@@ -108,46 +131,74 @@ export default function Add({ isOpen, onClose }) {
         <form
           onSubmit={handleSubmit}
           className="flex flex-col gap-4"
-          encType="multipart/form-data"
         >
           <div className="w-full">
-            <h2 className="text-white font-semibold">Nama Produk</h2>
+            <h2 className="text-white font-semibold">Username</h2>
             <input
               className="w-full h-10 px-3 py-2 bg-white rounded-lg"
-              name="nama_produk"
-              value={formData.nama_produk}
+              name="username"
+              value={formData.username}
               onChange={handleInputChange}
-              placeholder="Masukkan Nama Produk"
+              placeholder="Masukkan Username"
             />
           </div>
           <div className="w-full">
-            <h2 className="text-white font-semibold">Deskripsi Produk</h2>
-            <textarea
-              className="w-full sm:h-24 h-[7rem] px-3 py-2 bg-white rounded-lg"
-              name="deskripsi_produk"
-              value={formData.deskripsi_produk}
-              onChange={handleInputChange}
-              placeholder="Masukkan Keterangan Produk"
-            />
-          </div>
-          <div className="w-full">
-            <h2 className="text-white font-semibold">Harga</h2>
+            <h2 className="text-white font-semibold">Password</h2>
             <input
-              className="w-full h-10 px-3 py-2 bg-white rounded-lg"
-              name="harga"
-              type="number"
-              min="0"
-              value={formData.harga}
+              type="password"
+              className="w-full px-3 py-2 bg-white rounded-lg"
+              name="password"
+              value={formData.password}
               onChange={handleInputChange}
-              placeholder="Masukkan Harga Produk"
+              placeholder="Masukkan Password"
             />
           </div>
           <div className="w-full">
-            <h2 className="text-white font-semibold">Foto Produk</h2>
+            <h2 className="text-white font-semibold">Email</h2>
+            <input
+              className="w-full px-3 py-2 bg-white rounded-lg"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              placeholder="Masukkan Email"
+            />
+          </div>
+          <div className="w-full">
+            <h2 className="text-white font-semibold">Nama</h2>
+            <input
+              className="w-full px-3 py-2 bg-white rounded-lg"
+              name="nama"
+              value={formData.nama}
+              onChange={handleInputChange}
+              placeholder="Masukkan Nama"
+            />
+          </div>
+          <div className="w-full">
+            <h2 className="text-white font-semibold">Handphone</h2>
+            <input
+              className="w-full px-3 py-2 bg-white rounded-lg"
+              name="handphone"
+              value={formData.handphone}
+              onChange={handleInputChange}
+              placeholder="Masukkan Handphone"
+            />
+          </div>
+          <div className="w-full">
+            <h2 className="text-white font-semibold">Alamat</h2>
+            <input
+              className="w-full px-3 py-2 bg-white rounded-lg"
+              name="alamat"
+              value={formData.alamat}
+              onChange={handleInputChange}
+              placeholder="Masukkan Alamat"
+            />
+          </div>
+          <div className="w-full">
+            <h2 className="text-white font-semibold">Profile Picture</h2>
             <label>
               <input
                 id="file-upload"
-                name="gambar"
+                name="profile_picture"
                 type="file"
                 accept=".png,.jpg,.jpeg"
                 className="hidden"
@@ -185,7 +236,7 @@ export default function Add({ isOpen, onClose }) {
               txtColor="text-black font-bold"
               txtSize="sm:w-full w-80 sm:h-10"
               position="flex justify-center items-center"
-              text="Add"
+              text="Tambah Akun"
               size=" sm:w-full w-[19rem] h-[2.938rem]"
               bgColor="bg-white"
             />

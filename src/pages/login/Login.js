@@ -8,7 +8,7 @@ import { useTypewriter } from "react-simple-typewriter";
 import AuthContext from "../../component/context/AuthProvider"; 
 
 export default function Login() {
-  const [showPass, setShowPass] = useState(true);
+  const [showPass, setShowPass] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -28,7 +28,6 @@ export default function Login() {
 
     try {
       setLoading(true);
-
       const response = await axios.post(
         "https://development.verni.yt/auth/login/mitra",
         {
@@ -36,14 +35,13 @@ export default function Login() {
           password,
         }
       );
-
       const accessToken = response.data.access_token;
       localStorage.setItem('authToken', accessToken );
       const decoded = jwtDecode(accessToken);
       console.log(decoded.payload);
-
       localStorage.setItem("authToken", accessToken);
       _Login(accessToken);
+
       navigate("/dashboard");
     } catch (error) {
       console.error("Login error", error);
@@ -56,8 +54,6 @@ export default function Login() {
   function jwtDecode(token) {
     let decodedToken = {};
     decodedToken.raw = token;
-
-    // Split the token into header and payload
     const [headerBase64, payloadBase64] = token.split(".");
 
     decodedToken.header = JSON.parse(window.atob(headerBase64));

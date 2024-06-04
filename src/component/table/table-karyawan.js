@@ -7,8 +7,10 @@ import Profile from "../../assets/Profile.png";
 import { FaRegAddressCard } from "react-icons/fa6";
 import "../../index.css";
 import Button from "../button/Button";
+import AddUser from "../form/AddUser";
 
 export default function Tabel() {
+  const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -45,7 +47,7 @@ export default function Tabel() {
 
   useEffect(() => {
     fetchData();
-  }, []); // Empty array ensures fetchData is only called once on component mount
+  }, []);
 
   const handleFilter = (event) => {
     const searchTerm = event.target.value.toLowerCase();
@@ -78,7 +80,7 @@ export default function Tabel() {
 
   return (
     <div className="overflow-auto">
-      <div className="flex justify-between mb-3">
+      <div className="sm:flex flex justify-between sm:justify-between sm:mb-3 mb-[1rem] sm:gap-0 gap-5">
         <div>
           <input
             className="px-4 py-2 border border-gray-500 rounded-lg text-black focus:outline-none placeholder-gray-400"
@@ -87,16 +89,17 @@ export default function Tabel() {
             onChange={handleFilter}
           />
         </div>
-
-        <Button 
+        <Button
           text="Tambah Karyawan"
           txtColor="text-white font"
-          txtSize="w-[12rem] h-[3rem]"
-          icon={<FaRegAddressCard color="white" size={25}/>}
+          txtSize="sm:w-[12rem] w-[12rem] sm:h-[3rem] h-[2.5rem]"
+          icon={<FaRegAddressCard color="white" size={25} />}
           bgColor="bg-gradient-to-r from-[#9b59b6] to-[#e74c3c]"
           position="flex flex-row-reverse justify-center items-center gap-3"
-          size="w-[12rem] h-[3rem]"
+          size="sm:w-[12rem] w-[12rem] sm:h-[3rem] h-[2.5rem]"
+          onClick={() => setIsPopUpOpen(true)}
         />
+        <AddUser isOpen={isPopUpOpen} onClose={() => setIsPopUpOpen(false)}/>
       </div>
 
       {loading ? (
@@ -114,7 +117,6 @@ export default function Tabel() {
               <th className="px-4 py-2">Email</th>
               <th className="px-4 py-2">No Handphone</th>
               <th className="px-4 py-2">Alamat</th>
-              <th className="px-4 py-2">Posisi</th>
               <th className="px-4 py-2">Tanggal Terdaftar</th>
             </tr>
           </thead>
@@ -123,7 +125,7 @@ export default function Tabel() {
               <tr key={index} className="border-b hover:bg-gray-100">
                 <td className="px-4 py-2">
                   <img
-                    src={Profile}
+                    src={`https://development.verni.yt/image/${item.profile_picture}`}
                     alt="Profile"
                     className="w-10 h-10 rounded-full"
                   />
@@ -132,7 +134,6 @@ export default function Tabel() {
                 <td className="px-4 py-2">{item.email}</td>
                 <td className="px-4 py-2">{item.handphone}</td>
                 <td className="px-4 py-2">{item.alamat}</td>
-                <td className="px-4 py-2">{item.isOwner}</td>
                 <td className="px-4 py-2">{item.created_at}</td>
               </tr>
             ))}
