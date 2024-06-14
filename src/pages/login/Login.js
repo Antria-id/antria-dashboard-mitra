@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import Logo from "../../assets/Logo.png";
@@ -8,15 +8,28 @@ import { useTypewriter } from "react-simple-typewriter";
 import AuthContext from "../../component/context/AuthProvider";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import SplashScreen from "../../route/splashscreen/SplashScreen";
 
 export default function Login() {
   const [showPass, setShowPass] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showSplash, setShowSplash] = useState(false);
   const navigate = useNavigate();
   const { _Login } = useContext(AuthContext);
+
+  useEffect(() => {
+    const savedUsername = localStorage.getItem("username");
+    const savedPassword = localStorage.getItem("password");
+    if (savedUsername && savedPassword) {
+      setUsername(savedUsername);
+      setPassword(savedPassword);
+      setRememberMe(true);
+    }
+  }, []);
 
   const buttonPass = () => {
     setShowPass((prevState) => !prevState);
@@ -44,6 +57,14 @@ export default function Login() {
       localStorage.setItem("authToken", accessToken);
       _Login(accessToken);
 
+      if (rememberMe) {
+        localStorage.setItem("username", username);
+        localStorage.setItem("password", password);
+      } else {
+        localStorage.removeItem("username");
+        localStorage.removeItem("password");
+      }
+
       toast.success("Login berhasil!", {
         position: "top-right",
         autoClose: 5000,
@@ -54,7 +75,7 @@ export default function Login() {
         progress: undefined,
       });
 
-      navigate("/data-analytics");
+      setShowSplash(true);
     } catch (error) {
       console.error("Login error", error);
       setError("Email atau password salah. Silakan coba lagi.");
@@ -80,6 +101,10 @@ export default function Login() {
     typeSpeed: 100,
     deleteSpeed: 40,
   });
+
+  if (showSplash) {
+    return <SplashScreen />;
+  }
 
   return (
     <div className="w-full h-full bg-[#F6F5F5]">
@@ -126,7 +151,19 @@ export default function Login() {
                     )}
                   </button>
                 </div>
-                <div className="sm:pr-0 pr-[3rem] mt-[4.313rem]">
+                <div className="flex flex-row-reverse items-center mt-[1.188rem] mr-[1.8rem] gap-x-[0.4rem]">
+                  <input
+                    className="w-[1rem] h-[1rem] cursor-pointer bg-gradient-to-r from-[#9b59b6] to-[#e74c3c]"
+                    type="checkbox"
+                    id="rememberMe"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                  />
+                  <label htmlFor="rememberMe" className="ml-2 text-[0.75rem] font-semibold">
+                    Simpan Riwayat Login
+                  </label>
+                </div>
+                <div className="sm:pr-0 pr-[3rem] mt-[4rem]">
                   <Button
                     text="Masuk"
                     size="sm:w-[27.125rem] w-[19rem] h-[2.938rem]"

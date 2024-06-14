@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import { MdDelete, MdDriveFolderUpload } from "react-icons/md";
 import { Link, useParams, useNavigate } from "react-router-dom";
+import Upload from "../../assets/Download.gif"
 import Button from "../button/Button";
 import axios from "axios";
 
@@ -49,7 +50,7 @@ export default function Edit() {
           deskripsi_produk: dataItem.deskripsi_produk,
           harga: hargaInt,
           gambar: dataItem.gambar,
-        },
+        }
       );
       console.log(response);
       navigate("/data-menu");
@@ -60,7 +61,7 @@ export default function Edit() {
 
   const handleFileChange = (event) => {
     setSelectedImage(URL.createObjectURL(event.target.files[0]));
-    setDataItem({ ...dataItem, gambar: event.target.files[0].name});
+    setDataItem({ ...dataItem, gambar: event.target.files[0].name });
   };
 
   const handleDeleteImage = () => {
@@ -152,7 +153,7 @@ export default function Edit() {
                   </div>
                 ) : (
                   <div className="flex flex-col items-center justify-center w-full sm:h-[14.4rem] h-[18rem] border-2 border-dashed border-neutral-700 bg-white rounded-lg">
-                    <MdDriveFolderUpload size={48} color="black" />
+                    <img className="w-[5rem] h-[5rem]" src={Upload} />
                     <p>Unggah Foto</p>
                   </div>
                 )}

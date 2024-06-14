@@ -13,7 +13,6 @@ import Logo from "../../assets/Logo.png";
 import Button from "../button/Button";
 import { motion } from "framer-motion";
 import "./navigation.css";
-import { CopyrightRounded } from "@mui/icons-material";
 
 export default function Navigation({ onToggle }) {
   const location = useLocation();

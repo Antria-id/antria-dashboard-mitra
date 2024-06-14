@@ -4,7 +4,7 @@ import * as XLSX from "xlsx";
 import ArrowBackIosSharpIcon from "@mui/icons-material/ArrowBackIosSharp";
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import { BsSearch } from "react-icons/bs";
-import { ThreeDots } from "react-loader-spinner";
+import Loading from "../../assets/Loading.gif"
 import XLS from "../../assets/XLS.svg";
 import "../../index.css";
 import Button from "../button/Button";
@@ -111,8 +111,10 @@ export default function Tabel() {
       </div>
 
       {loading ? (
-        <div className="text-center mt-4">
-          <ThreeDots type="ThreeDots" color="#555555" height={50} width={50} />
+        <div className="flex flex-col justify-center items-center">
+          <div className="w-[31.438rem] h-[28.875rem]">
+            <img src={Loading} alt="Page not found" />
+          </div>
         </div>
       ) : error ? (
         <div className="text-center text-red-500 mt-4">{error}</div>

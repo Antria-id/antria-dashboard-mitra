@@ -1,8 +1,9 @@
 import React, { useRef, useState } from "react";
 import { IoMdClose } from "react-icons/io";
-import { MdDriveFolderUpload, MdDelete } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
 import axios from "axios";
 import Button from "../button/Button";
+import Upload from "../../assets/Download.gif"
 
 export default function Add({ isOpen, onClose }) {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -179,7 +180,7 @@ export default function Add({ isOpen, onClose }) {
                   className="flex flex-col items-center justify-center w-full sm:h-48 h-[14rem] bg-white rounded-lg cursor-pointer"
                   onClick={handleImageUpload}
                 >
-                  <MdDriveFolderUpload size={48} color="black" />
+                  <img className="w-[5rem] h-[5rem]" src={Upload}/>
                   <p>Unggah Foto</p>
                 </button>
               )}

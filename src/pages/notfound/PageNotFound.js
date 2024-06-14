@@ -1,12 +1,11 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import NotFound from "../../assets/NotFound.png";
+import NotFoundGif from "../../assets/NotFound.gif";
 
 export default function PageNotFound() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Redirect to login page after a delay
     const timer = setTimeout(() => {
       navigate("/Login");
     }, 5000); 
@@ -15,12 +14,12 @@ export default function PageNotFound() {
   }, [navigate]);
 
   return (
-    <div className="bg-white w-full h-full">
+    <div className="bg-[#FCFCFE] w-full h-full">
       <div className="grid grid-rows-2 grid-flow-col justify-center items-center">
         <div className="w-[31.438rem] h-[28.875rem]">
-          <img src={NotFound} alt="Page not found" />
+          <img src={NotFoundGif} alt="Page not found" />
         </div>
-        <div className="grid justify-center text-center items-center gap-4 relative bottom-20">
+        <div className="grid justify-center text-center items-center gap-4 relative bottom-[10rem]">
           <div className="ml-[54px]">
             <h1 className="mr-[60px] text-4xl font-extrabold text-gray-800">
               404

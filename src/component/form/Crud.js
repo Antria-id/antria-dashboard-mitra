@@ -4,6 +4,7 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import ErrorImage from "../../assets/Error.png"; // Import the error image
 import { Link, useHistory } from "react-router-dom";
 import DeleteConfirmation from "./Delete";
+import Loading from "../../assets/Loading.gif"
 
 export default function Crud() {
   const [data, setData] = useState(null);
@@ -64,7 +65,11 @@ export default function Crud() {
   return (
     <div className="flex flex-row gap-x-6 sm:w-[72.75rem] sm:h-[35.25rem] w-[12rem] h-[20rem]">
       {loading ? (
-        <p>Loading...</p>
+        <div className="flex flex-col justify-center items-center sm:w-[72.75rem] sm:h-[35.25rem] w-[12rem] h-[20rem]">
+          <div className="w-[31.438rem] h-[28.875rem]">
+            <img src={Loading} alt="Page not found" />
+          </div>
+        </div>
       ) : error ? (
         <div className="sm:flex sm:flex-col sm:justify-center sm:items-center sm:w-[70.75rem] w-[12rem]">
           <img className="w-[30rem] h-[50rem]" src={ErrorImage} alt="Error" />

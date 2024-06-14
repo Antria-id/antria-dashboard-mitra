@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ArrowBackIosSharpIcon from "@mui/icons-material/ArrowBackIosSharp";
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
-import { ThreeDots } from "react-loader-spinner";
+import Loading from "../../assets/Loading.gif"
 import Profile from "../../assets/Profile.png";
 import { TiUserDelete } from "react-icons/ti";
 import { FaRegAddressCard } from "react-icons/fa6";
@@ -78,23 +78,26 @@ export default function Tabel() {
   const handleDelete = async (id) => {
     try {
       console.log(`Attempting to delete user with ID: ${id}`);
-      const response = await axios.delete(`https://development.verni.yt/karyawan/${id}`);
+      const response = await axios.delete(
+        `https://development.verni.yt/karyawan/${id}`
+      );
       if (response.status === 200) {
         console.log(`Successfully deleted user with ID: ${id}`);
         const updatedData = data.filter((item) => item.id !== id);
-        const updatedFilteredData = filteredData.filter((item) => item.id !== id);
+        const updatedFilteredData = filteredData.filter(
+          (item) => item.id !== id
+        );
         setData(updatedData);
         setFilteredData(updatedFilteredData);
       } else {
-        console.log('Failed to delete the user', response);
-        alert('Failed to delete the user');
+        console.log("Failed to delete the user", response);
+        alert("Failed to delete the user");
       }
     } catch (err) {
       console.error("Error deleting user:", err);
-      alert('Failed to delete the user');
+      alert("Failed to delete the user");
     }
   };
-  
 
   const pageNumbers = [];
   for (let i = 1; i <= totalPages; i++) {
@@ -126,8 +129,10 @@ export default function Tabel() {
       </div>
 
       {loading ? (
-        <div className="text-center mt-4">
-          <ThreeDots type="ThreeDots" color="#555555" height={50} width={50} />
+        <div className="flex flex-col justify-center items-center">
+          <div className="w-[31.438rem] h-[28.875rem]">
+            <img src={Loading} alt="Page not found" />
+          </div>
         </div>
       ) : error ? (
         <div className="text-center text-red-500 mt-4">{error}</div>

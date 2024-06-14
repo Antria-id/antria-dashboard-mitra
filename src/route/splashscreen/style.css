@@ -1,0 +1,73 @@
+/* SplashScreen.css */
+@keyframes loadingAnimation {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+  }
+  
+  .loading-animation {
+    animation: loadingAnimation 1.5s infinite;
+  }
+/* SplashScreen.css */
+@keyframes loadingAnimation {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+  }
+  
+  @keyframes progressAnimation {
+    0% { width: 0%; }
+    100% { width: 100%; }
+  }
+  
+  @keyframes gearRotation {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .loading-animation {
+    animation: loadingAnimation 1.5s infinite;
+  }
+  
+  .process-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .process-image {
+    width: 300px; /* Adjust the size as needed */
+  }
+  
+  .progress-bar {
+    position: absolute;
+    bottom: 50px; /* Adjust this value based on the image */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%; /* Adjust the width as needed */
+    height: 10px;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  
+  .progress {
+    height: 100%;
+    background-color: #ff6b6b; /* Change to your desired color */
+    animation: progressAnimation 3s linear infinite;
+  }
+  
+  .gear {
+    position: absolute;
+    animation: gearRotation 2s linear infinite;
+  }
+  
+  .gear1 {
+    top: 20%; /* Adjust based on the image */
+    left: 30%; /* Adjust based on the image */
+  }
+  
+  .gear2 {
+    top: 40%; /* Adjust based on the image */
+    left: 60%; /* Adjust based on the image */
+  }
+  
