@@ -1,4 +1,3 @@
-// CRUD Component
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaRegTrashAlt } from "react-icons/fa";
@@ -12,7 +11,6 @@ export default function Crud() {
   const [error, setError] = useState(null);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState(null);
-
   const fetchData = async () => {
     setLoading(true);
     setError(null);
@@ -36,7 +34,9 @@ export default function Crud() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`https://development.verni.yt/produk/${id}`);
+      await axios.put(`https://development.verni.yt/produk/${id}`, {
+        show_produk: false,
+      });
       fetchData();
     } catch (error) {
       setError("Error deleting data");
@@ -51,6 +51,14 @@ export default function Crud() {
   const handleConfirmDelete = () => {
     handleDelete(selectedItemId);
     setIsDeleteConfirmOpen(false);
+  };
+
+  const rupiah = (harga) => {
+    return new Intl.NumberFormat("id", {
+      style: "currency",
+      currency: "IDR",
+      maximumFractionDigits: 0
+    }).format(harga);
   };
 
   return (
@@ -75,21 +83,21 @@ export default function Crud() {
                   />
                 </div>
                 <div className="sm:flex sm:flex-col flex flex-col sm:gap-y-[1rem] gap-y-3 sm:ml-0 ml-3">
-                  <h1 className="sm:w-[14.956rem] sm:h-[0.935] sm:flex sm:justify-start sm:pl-[0.9rem] text-[1.2rem] font-semibold">
+                  <h1 className="sm:w-[14.956rem] sm:h-[0.935rem] sm:mt-[1rem] mt-[1rem] sm:flex sm:justify-start sm:pl-[0.9rem] text-[1.2rem] font-semibold">
                     {item.nama_produk}
                   </h1>
                   <h2 className="sm:w-[14.956rem] sm:h-[0.935] sm:flex sm:justify-start sm:pl-[0.9rem] text-[1rem]">
                     {item.deskripsi_produk}
                   </h2>
                   <h2 className="sm:w-[14.956rem] sm:h-[0.935] sm:flex sm:justify-start sm:pl-[0.9rem] text-[1rem]">
-                    Rp. {item.harga}
+                    {rupiah(item.harga)}
                   </h2>
                   <h2 className="sm:w-[14.956rem] sm:h-[0.935] sm:flex sm:justify-start sm:pl-[0.9rem] text-[1rem]">
                     Jumlah {item.kuantitas}
                   </h2>
                 </div>
               </>
-              <div className="flex flex-row-reverse sm:flex sm:flex-row-reverse sm:justify-center justify-center items-center sm:gap-2 gap-4 sm:w-[18.75rem] w-[12rem]">
+              <div className="flex flex-row-reverse sm:flex sm:flex-row-reverse sm:justify-center sm:mt-[1rem] mt-[1rem] justify-center items-center sm:gap-2 gap-4 sm:w-[18.75rem] w-[12rem]">
                 <button
                   onClick={() => handleOpenDeleteConfirm(item.id)}
                   className="sm:w-[3.125rem] w-[2.5rem] h-[2.5rem] sm:h-[3.125rem] sm:mt-[0.2rem] mt-[2rem] bg-gradient-to-r from-[#9b59b6] to-[#e74c3c] rounded-lg"

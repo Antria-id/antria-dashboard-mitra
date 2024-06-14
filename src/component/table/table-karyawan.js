@@ -4,10 +4,12 @@ import ArrowBackIosSharpIcon from "@mui/icons-material/ArrowBackIosSharp";
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import { ThreeDots } from "react-loader-spinner";
 import Profile from "../../assets/Profile.png";
+import { TiUserDelete } from "react-icons/ti";
 import { FaRegAddressCard } from "react-icons/fa6";
 import "../../index.css";
 import Button from "../button/Button";
 import AddUser from "../form/AddUser";
+import UserProfile from "../../assets/Profile.png";
 
 export default function Tabel() {
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
@@ -73,6 +75,27 @@ export default function Tabel() {
     setCurrentPage(1);
   };
 
+  const handleDelete = async (id) => {
+    try {
+      console.log(`Attempting to delete user with ID: ${id}`);
+      const response = await axios.delete(`https://development.verni.yt/karyawan/${id}`);
+      if (response.status === 200) {
+        console.log(`Successfully deleted user with ID: ${id}`);
+        const updatedData = data.filter((item) => item.id !== id);
+        const updatedFilteredData = filteredData.filter((item) => item.id !== id);
+        setData(updatedData);
+        setFilteredData(updatedFilteredData);
+      } else {
+        console.log('Failed to delete the user', response);
+        alert('Failed to delete the user');
+      }
+    } catch (err) {
+      console.error("Error deleting user:", err);
+      alert('Failed to delete the user');
+    }
+  };
+  
+
   const pageNumbers = [];
   for (let i = 1; i <= totalPages; i++) {
     pageNumbers.push(i);
@@ -95,11 +118,11 @@ export default function Tabel() {
           txtSize="sm:w-[12rem] w-[12rem] sm:h-[3rem] h-[2.5rem]"
           icon={<FaRegAddressCard color="white" size={25} />}
           bgColor="bg-gradient-to-r from-[#9b59b6] to-[#e74c3c]"
-          position="flex flex-row-reverse justify-center items-center gap-3"
+          position="flex flex-row-reverse justify-center items-center gap-x-2"
           size="sm:w-[12rem] w-[12rem] sm:h-[3rem] h-[2.5rem]"
           onClick={() => setIsPopUpOpen(true)}
         />
-        <AddUser isOpen={isPopUpOpen} onClose={() => setIsPopUpOpen(false)}/>
+        <AddUser isOpen={isPopUpOpen} onClose={() => setIsPopUpOpen(false)} />
       </div>
 
       {loading ? (
@@ -118,6 +141,7 @@ export default function Tabel() {
               <th className="px-4 py-2">No Handphone</th>
               <th className="px-4 py-2">Alamat</th>
               <th className="px-4 py-2">Tanggal Terdaftar</th>
+              <th className="px-4 py-2">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -125,7 +149,11 @@ export default function Tabel() {
               <tr key={index} className="border-b hover:bg-gray-100">
                 <td className="px-4 py-2">
                   <img
-                    src={`https://development.verni.yt/image/${item.profile_picture}`}
+                    src={
+                      item.profile_picture
+                        ? `https://development.verni.yt/image/${item.profile_picture}`
+                        : UserProfile
+                    }
                     alt="Profile"
                     className="w-10 h-10 rounded-full"
                   />
@@ -135,6 +163,17 @@ export default function Tabel() {
                 <td className="px-4 py-2">{item.handphone}</td>
                 <td className="px-4 py-2">{item.alamat}</td>
                 <td className="px-4 py-2">{item.created_at}</td>
+                <td className="px-4 py-2">
+                  <button
+                    className="text-red-500 hover:underline"
+                    onClick={() => {
+                      console.log(`Delete button clicked for ID: ${item.id}`);
+                      handleDelete(item.id);
+                    }}
+                  >
+                    <TiUserDelete size={25} />
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>

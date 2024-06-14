@@ -9,13 +9,13 @@ const BarChart = () => {
     labels: ['January', 'February', 'March', 'April', 'May', 'June'],
     datasets: [
       {
-        label: 'Dataset 1',
-        data: [12, 19, 3, 5, 2, 3],
+        label: 'Dine In',
+        data: [120, 140, 3, 5, 2, 3],
         backgroundColor: '#A252A0',
       },
       {
-        label: 'Dataset 2',
-        data: [8, 12, 6, 9, 4, 7],
+        label: 'Take Away',
+        data: [180, 122, 6, 9, 4, 7],
         backgroundColor: '#E74C4C',
       },
     ],

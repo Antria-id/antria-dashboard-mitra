@@ -1,21 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import { MdDelete, MdDriveFolderUpload } from "react-icons/md";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import Button from "../button/Button";
 import axios from "axios";
+import Button from "../button/Button";
 
 export default function Edit() {
   const [selectedImage, setSelectedImage] = useState(null);
+  const fileUploadRef = useRef();
   const [dataItem, setDataItem] = useState({
     nama_produk: "",
     deskripsi_produk: "",
-    harga: "",
+    harga: 10,
     gambar: "",
   });
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
   const { id } = useParams();
 
   useEffect(() => {
@@ -35,23 +36,31 @@ export default function Edit() {
     }
   };
 
+  const handleImageUpload = (event) => {
+    event.preventDefault();
+    fileUploadRef.current.click();
+  };
+
   const handleUpdate = async () => {
     try {
-      const hargaInt = parseInt(dataItem.harga);
-      if (isNaN(hargaInt)) {
-        console.error("Invalid price value");
-        return;
+      const formData = new FormData();
+      formData.append("nama_produk", dataItem.nama_produk);
+      formData.append("deskripsi_produk", dataItem.deskripsi_produk);
+      formData.append("harga", parseInt(dataItem.harga, 10));
+      if (dataItem.gambar instanceof File) {
+        formData.append("gambar", dataItem.gambar);
       }
+      // Log FormData entries for debugging
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
+
       const response = await axios.put(
         `https://development.verni.yt/produk/${id}`,
-        {
-          nama_produk: dataItem.nama_produk,
-          deskripsi_produk: dataItem.deskripsi_produk,
-          harga: hargaInt,
-          gambar: dataItem.gambar,
-        },
+        formData
       );
-      console.log(response);
+
+      console.log("Response:", response);
       navigate("/data-menu");
     } catch (error) {
       console.error("Error updating product", error);
@@ -59,8 +68,14 @@ export default function Edit() {
   };
 
   const handleFileChange = (event) => {
-    setSelectedImage(URL.createObjectURL(event.target.files[0]));
-    setDataItem({ ...dataItem, gambar: event.target.files[0].name});
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedImage(URL.createObjectURL(file));
+      setDataItem({
+        ...dataItem,
+        gambar: file,
+      });
+    }
   };
 
   const handleDeleteImage = () => {
@@ -70,7 +85,10 @@ export default function Edit() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setDataItem({ ...dataItem, [name]: value });
+    setDataItem({
+      ...dataItem,
+      [name]: value,
+    });
   };
 
   return (
@@ -86,7 +104,10 @@ export default function Edit() {
       </div>
       {Object.keys(dataItem).length > 0 && (
         <div className="flex flex-col lg:flex-row pl-4 pt-8 gap-8 px-4">
-          <div className="flex flex-col gap-6 w-full lg:w-1/2">
+          <form
+            encType="multipart/form-data"
+            className="flex flex-col gap-6 w-full lg:w-1/2"
+          >
             <div className="flex flex-col gap-2">
               <h2 className="font-semibold">Nama Produk</h2>
               <input
@@ -104,9 +125,7 @@ export default function Edit() {
                 name="deskripsi_produk"
                 placeholder="Masukkan Keterangan Produk"
                 value={dataItem.deskripsi_produk}
-                onChange={(e) =>
-                  setDataItem({ ...dataItem, deskripsi_produk: e.target.value })
-                }
+                onChange={handleInputChange}
               />
             </div>
             <div className="flex flex-col gap-2">
@@ -117,13 +136,10 @@ export default function Edit() {
                 type="number"
                 min="0"
                 placeholder="Masukkan Harga Produk"
-                value={dataItem.harga || ""}
-                onChange={(e) =>
-                  setDataItem({ ...dataItem, harga: e.target.value })
-                }
+                value={dataItem.harga}
+                onChange={handleInputChange}
               />
             </div>
-
             <div className="sm:w-full w-full flex flex-col gap-y-2">
               <h2 className="font-semibold">Foto Produk</h2>
               <label htmlFor="file-upload" className="cursor-pointer">
@@ -133,6 +149,7 @@ export default function Edit() {
                   type="file"
                   accept=".png,.jpg,.jpeg"
                   className="w-full border-2 border-neutral-700 h-10 px-3 py-2 bg-white rounded-lg hidden"
+                  ref={fileUploadRef}
                   onChange={handleFileChange}
                 />
                 {selectedImage ? (
@@ -151,14 +168,17 @@ export default function Edit() {
                     </button>
                   </div>
                 ) : (
-                  <div className="flex flex-col items-center justify-center w-full sm:h-[14.4rem] h-[18rem] border-2 border-dashed border-neutral-700 bg-white rounded-lg">
+                  <button
+                    onClick={handleImageUpload}
+                    className="flex flex-col items-center justify-center w-full sm:h-[14.4rem] h-[18rem] border-2 border-dashed border-neutral-700 bg-white rounded-lg"
+                  >
                     <MdDriveFolderUpload size={48} color="black" />
                     <p>Unggah Foto</p>
-                  </div>
+                  </button>
                 )}
               </label>
             </div>
-          </div>
+          </form>
           <div className="flex flex-col gap-y-2">
             <div className="flex flex-row gap-x-[2rem] pt-[2.125rem]">
               {loading ? (
@@ -173,36 +193,38 @@ export default function Edit() {
                     <div className="sm:w-[18.75rem] sm:h-[18rem] rounded-2xl">
                       <img
                         className="sm:w-[18.75rem] sm:h-[18rem] rounded-[1.4rem]"
-                        src={`https://development.verni.yt/image/${dataItem.gambar}`}
+                        src={
+                          selectedImage ||
+                          `https://development.verni.yt/image/${dataItem.gambar}`
+                        }
                         alt="Product"
                       />
                     </div>
-                    <div className="sm:flex sm:flex-col flex flex-col sm:gap-y-[1rem] gap-y-3 sm:ml-0 ml-3">
+                    <div className="sm:flex sm:flex-col flex flex-col sm:gap-y-[1rem] gap-y-3 sm:ml-0 ml-3  sm:mt-3 mt-3">
                       <h1 className="sm:w-[14.956rem] sm:h-[0.935] sm:flex sm:justify-start sm:pl-[0.9rem] text-[1.2rem] font-semibold">
                         {dataItem.nama_produk}
                       </h1>
                       <h2 className="sm:w-[14.956rem] sm:h-[0.935] sm:flex sm:justify-start sm:pl-[0.9rem] text-[1rem]">
                         {dataItem.deskripsi_produk}
                       </h2>
-                      <h2 className="sm:w-[14.956rem] sm:h-[0.935] sm:flex sm:justify-start sm:pl-[0.9rem] text-[1.2rem] font-bold">
+                      <h3 className="sm:w-[14.956rem] sm:h-[0.935] sm:flex sm:justify-start sm:pl-[0.9rem] text-[1rem]">
                         Rp{dataItem.harga}
-                      </h2>
+                      </h3>
                     </div>
                   </div>
                 </div>
               )}
             </div>
-            <div className="flex flex-row gap-x-[2rem] sm:mt-[1rem] mt-3 sm:mb-[3rem] mb-[2rem] h-full  ">
-              <Button
-                txtColor="text-white"
-                txtSize="sm:w-72 w-80 sm:h-10"
-                position="flex justify-center items-center"
-                text="Update"
-                size=" sm:w-[18.75rem] w-[19rem] h-[2.938rem]"
-                bgColor="bg-gradient-to-r from-[#9b59b6] to-[#e74c3c]"
-                onClick={handleUpdate}
-              />
-            </div>
+            <Button
+              onClick={handleUpdate}
+              txtColor="text-white"
+              txtSize="sm:w-72 w-80 sm:h-10"
+              position="flex justify-center items-center"
+              text="Update"
+              size=" sm:w-[18.75rem] w-[19rem] h-[2.938rem]"
+              bgColor="bg-gradient-to-r from-[#9b59b6] to-[#e74c3c]"
+              type="submit"
+            />
           </div>
         </div>
       )}

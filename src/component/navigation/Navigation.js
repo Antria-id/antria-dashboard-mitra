@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   FaUser,
   FaSignOutAlt,
@@ -8,19 +8,23 @@ import {
 } from "react-icons/fa";
 import { MdOutlineMenuBook } from "react-icons/md";
 import { GrMoney } from "react-icons/gr";
+import { IoAnalytics } from "react-icons/io5";
 import Logo from "../../assets/Logo.png";
 import Button from "../button/Button";
-import { IoAnalytics } from "react-icons/io5";
+import { motion } from "framer-motion";
+import "./navigation.css";
+import { CopyrightRounded } from "@mui/icons-material";
 
 export default function Navigation({ onToggle }) {
+  const location = useLocation();
   const handleLogout = () => {
     localStorage.removeItem("authToken");
-    window.location.href = "/Login"; // Assuming /Login is your login page route
+    window.location.href = "/Login";
   };
   const menuItems = [
     {
-      to: "/dashboard",
-      text: "Dashboard",
+      to: "/data-analytics",
+      text: "Data Analytics",
       icon: <IoAnalytics size={22} />,
     },
     {
@@ -39,10 +43,11 @@ export default function Navigation({ onToggle }) {
       icon: <MdOutlineMenuBook size={22} />,
     },
   ];
+
   const menuBottom = [
     {
-      to: "/dashboard",
-      text: "Dashboard",
+      to: "/data-analytics",
+      text: "Data Analytics",
       icon: <IoAnalytics color="white" size={22} />,
     },
     {
@@ -91,22 +96,14 @@ export default function Navigation({ onToggle }) {
 
   return (
     <>
-      {/* Sidebar for larger screens */}
       <div className="hidden lg:block h-screen">
         <aside
           className={`flex flex-col ${
             expanded
               ? "w-[17.9rem] h-[51.563rem] ml-[0.5rem]"
               : "w-[6rem] sm:h-[51.563rem] h-[39.2rem] ml-[2rem]"
-          } 
-          mt-[1.5rem] 
-          rounded-xl 
-          shadow-2xl 
-          bg-white
-          transition-all duration-300 ease-in-out
-        `}
+          } mt-[1.5rem] rounded-xl shadow-2xl bg-white transition-all duration-300 ease-in-out`}
         >
-          {/* Sidebar Content */}
           <div
             className={`p-4 ${
               expanded
@@ -175,8 +172,14 @@ export default function Navigation({ onToggle }) {
                           ? "w-[16rem] h-[2.688rem]"
                           : "w-[4rem] h-[2.688rem]"
                       }`}
-                      txtColor="hover:text-white flex items-center w-[16rem] h-[2.688rem]"
-                      bgColor="hover:bg-gradient-to-r from-[#9b59b6] to-[#e74c3c]"
+                      txtColor={`hover:text-white flex items-center w-[16rem] h-[2.688rem] ${
+                        location.pathname === menuItem.to ? "text-white" : ""
+                      }`}
+                      bgColor={`${
+                        location.pathname === menuItem.to
+                          ? "bg-gradient-to-r from-[#9b59b6] to-[#e74c3c]"
+                          : "hover:bg-gradient-to-r from-[#9b59b6] to-[#e74c3c]"
+                      }`}
                       position={`flex ${
                         expanded
                           ? "pl-2 gap-x-[1.2rem] font-extralight"
@@ -185,7 +188,7 @@ export default function Navigation({ onToggle }) {
                     />
                   </Link>
                   {!expanded && (
-                    <div className="absolute left-full ml-[-0.5rem] mt-[-2.6rem] hidden group-hover:block text-center bg-gradient-to-r from-[#9b59b6] to-[#e74c3c] text-white text-sm rounded-md w-[10rem] z-auto h-[2.688rem]">
+                    <div className="absolute left-full ml-[-0.5rem] mt-[-2.6rem] hidden group-hover:block active:bg-gradient-to-r active:from-[#9b59b6] active:to-[#e74c3c] text-center bg-gradient-to-r from-[#9b59b6] to-[#e74c3c] active:font-bold text-white text-sm rounded-md w-[10rem] z-auto h-[2.688rem]">
                       <h1 className="flex justify-center items-center h-[2.688rem] font-bold">
                         <Link to={menuItem.to}>{menuItem.text}</Link>
                       </h1>
@@ -195,10 +198,21 @@ export default function Navigation({ onToggle }) {
               ))}
             </ul>
           </div>
+          <div
+            size={`${
+              expanded ? "w-[16rem]" : "w-[4rem]"
+            }`}
+            className="sound-wave flex justify-center items-center mb-5"
+          >
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
         </aside>
       </div>
-
-      {/* Bottom navigation for smaller screens */}
+      {/* Bottom Navigation */}
       <div
         className={`block lg:hidden fixed left-1/2 transform -translate-x-1/2 bottom-2 rounded-xl w-[22.75rem] h-[3.875rem] bg-gradient-to-r from-[#9b59b6] to-[#e74c3c] shadow-lg z-50 ${
           visible ? "" : "invisible"

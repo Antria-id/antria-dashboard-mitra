@@ -7,6 +7,8 @@ import { BsSearch } from "react-icons/bs";
 import { ThreeDots } from "react-loader-spinner";
 import XLS from "../../assets/XLS.svg";
 import "../../index.css";
+import Button from "../button/Button";
+import { SiMicrosoftexcel } from "react-icons/si";
 
 export default function Tabel() {
   const [data, setData] = useState([]);
@@ -96,14 +98,16 @@ export default function Tabel() {
           onChange={handleFilter}
         />
         <BsSearch className="relative right-6 text-white top-2" size={20} />
-        <div className="flex sm:w-[10rem] sm:h-[3rem] rounded-xl">
-          <h1 className="sm:w-[10rem] sm:flex hidden sm:h-[3rem] font-semibold justify-center items-center">
-            Download Data
-          </h1>
-          <button className="sm:h-[3rem] pr-2" onClick={convertToXLS}>
-            <img src={XLS} alt="XLS" />
-          </button>
-        </div>
+        <Button
+          text="Download Data"
+          txtColor="text-white font"
+          txtSize="sm:w-[12rem] w-[12rem] sm:h-[3rem] h-[2.5rem]"
+          icon={<SiMicrosoftexcel color="white" size={25} />}
+          bgColor="bg-gradient-to-r from-[#9b59b6] to-[#e74c3c]"
+          position="flex flex-row-reverse justify-center items-center gap-3"
+          size="sm:w-[12rem] w-[12rem] sm:h-[3rem] h-[2.5rem]"
+          onClick={convertToXLS}
+        />
       </div>
 
       {loading ? (

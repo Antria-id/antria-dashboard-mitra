@@ -5,7 +5,9 @@ import Logo from "../../assets/Logo.png";
 import Button from "../../component/button/Button";
 import { useNavigate } from "react-router-dom";
 import { useTypewriter } from "react-simple-typewriter";
-import AuthContext from "../../component/context/AuthProvider"; 
+import AuthContext from "../../component/context/AuthProvider";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Login() {
   const [showPass, setShowPass] = useState(false);
@@ -36,13 +38,23 @@ export default function Login() {
         }
       );
       const accessToken = response.data.access_token;
-      localStorage.setItem('authToken', accessToken );
+      localStorage.setItem("authToken", accessToken);
       const decoded = jwtDecode(accessToken);
       console.log(decoded.payload);
       localStorage.setItem("authToken", accessToken);
       _Login(accessToken);
 
-      navigate("/dashboard");
+      toast.success("Login berhasil!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+
+      navigate("/data-analytics");
     } catch (error) {
       console.error("Login error", error);
       setError("Email atau password salah. Silakan coba lagi.");
@@ -62,28 +74,29 @@ export default function Login() {
     return decodedToken;
   }
 
-  const [typeEffect1] = useTypewriter({
-    words: ["Selamat datang mitra Antria 👋"],
+  const [typeEffect] = useTypewriter({
+    words: ["elamat datang mitra Antria 👋"],
     loop: {},
-    typeSpeed: 80,
+    typeSpeed: 100,
     deleteSpeed: 40,
   });
 
   return (
     <div className="w-full h-full bg-[#F6F5F5]">
+      <ToastContainer />
       <div className="flex justify-center items-center h-screen">
         <div className="md:w-[30.313rem] w-[22rem] h-[35.75rem] bg-white rounded-xl shadow-xl">
           <img className="ml-[1.563rem] mt-[2.2rem]" src={Logo} alt="Logo" />
           <div>
             <h1 className="mt-[3.288rem] ml-[1.563rem] font-semibold sm:text-[1.5rem] text-[1.3rem]">
-              {typeEffect1}
+              S{typeEffect}
             </h1>
             <h2 className="mt-[0.1rem] ml-[1.563rem] font-semibold text-[#8A8A8A] text-[0.75rem]">
               Masukan data akun mitra yang sudah terdaftar
             </h2>
-            <div className="sm:flex sm:flex-col sm:justify-center justify-center ml-[1.4rem] mt-[1.188rem]">
-              <h1 className="text-[0.75rem] font-bold">Username</h1>
-              <div>
+            <div className="sm:flex sm:flex-col sm:justify-center justify-center ml-[1.4rem] mt-[1.5rem]">
+              <div className="gap-y-[1rem]">
+                <h1 className="text-[0.75rem] font-bold">Username</h1>
                 <input
                   className="md:w-[27.125rem] w-[19rem] h-[3.438rem] bg-white shadow-xl py-3 px-3 rounded-xl"
                   type="username"

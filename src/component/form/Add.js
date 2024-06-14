@@ -52,10 +52,15 @@ export default function Add({ isOpen, onClose }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const hargaInt = parseInt(formData.harga);
+    if (isNaN(hargaInt)) {
+      console.error("Invalid price value");
+      return;
+    }
     const formDataToSend = new FormData();
     formDataToSend.append("nama_produk", formData.nama_produk);
     formDataToSend.append("deskripsi_produk", formData.deskripsi_produk);
-    formDataToSend.append("harga", formData.harga);
+    formDataToSend.append("harga", hargaInt);
     formDataToSend.append("gambar", formData.gambar);
     formDataToSend.append("mitraId", 2);
     try {

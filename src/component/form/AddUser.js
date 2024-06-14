@@ -16,7 +16,7 @@ export default function AddUser({ isOpen, onClose }) {
     handphone: "",
     alamat: "",
     isOwner: false,
-    mitraId: 2
+    mitraId: 2,
   });
 
   const handleClose = () => {
@@ -30,7 +30,7 @@ export default function AddUser({ isOpen, onClose }) {
       handphone: "",
       alamat: "",
       isOwner: false,
-      mitraId: 2
+      mitraId: 2,
     });
     if (typeof onClose === "function") {
       onClose();
@@ -87,7 +87,7 @@ export default function AddUser({ isOpen, onClose }) {
         payload,
         {
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         }
       );
@@ -128,10 +128,7 @@ export default function AddUser({ isOpen, onClose }) {
         >
           <IoMdClose size={30} color="white" />
         </button>
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-col gap-4"
-        >
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="w-full">
             <h2 className="text-white font-semibold">Username</h2>
             <input
@@ -192,44 +189,6 @@ export default function AddUser({ isOpen, onClose }) {
               onChange={handleInputChange}
               placeholder="Masukkan Alamat"
             />
-          </div>
-          <div className="w-full">
-            <h2 className="text-white font-semibold">Profile Picture</h2>
-            <label>
-              <input
-                id="file-upload"
-                name="profile_picture"
-                type="file"
-                accept=".png,.jpg,.jpeg"
-                className="hidden"
-                ref={fileUploadRef}
-                onChange={uploadImageDisplay}
-              />
-              {selectedImage ? (
-                <div className="relative">
-                  <img
-                    src={selectedImage}
-                    alt="Selected"
-                    className="w-full h-48 object-cover rounded-lg"
-                  />
-                  <button
-                    className="absolute top-0 right-0 mt-1 mr-1"
-                    type="button"
-                    onClick={handleDeleteImage}
-                  >
-                    <MdDelete size={24} color="white" />
-                  </button>
-                </div>
-              ) : (
-                <button
-                  className="flex flex-col items-center justify-center w-full sm:h-48 h-[14rem] bg-white rounded-lg cursor-pointer"
-                  onClick={handleImageUpload}
-                >
-                  <MdDriveFolderUpload size={48} color="black" />
-                  <p>Unggah Foto</p>
-                </button>
-              )}
-            </label>
           </div>
           <div className="w-full sm:py-0 pt-6">
             <Button

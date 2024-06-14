@@ -23,19 +23,16 @@ ChartJS.register(
 );
 
 const LineChart = () => {
-  // Create a reference for the canvas
   const chartRef = useRef(null);
-
-  // Initialize data and options for the line chart
   const data = {
-    labels: ["2018", "2019", "2020", "2021", "2022", "2023"],
+    labels: ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"],
     datasets: [
       {
         label: "Pendapatan Rp",
-        data: [10000000, 20000000, 30000000, 40000000, 50000000, 60000000],
+        data: [1000000, 2200000, 3400000, 2000000, 5200000, 6000000, 900000],
         borderWidth: 2,
         fill: true,
-        tension: 0.4,
+        tension: 0.8,
       },
     ],
   };
@@ -76,7 +73,7 @@ const LineChart = () => {
   }, [chartRef]);
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-4">
+    <div className="w-full h-[300px] sm:h-[500px] max-w-full sm:max-w-4xl mx-auto p-4">
       <Line ref={chartRef} data={data} options={options} />
     </div>
   );
