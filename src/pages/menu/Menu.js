@@ -7,6 +7,7 @@ export default function Menu() {
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const [hasData, setHasData] = useState(false); // New state to track data presence
   const scrollableDivRef = useRef(null);
 
   const handleScroll = () => {
@@ -48,7 +49,7 @@ export default function Menu() {
 
   return (
     <aside
-      className={`bg-white mt-[1.5rem] rounded-xl shadow-2xl z-0 transition-all mx-auto duration-300 sm:w-[77rem] w-[24.4rem] sm:h-[51.563rem] h-[43.2rem]`}
+      className={`bg-[#FCFCFF] mt-[1.5rem] rounded-xl shadow-2xl z-0 transition-all mx-auto duration-300 sm:w-[77rem] w-[24.4rem] sm:h-[51.563rem] h-[43.2rem]`}
     >
       <h1 className="text-[2rem] pl-[1.875rem] pt-[2.125rem] font-semibold">
         Data Menu
@@ -66,8 +67,9 @@ export default function Menu() {
       <div className="z-0">
         <Add isOpen={isPopUpOpen} onClose={() => setIsPopUpOpen(false)} />
       </div>
+   
       <div className="sm:flex flex sm:justify-between justify-between items-center lg:mx-[1rem] mx-[0.3rem]">
-        {canScrollLeft && (
+        {hasData && canScrollLeft && (
           <button
             className="sm:z-0 z-0 sm:relative relative sm:left-2 left-3 sm:flex flex sm:justify-center justify-center items-center sm:w-[3.25rem] w-[4rem] h-[4rem] sm:h-[2.5rem] bg-gradient-to-b from-[#9b59b6] to-[#e74c3c] rounded-full"
             onClick={handleScrollLeft}
@@ -79,9 +81,9 @@ export default function Menu() {
           className="sm:flex flex justify-between sm:w-[75rem] w-[28.4rem] overflow-x-scroll ml-2 pt-[2.125rem] pb-[1.125rem]"
           ref={scrollableDivRef}
         >
-          <Crud />
+          <Crud setHasData={setHasData} /> {/* Pass setHasData to Crud */}
         </div>
-        {canScrollRight && (
+        {hasData && canScrollRight && (
           <button
             className=" sm:z-0 z-0 sm:relative relative sm:right-4 right-4 sm:flex flex sm:justify-center justify-center items-center sm:w-[3.25rem] w-[4rem] h-[4rem] sm:h-[2.5rem] bg-gradient-to-b from-[#9b59b6] to-[#e74c3c] rounded-full"
             onClick={handleScrollRight}

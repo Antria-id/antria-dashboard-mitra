@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaRegTrashAlt } from "react-icons/fa";
-import ErrorImage from "../../assets/Error.png"; // Import the error image
-import { Link, useHistory } from "react-router-dom";
+import ErrorImage from "../../assets/Error.png"; 
 import DeleteConfirmation from "./Delete";
 import Loading from "../../assets/Loading.gif";
-import Edit from "./Edit"; // Import the Edit component
+import Edit from "./Edit"; 
+import NoData from "../../assets/NoData.gif";
 
 export default function Crud() {
   const [data, setData] = useState([]);
@@ -15,7 +15,7 @@ export default function Crud() {
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null); // State for selected item data
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const fetchData = async () => {
     setLoading(true);
@@ -99,7 +99,7 @@ export default function Crud() {
       <div className="flex flex-col sm:flex-row gap-6 sm:w-[72.75rem] sm:h-[35.25rem] w-full h-full p-4 overflow-x-auto overscroll-y-none">
         {loading ? (
           <div className="flex flex-col justify-center items-center w-full h-full">
-            <div className="w-full h-full">
+            <div className="w-[31.438rem] h-[28.875rem]">
               <img
                 src={Loading}
                 alt="Page not found"
@@ -148,7 +148,18 @@ export default function Crud() {
             </div>
           ))
         ) : (
-          <p>No data available</p>
+          <div className="flex flex-col justify-center items-center w-full h-full">
+            <div className="w-[31.438rem] h-[28.875rem]">
+              <img
+                src={NoData}
+                alt="Page not found"
+                className="w-full h-full object-cover bg-transparent"
+              />
+            </div>
+            <h1 className="w-[24rem] text-center text-2xl font-bold text-gray-500">
+              Belum ada data menu yang tersimpan
+            </h1>
+          </div>
         )}
         <DeleteConfirmation
           isOpen={isDeleteConfirmOpen}
