@@ -169,16 +169,12 @@ export default function Dashboard() {
       maximumFractionDigits: 0,
     }).format(harga);
   };
+
   const cardData = [
     {
       icon: <GrMoney size={50} color="white" />,
       tag: "Jumlah Pemasukan",
-      data: (
-        <>
-          Rp
-          <Data n={500000} />
-        </>
-      ),
+      data: rupiah(500000),
       link: "/data-pemasukan",
     },
     {
@@ -189,11 +185,7 @@ export default function Dashboard() {
     {
       icon: <MdPeopleAlt size={50} color="white" />,
       tag: "Jumlah Karyawan",
-      data: (
-        <>
-          <Data n={employeeCount} />
-        </>
-      ),
+      data: <Data n={employeeCount} />,
       link: "/data-akun",
     },
     {
