@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ArrowBackIosSharpIcon from "@mui/icons-material/ArrowBackIosSharp";
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
-import Loading from "../../assets/Loading.gif"
+import Loading from "../../assets/Loading.gif";
 import Profile from "../../assets/Profile.png";
 import { TiUserDelete } from "react-icons/ti";
 import { FaRegAddressCard } from "react-icons/fa6";
@@ -176,7 +176,10 @@ export default function Tabel() {
                       handleDelete(item.id);
                     }}
                   >
-                    <TiUserDelete size={25} />
+                    <div className="flex flex-row gap-2">
+                      <TiUserDelete size={25} />
+                      <h1>Hapus Akun</h1>
+                    </div>
                   </button>
                 </td>
               </tr>

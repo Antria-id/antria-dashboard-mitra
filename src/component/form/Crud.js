@@ -139,10 +139,10 @@ export default function Crud() {
                   <FaRegTrashAlt color="white" size={20} />
                 </button>
                 <button
-                  className="flex items-center justify-center w-[15.5rem] sm:w-[13rem] h-12 bg-gradient-to-r from-[#9b59b6] to-[#e74c3c] rounded-lg"
+                  className="flex items-center justify-center w-[15.5rem] sm:w-[13rem] h-12 hover:bg-gradient-to-r hover:from-[#FFFF] hover:to-[#FFFF] bg-gradient-to-r from-[#9b59b6] to-[#e74c3c] rounded-lg"
                   onClick={() => handleEdit(item)}
                 >
-                  <h1 className="text-white font-semibold">Edit</h1>
+                  <h1 className="w-[15.5rem] sm:w-[13rem] text-white hover:text-[#9b59b6] font-semibold">Edit</h1>
                 </button>
               </div>
             </div>

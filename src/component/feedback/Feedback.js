@@ -51,7 +51,7 @@ export default function Feedback({ onRatingChange }) {
         >
           <div className="flex flex-row sm:w-full w-full sm:h-full h-full gap-4">
             <div className="flex justify-center items-center">
-              <img className="w-[4rem] h-[4rem]" src={Profile} />
+              <img className="sm:w-[4rem] sm:h-[4rem] w-[12rem] h-[5rem]" src={Profile} />
             </div>
             <div className="flex flex-col justify-center flex-grow">
               <h1 className="text-[1.5rem] font-bold">{review.username}</h1>
