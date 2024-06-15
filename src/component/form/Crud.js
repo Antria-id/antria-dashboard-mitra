@@ -4,14 +4,19 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import ErrorImage from "../../assets/Error.png"; // Import the error image
 import { Link, useHistory } from "react-router-dom";
 import DeleteConfirmation from "./Delete";
-import Loading from "../../assets/Loading.gif"
+import Loading from "../../assets/Loading.gif";
+import Edit from "./Edit"; // Import the Edit component
 
 export default function Crud() {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState(null);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null); // State for selected item data
+
   const fetchData = async () => {
     setLoading(true);
     setError(null);
@@ -21,6 +26,7 @@ export default function Crud() {
       );
       if (response.status === 200) {
         setData(response.data);
+        setFilteredData(response.data); // Initialize filteredData with fetched data
       }
     } catch (error) {
       setError("Error fetching data");
@@ -54,93 +60,108 @@ export default function Crud() {
     setIsDeleteConfirmOpen(false);
   };
 
+  const handleEdit = (item) => {
+    setSelectedItem(item);
+    setIsEditOpen(true);
+  };
+
+  const handleCloseEdit = () => {
+    setIsEditOpen(false);
+    setSelectedItem(null);
+  };
+
+  const handleFilter = (event) => {
+    const searchTerm = event.target.value.toLowerCase();
+    const filtered = data.filter((item) =>
+      item.nama_produk.toLowerCase().includes(searchTerm)
+    );
+    setFilteredData(filtered);
+  };
+
   const rupiah = (harga) => {
     return new Intl.NumberFormat("id", {
       style: "currency",
       currency: "IDR",
-      maximumFractionDigits: 0
+      maximumFractionDigits: 0,
     }).format(harga);
   };
 
   return (
-    <div className="flex flex-row gap-x-6 sm:w-[72.75rem] sm:h-[35.25rem] w-[12rem] h-[20rem]">
-      {loading ? (
-        <div className="flex flex-col justify-center items-center sm:w-[72.75rem] sm:h-[35.25rem] w-[12rem] h-[20rem]">
-          <div className="w-[31.438rem] h-[28.875rem]">
-            <img src={Loading} alt="Page not found" />
-          </div>
-        </div>
-      ) : error ? (
-        <div className="sm:flex sm:flex-col sm:justify-center sm:items-center sm:w-[70.75rem] w-[12rem]">
-          <img className="w-[30rem] h-[50rem]" src={ErrorImage} alt="Error" />
-          <p className="text-[2rem] font-bold text-red-500">{error}</p>
-        </div>
-      ) : data ? (
-        data.map((item, id) => (
-          <div key={id}>
-            <div className="flex flex-col gap-x-3 sm:w-[18.75rem] sm:h-[33.25rem] w-[12rem] h-[23rem] shadow-xl rounded-lg">
-              <>
-                <div className="sm:w-[18.75rem] sm:h-[18rem] rounded-2xl">
-                  <img
-                    className="sm:w-[18.75rem] sm:h-[18rem] rounded-[1.4rem]"
-                    src={`https://development.verni.yt/image/${item.gambar}`}
-                    alt="Product"
-                  />
-                </div>
-                <div className="sm:flex sm:flex-col flex flex-col sm:gap-y-[1rem] gap-y-3 sm:ml-0 ml-3">
-                  <h1 className="sm:w-[14.956rem] sm:h-[0.935rem] sm:mt-[1rem] mt-[1rem] sm:flex sm:justify-start sm:pl-[0.9rem] text-[1.2rem] font-semibold">
-                    {item.nama_produk}
-                  </h1>
-                  <h2 className="sm:w-[14.956rem] sm:h-[0.935] sm:flex sm:justify-start sm:pl-[0.9rem] text-[1rem]">
-                    {item.deskripsi_produk}
-                  </h2>
-                  <h2 className="sm:w-[14.956rem] sm:h-[0.935] sm:flex sm:justify-start sm:pl-[0.9rem] text-[1rem]">
-                    {rupiah(item.harga)}
-                  </h2>
-                  <h2 className="sm:w-[14.956rem] sm:h-[0.935] sm:flex sm:justify-start sm:pl-[0.9rem] text-[1rem]">
-                    Jumlah {item.kuantitas}
-                  </h2>
-                </div>
-              </>
-              <div className="flex flex-row-reverse sm:flex sm:flex-row-reverse sm:justify-center sm:mt-[1rem] mt-[1rem] justify-center items-center sm:gap-2 gap-4 sm:w-[18.75rem] w-[12rem]">
-                <button
-                  onClick={() => handleOpenDeleteConfirm(item.id)}
-                  className="sm:w-[3.125rem] w-[2.5rem] h-[2.5rem] sm:h-[3.125rem] sm:mt-[0.2rem] mt-[2rem] bg-gradient-to-r from-[#9b59b6] to-[#e74c3c] rounded-lg"
-                >
-                  <div className="sm:w-[3.125rem] w-[2.5rem] h-[2.5rem] sm:h-[3.125rem] sm:flex flex sm:justify-center justify-center items-center sm:items-center">
-                    <FaRegTrashAlt color="white" size={20} />
-                  </div>
-                </button>
-                <Link
-                  className="
-                  sm:flex 
-                  sm:justify-center 
-                  sm:items-center 
-                  flex 
-                  justify-center 
-                  items-center 
-                  sm:mt-[0.1rem] 
-                  mt-[2rem]"
-                  to={`/edit-page/${item.id}`}
-                >
-                  <div className="sm:w-[12.625rem] w-[6rem] h-[2rem] sm:h-[3.125rem] bg-gradient-to-r from-[#9b59b6] to-[#e74c3c] rounded-lg">
-                    <h1 className="sm:w-[12.625rem] w-[6rem] h-[2rem] flex justify-center items-center sm:h-[3.125rem] sm:flex sm:justify-center sm:items-center sm:text-[1.2rem] text-[1rem] text-white font-semibold">
-                      Edit
-                    </h1>
-                  </div>
-                </Link>
-              </div>
+    <div className="container">
+      <div className="w-full mb-2">
+        <input
+          className="px-4 py-2 border border-gray-500 rounded-lg text-black focus:outline-none placeholder-gray-400"
+          type="text"
+          placeholder="Search Products"
+          onChange={handleFilter}
+        />
+      </div>
+      <div className="flex flex-col sm:flex-row gap-6 sm:w-[72.75rem] sm:h-[35.25rem] w-full h-full p-4 overflow-x-auto overscroll-y-none">
+        {loading ? (
+          <div className="flex flex-col justify-center items-center w-full h-full">
+            <div className="w-full h-full">
+              <img
+                src={Loading}
+                alt="Page not found"
+                className="w-full h-full object-cover"
+              />
             </div>
           </div>
-        ))
-      ) : (
-        <p>No data available</p>
-      )}
-      <DeleteConfirmation
-        isOpen={isDeleteConfirmOpen}
-        onClose={() => setIsDeleteConfirmOpen(false)}
-        onConfirm={handleConfirmDelete}
-      />
+        ) : error ? (
+          <div className="flex flex-col justify-center items-center w-full h-full">
+            <img className="w-full h-auto" src={ErrorImage} alt="Error" />
+            <p className="text-2xl font-bold text-red-500">{error}</p>
+          </div>
+        ) : filteredData.length > 0 ? (
+          filteredData.map((item, id) => (
+            <div
+              key={id}
+              className="flex flex-col sm:w-[18.75rem] w-full sm:h-[33.25rem] h-auto shadow-xl rounded-lg mb-4"
+            >
+              <div className="w-full h-48 sm:w-[18.875rem] sm:h-[31.563rem] rounded-t-lg overflow-hidden">
+                <img
+                  className="w-full h-full object-cover"
+                  src={`https://development.verni.yt/image/${item.gambar}`}
+                  alt="Product"
+                />
+              </div>
+              <div className="flex flex-col p-4">
+                <h1 className="text-lg font-semibold">{item.nama_produk}</h1>
+                <h2 className="text-md">{item.deskripsi_produk}</h2>
+                <h2 className="text-md pt-[1.8rem]">{rupiah(item.harga)}</h2>
+                <h2 className="text-md">Jumlah {item.kuantitas}</h2>
+              </div>
+              <div className="flex flex-row-reverse justify-between p-4">
+                <button
+                  onClick={() => handleOpenDeleteConfirm(item.id)}
+                  className="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-[#9b59b6] to-[#e74c3c] rounded-lg"
+                >
+                  <FaRegTrashAlt color="white" size={20} />
+                </button>
+                <button
+                  className="flex items-center justify-center w-[15.5rem] sm:w-[13rem] h-12 bg-gradient-to-r from-[#9b59b6] to-[#e74c3c] rounded-lg"
+                  onClick={() => handleEdit(item)}
+                >
+                  <h1 className="text-white font-semibold">Edit</h1>
+                </button>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p>No data available</p>
+        )}
+        <DeleteConfirmation
+          isOpen={isDeleteConfirmOpen}
+          onClose={() => setIsDeleteConfirmOpen(false)}
+          onConfirm={handleConfirmDelete}
+        />
+        <Edit
+          className="z-10"
+          isOpen={isEditOpen}
+          onClose={handleCloseEdit}
+          item={selectedItem}
+        />
+      </div>
     </div>
   );
 }

@@ -7,12 +7,12 @@
     25% {
         height: 40px;
         transform: translateY(-5px) scaleY(1.7);
-        background: #ED509E;
+        background: #C21292;
     }
     50% {
         height: 6px;
         transform: translateY(0px);
-        background: #9C73F8;
+        background: #711DB0;
     }
     100% {
         height: 6px;
@@ -38,7 +38,7 @@
     animation: audio-wave 2.2s infinite ease-in-out;
 }
 .sound-wave div:nth-child(2) {
-    left: 11px;
+    left: 12px;
     animation-delay: 0.2s;
 }
 .sound-wave div:nth-child(3) {
@@ -55,5 +55,5 @@
 }
 .sound-wave div:nth-child(5) {
     left: 55px;
-    animation-delay: 0.9s;
+    animation-delay: 0.8s;
 }

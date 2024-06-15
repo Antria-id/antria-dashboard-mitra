@@ -1,212 +1,246 @@
-import React, { useState, useEffect } from "react";
-import { IoIosArrowBack } from "react-icons/io";
-import { MdDelete, MdDriveFolderUpload } from "react-icons/md";
-import { Link, useParams, useNavigate } from "react-router-dom";
-import Upload from "../../assets/Download.gif"
-import Button from "../button/Button";
+import React, { useRef, useState, useEffect } from "react";
+import { IoMdClose } from "react-icons/io";
+import { MdDelete } from "react-icons/md";
 import axios from "axios";
+import Button from "../button/Button";
+import Upload from "../../assets/Download.gif";
 
-export default function Edit() {
+export default function Edit({ isOpen, onClose, item }) {
   const [selectedImage, setSelectedImage] = useState(null);
-  const [dataItem, setDataItem] = useState({
+  const fileUploadRef = useRef();
+  const [formData, setFormData] = useState({
     nama_produk: "",
     deskripsi_produk: "",
-    harga: "",
+    harga: "", // Initialize harga as an integer
     gambar: "",
   });
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const [error, setError] = useState(null);
-  const { id } = useParams();
 
   useEffect(() => {
-    fetchProductDataItem();
-  }, [id]);
+    if (item) {
+      setFormData({
+        nama_produk: item.nama_produk,
+        deskripsi_produk: item.deskripsi_produk,
+        harga: parseInt(item.harga, 10), // Parse harga as an integer
+        gambar: item.gambar,
+      });
+      setSelectedImage(`https://development.verni.yt/image/${item.gambar}`);
+    }
+  }, [item]);
 
-  const fetchProductDataItem = async () => {
-    try {
-      const response = await fetch(`https://development.verni.yt/produk/${id}`);
-      const data = await response.json();
-      setDataItem(data);
-      if (data.gambar) {
-        setSelectedImage(`https://development.verni.yt/image/${data.gambar}`);
-      }
-    } catch (error) {
-      console.error("Error fetching product data:", error);
+  const handleClose = () => {
+    setSelectedImage(null);
+    setFormData({
+      nama_produk: "",
+      deskripsi_produk: "",
+      harga: 0, // Reset harga as an integer
+      gambar: "",
+    });
+    if (typeof onClose === "function") {
+      onClose();
     }
   };
 
-  const handleUpdate = async () => {
-    try {
-      const hargaInt = parseInt(dataItem.harga);
-      if (isNaN(hargaInt)) {
-        console.error("Invalid price value");
-        return;
-      }
-      const response = await axios.put(
-        `https://development.verni.yt/produk/${id}`,
-        {
-          nama_produk: dataItem.nama_produk,
-          deskripsi_produk: dataItem.deskripsi_produk,
-          harga: hargaInt,
-          gambar: dataItem.gambar,
-        }
-      );
-      console.log(response);
-      navigate("/data-menu");
-    } catch (error) {
-      console.error("Error updating product", error);
-    }
+  const handleImageUpload = (event) => {
+    event.preventDefault();
+    fileUploadRef.current.click();
   };
 
-  const handleFileChange = (event) => {
-    setSelectedImage(URL.createObjectURL(event.target.files[0]));
-    setDataItem({ ...dataItem, gambar: event.target.files[0].name });
+  const uploadImageDisplay = (event) => {
+    const uploadedFile = event.target.files[0];
+    setSelectedImage(URL.createObjectURL(uploadedFile));
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      gambar: uploadedFile,
+    }));
   };
 
   const handleDeleteImage = () => {
     setSelectedImage(null);
-    setDataItem({ ...dataItem, gambar: "" });
+    fileUploadRef.current.value = "";
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      gambar: "",
+    }));
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setDataItem({ ...dataItem, [name]: value });
+  const handleJSONSubmission = async () => {
+    const hargaInt = parseInt(formData.harga, 10);
+    if (isNaN(hargaInt)) {
+      console.error("Invalid price value");
+      return;
+    }
+
+    const jsonFormData = {
+      nama_produk: formData.nama_produk,
+      deskripsi_produk: formData.deskripsi_produk,
+      harga: hargaInt,
+    };
+
+    try {
+      const response = await axios.put(
+        `https://development.verni.yt/produk/${item.id}`,
+        jsonFormData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("JSON data submitted successfully", response.data);
+    } catch (error) {
+      console.error("Error submitting JSON data:", error);
+      alert("Failed to submit JSON data. Please try again later.");
+    }
+  };
+
+  const handleImageSubmission = async () => {
+    if (!formData.gambar) {
+      return;
+    }
+
+    const formDataToSend = new FormData();
+    formDataToSend.append("gambar", formData.gambar);
+
+    try {
+      const response = await axios.put(
+        `https://development.verni.yt/produk/${item.id}`,
+        formDataToSend,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log("Image uploaded successfully", response.data);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      alert("Failed to upload image. Please try again later.");
+    }
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    await handleJSONSubmission();
+    await handleImageSubmission();
+    handleClose();
+    window.location.reload();
+  };
+
+  if (!isOpen) {
+    return null;
+  }
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: name === "harga" ? parseInt(value, 10) : value,
+    }));
   };
 
   return (
-    <aside className="bg-white mt-6 rounded-xl shadow-2xl z-0 transition-all mx-auto duration-300 max-w-7xl w-full sm:h-[51.563rem] px-4">
-      <div className="flex flex-row items-center pl-4 pt-8 gap-4">
-        <Link
-          to="/data-menu"
-          className="flex justify-center items-center w-8 h-8 rounded-full bg-gradient-to-r from-purple-600 to-red-600"
+    <div className="z-10 fixed inset-0 sm:flex flex justify-center sm:justify-center sm:items-center">
+      <div
+        className="absolute inset-0 bg-gray-600 opacity-60"
+        onClick={handleClose}
+      />
+      <div
+        className="relative w-full sm:w-[30rem] max-w-md bg-gradient-to-b from-[#9b59b6] to-[#e74c3c] rounded-lg p-6 m-6 overflow-y-auto"
+        style={{ maxHeight: "85vh" }}
+      >
+        <button
+          className="absolute top-0 right-0 mt-2 mr-2"
+          onClick={handleClose}
         >
-          <IoIosArrowBack color="white" size={22} />
-        </Link>
-        <h1 className="text-2xl font-semibold">Edit Product</h1>
-      </div>
-      {Object.keys(dataItem).length > 0 && (
-        <div className="flex flex-col lg:flex-row pl-4 pt-8 gap-8 px-4">
-          <div className="flex flex-col gap-6 w-full lg:w-1/2">
-            <div className="flex flex-col gap-2">
-              <h2 className="font-semibold">Nama Produk</h2>
-              <input
-                className="w-full border-2 border-neutral-700 h-10 px-3 py-2 bg-white rounded-lg"
-                name="nama_produk"
-                placeholder="Masukkan Nama Produk"
-                value={dataItem.nama_produk}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <h2 className="font-semibold">Deskripsi Produk</h2>
-              <textarea
-                className="w-full border-2 border-neutral-700 h-[7rem] px-3 py-2 bg-white rounded-lg"
-                name="deskripsi_produk"
-                placeholder="Masukkan Keterangan Produk"
-                value={dataItem.deskripsi_produk}
-                onChange={(e) =>
-                  setDataItem({ ...dataItem, deskripsi_produk: e.target.value })
-                }
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <h2 className="font-semibold">Harga</h2>
-              <input
-                className="w-full border-2 border-neutral-700 h-10 px-3 py-2 bg-white rounded-lg"
-                name="harga"
-                type="number"
-                min="0"
-                placeholder="Masukkan Harga Produk"
-                value={dataItem.harga || ""}
-                onChange={(e) =>
-                  setDataItem({ ...dataItem, harga: e.target.value })
-                }
-              />
-            </div>
-
-            <div className="sm:w-full w-full flex flex-col gap-y-2">
-              <h2 className="font-semibold">Foto Produk</h2>
-              <label htmlFor="file-upload" className="cursor-pointer">
-                <input
-                  id="file-upload"
-                  name="gambar"
-                  type="file"
-                  accept=".png,.jpg,.jpeg"
-                  className="w-full border-2 border-neutral-700 h-10 px-3 py-2 bg-white rounded-lg hidden"
-                  onChange={handleFileChange}
-                />
-                {selectedImage ? (
-                  <div className="relative">
-                    <img
-                      src={selectedImage}
-                      alt="Selected"
-                      className="w-full border-2 border-neutral-700 h-48 object-cover rounded-lg"
-                    />
-                    <button
-                      type="button"
-                      className="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700 transition"
-                      onClick={handleDeleteImage}
-                    >
-                      <MdDelete size={24} />
-                    </button>
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center justify-center w-full sm:h-[14.4rem] h-[18rem] border-2 border-dashed border-neutral-700 bg-white rounded-lg">
-                    <img className="w-[5rem] h-[5rem]" src={Upload} />
-                    <p>Unggah Foto</p>
-                  </div>
-                )}
-              </label>
-            </div>
+          <IoMdClose size={30} color="white" />
+        </button>
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-4"
+          encType="multipart/form-data"
+        >
+          <div className="w-full">
+            <h2 className="text-white font-semibold">Nama Produk</h2>
+            <input
+              className="w-full h-10 px-3 py-2 bg-white rounded-lg"
+              name="nama_produk"
+              value={formData.nama_produk}
+              onChange={handleInputChange}
+              placeholder="Masukkan Nama Produk"
+            />
           </div>
-          <div className="flex flex-col gap-y-2">
-            <div className="flex flex-row gap-x-[2rem] pt-[2.125rem]">
-              {loading ? (
-                <p>Loading...</p>
-              ) : error ? (
-                <div className="sm:flex sm:flex-col sm:justify-center sm:items-center sm:w-[70.75rem] w-[12rem]">
-                  <p className="text-[2rem] font-bold text-red-500">{error}</p>
+          <div className="w-full">
+            <h2 className="text-white font-semibold">Deskripsi Produk</h2>
+            <textarea
+              className="w-full sm:h-24 h-[7rem] px-3 py-2 bg-white rounded-lg"
+              name="deskripsi_produk"
+              value={formData.deskripsi_produk}
+              onChange={handleInputChange}
+              placeholder="Masukkan Keterangan Produk"
+            />
+          </div>
+          <div className="w-full">
+            <h2 className="text-white font-semibold">Harga</h2>
+            <input
+              className="w-full h-10 px-3 py-2 bg-white rounded-lg"
+              name="harga"
+              type="number"
+              min="0"
+              value={formData.harga}
+              onChange={handleInputChange}
+              placeholder="Masukkan Harga Produk"
+            />
+          </div>
+          <div className="w-full">
+            <h2 className="text-white font-semibold">Foto Produk</h2>
+            <label>
+              <input
+                id="file-update"
+                name="gambar"
+                type="file"
+                accept=".png,.jpg,.jpeg"
+                className="hidden"
+                ref={fileUploadRef}
+                onChange={uploadImageDisplay}
+              />
+              {selectedImage ? (
+                <div className="relative">
+                  <img
+                    src={selectedImage}
+                    alt="Selected"
+                    className="w-full h-48 object-cover rounded-lg"
+                  />
+                  <button
+                    className="absolute top-0 right-0 mt-1 mr-1"
+                    type="button"
+                    onClick={handleDeleteImage}
+                  >
+                    <MdDelete size={24} color="white" />
+                  </button>
                 </div>
               ) : (
-                <div key={dataItem.id}>
-                  <div className="flex flex-col gap-x-3 sm:w-[18.75rem] sm:h-[31.25rem] w-[20rem] h-[29rem] shadow-xl rounded-lg">
-                    <div className="sm:w-[18.75rem] sm:h-[18rem] rounded-2xl">
-                      <img
-                        className="sm:w-[18.75rem] sm:h-[18rem] rounded-[1.4rem]"
-                        src={`https://development.verni.yt/image/${dataItem.gambar}`}
-                        alt="Product"
-                      />
-                    </div>
-                    <div className="sm:flex sm:flex-col flex flex-col sm:gap-y-[1rem] gap-y-3 sm:ml-0 ml-3">
-                      <h1 className="sm:w-[14.956rem] sm:h-[0.935] sm:flex sm:justify-start sm:pl-[0.9rem] text-[1.2rem] font-semibold">
-                        {dataItem.nama_produk}
-                      </h1>
-                      <h2 className="sm:w-[14.956rem] sm:h-[0.935] sm:flex sm:justify-start sm:pl-[0.9rem] text-[1rem]">
-                        {dataItem.deskripsi_produk}
-                      </h2>
-                      <h2 className="sm:w-[14.956rem] sm:h-[0.935] sm:flex sm:justify-start sm:pl-[0.9rem] text-[1.2rem] font-bold">
-                        Rp{dataItem.harga}
-                      </h2>
-                    </div>
-                  </div>
-                </div>
+                <button
+                  className="flex flex-col items-center justify-center w-full sm:h-48 h-[14rem] bg-white rounded-lg cursor-pointer"
+                  onClick={handleImageUpload}
+                >
+                  <img className="w-[5rem] h-[5rem]" src={Upload} alt="Upload" />
+                  <p>Unggah Foto</p>
+                </button>
               )}
-            </div>
-            <div className="flex flex-row gap-x-[2rem] sm:mt-[1rem] mt-3 sm:mb-[3rem] mb-[2rem] h-full  ">
-              <Button
-                txtColor="text-white"
-                txtSize="sm:w-72 w-80 sm:h-10"
-                position="flex justify-center items-center"
-                text="Update"
-                size=" sm:w-[18.75rem] w-[19rem] h-[2.938rem]"
-                bgColor="bg-gradient-to-r from-[#9b59b6] to-[#e74c3c]"
-                onClick={handleUpdate}
-              />
-            </div>
+            </label>
           </div>
-        </div>
-      )}
-    </aside>
+          <div className="w-full sm:py-0 pt-6">
+            <Button
+              txtColor="text-black font-bold"
+              txtSize="sm:w-full w-80 sm:h-10"
+              position="flex justify-center items-center"
+              text="Update"
+              size=" sm:w-full w-[19rem] h-[2.938rem]"
+              bgColor="bg-white"
+            />
+          </div>
+        </form>
+      </div>
+    </div>
   );
 }

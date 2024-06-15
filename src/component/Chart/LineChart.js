@@ -10,8 +10,6 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-
-// Register the necessary components for Chart.js
 ChartJS.register(
   LineElement,
   CategoryScale,
@@ -22,7 +20,7 @@ ChartJS.register(
   Legend
 );
 
-const LineChart = () => {
+export default function LineChart (){
   const chartRef = useRef(null);
   const data = {
     labels: ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"],
@@ -73,10 +71,8 @@ const LineChart = () => {
   }, [chartRef]);
 
   return (
-    <div className="w-full h-[300px] sm:h-[500px] max-w-full sm:max-w-4xl mx-auto p-4">
+    <div className="w-full sm:h-full h-full max-h-full max-w-full sm:max-w-4xl mx-auto p-4">
       <Line ref={chartRef} data={data} options={options} />
     </div>
   );
 };
-
-export default LineChart;

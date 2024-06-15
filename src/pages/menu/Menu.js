@@ -63,7 +63,7 @@ export default function Menu() {
           </div>
         </button>
       </div>
-      <div className="z-20">
+      <div className="z-0">
         <Add isOpen={isPopUpOpen} onClose={() => setIsPopUpOpen(false)} />
       </div>
       <div className="sm:flex flex sm:justify-between justify-between items-center lg:mx-[1rem] mx-[0.3rem]">

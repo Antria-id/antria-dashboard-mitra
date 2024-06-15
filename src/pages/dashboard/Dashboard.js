@@ -53,10 +53,12 @@ export default function Dashboard() {
       label: "Income Analytics",
       icon: <IoAnalytics size={28} />,
       content: (
-        <div className="flex flex-col justify-start w-full sm:w-[34rem] sm:h-[32rem] overflow-y-scroll gap-2 sm:gap-4">
-          <div className="bg-gray-200 rounded-xl p-4 w-full h-[35rem] sm:h-[22.7rem]">
+        <div className="flex flex-col justify-start w-full sm:w-[34rem] sm:h-[32rem] h-[26rem] overflow-y-scroll gap-2 sm:gap-4">
+          <div className="bg-gray-200 rounded-xl p-4 w-full h-[16rem] sm:h-[22.7rem]">
             <h1 className="text-[1.5rem] font-semibold">Total Pendapatan</h1>
-            <LineChart className="h-[30rem]" />
+            <div className="sm:h-[30rem] h-[40rem]">
+              <LineChart />
+            </div>
           </div>
           <div className="flex flex-row justify-between bg-[#ECECEC] rounded-xl p-4 w-full h-[5rem] sm:h-[4.7rem]">
             <h1 className="flex justify-center h-[5rem] sm:h-[4.7rem] text-[1.3rem] font-medium">
@@ -203,8 +205,7 @@ export default function Dashboard() {
   const [expanded, setExpanded] = useState(true);
   return (
     <aside
-      className={
-        `bg-white 
+      className={`bg-white 
         sm:w-[77rem] 
         w-[23.4rem] 
         sm:h-[51.563rem] 

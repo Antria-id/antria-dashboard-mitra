@@ -90,7 +90,7 @@ export default function Tabel() {
 
   return (
     <div className="overflow-auto">
-      <div className="sm:flex flex sm:justify-between mb-3">
+      <div className="sm:flex flex sm:justify-between sm:gap-0 gap-4 mb-3">
         <input
           className="px-4 py-2 border border-gray-500 rounded-lg text-black focus:outline-none placeholder-gray-400"
           type="text"
@@ -109,7 +109,6 @@ export default function Tabel() {
           onClick={convertToXLS}
         />
       </div>
-
       {loading ? (
         <div className="flex flex-col justify-center items-center">
           <div className="w-[31.438rem] h-[28.875rem]">
