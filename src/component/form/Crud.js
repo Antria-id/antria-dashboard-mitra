@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaRegTrashAlt } from "react-icons/fa";
-import ErrorImage from "../../assets/Error.png"; 
+import ErrorImage from "../../assets/Error.gif"; 
 import DeleteConfirmation from "./Delete";
 import Loading from "../../assets/Loading.gif";
 import Edit from "./Edit"; 
@@ -109,7 +109,7 @@ export default function Crud() {
           </div>
         ) : error ? (
           <div className="flex flex-col justify-center items-center w-full h-full">
-            <img className="w-full h-auto" src={ErrorImage} alt="Error" />
+            <img className="w-[31.438rem] h-[28.875rem]" src={ErrorImage} alt="Error" />
             <p className="text-2xl font-bold text-red-500">{error}</p>
           </div>
         ) : filteredData.length > 0 ? (

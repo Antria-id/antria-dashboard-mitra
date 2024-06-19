@@ -22,7 +22,7 @@ export default function SplashScreen() {
   });
 
   return (
-    <div className="w-full h-screen flex justify-center items-center bg-white">
+    <div className="w-full h-screen flex justify-center items-center bg-[#FCFCFF]">
       <div className="text-center">
         <div className="sm:w-[31.438rem] sm:h-[28.875rem] w-[15.5rem] h-[14.5rem]">
           <img src={Splash} alt="Logo" />

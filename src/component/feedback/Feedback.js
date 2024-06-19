@@ -34,14 +34,6 @@ export default function Feedback({ onRatingChange }) {
     fetchReviews();
   }, []);
 
-  const handleClick = (newRating, index) => {
-    const updatedReviews = reviews.map((review, i) =>
-      i === index ? { ...review, rating: newRating } : review
-    );
-    setReviews(updatedReviews);
-    onRatingChange(newRating);
-  };
-
   return (
     <>
       {reviews.map((review, index) => (
@@ -69,7 +61,6 @@ export default function Feedback({ onRatingChange }) {
                         ? "text-yellow-500"
                         : "text-gray-300"
                     }`}
-                    onClick={() => handleClick(ratingValue, index)}
                   />
                 );
               })}

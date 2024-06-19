@@ -11,15 +11,18 @@ import { GrMoney } from "react-icons/gr";
 import { IoAnalytics } from "react-icons/io5";
 import Logo from "../../assets/Logo.png";
 import Button from "../button/Button";
-import { motion } from "framer-motion";
+import SignOut from "../../assets/Logout.gif"
 import "./navigation.css";
 
 export default function Navigation({ onToggle }) {
   const location = useLocation();
+  const [showPopup, setShowPopup] = useState(false);
+
   const handleLogout = () => {
     localStorage.removeItem("authToken");
     window.location.href = "/Login";
   };
+
   const menuItems = [
     {
       to: "/data-analytics",
@@ -95,6 +98,39 @@ export default function Navigation({ onToggle }) {
 
   return (
     <>
+      {showPopup && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+            <div className="flex flex-col justify-center items-center w-full h-full">
+              <div className="w-[31.438rem] h-[28.875rem]">
+                <img
+                  src={SignOut}
+                  alt="Walking"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+            <h2 className="text-lg font-bold mb-4">
+              Apakah kamu yakin ingin keluar?
+            </h2>
+            <div className="flex justify-center space-x-4">
+              <button
+                onClick={() => setShowPopup(false)}
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleLogout}
+                className="bg-gradient-to-r from-[#9b59b6] to-[#e74c3c] text-white font-bold py-2 px-4 rounded"
+              >
+                Sign Out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="hidden lg:block h-screen">
         <aside
           className={`flex flex-col ${
@@ -148,7 +184,7 @@ export default function Navigation({ onToggle }) {
                   <h1 className="text-white font-bold">Admin</h1>
                 </div>
               )}
-              <button onClick={handleLogout}>
+              <button onClick={() => setShowPopup(true)}>
                 <FaSignOutAlt size={25} color="white" />
               </button>
             </div>
@@ -198,9 +234,7 @@ export default function Navigation({ onToggle }) {
             </ul>
           </div>
           <div
-            size={`${
-              expanded ? "w-[16rem]" : "w-[4rem]"
-            }`}
+            size={`${expanded ? "w-[16rem]" : "w-[4rem]"}`}
             className="sound-wave flex justify-center items-center mb-5"
           >
             <div></div>
@@ -229,14 +263,12 @@ export default function Navigation({ onToggle }) {
               />
             </Link>
           ))}
-          <button className="group">
-            <Link to="/Login">
-              <FaSignOutAlt
-                size={22}
-                color="white"
-                className="group-hover:text-[#9b59b6] transition-all duration-300 ease-in-out"
-              />
-            </Link>
+          <button className="group" onClick={() => setShowPopup(true)}>
+            <FaSignOutAlt
+              size={22}
+              color="white"
+              className="group-hover:text-[#9b59b6] transition-all duration-300 ease-in-out"
+            />
           </button>
         </nav>
       </div>

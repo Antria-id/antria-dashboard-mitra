@@ -18,6 +18,8 @@ export default function Login() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showSplash, setShowSplash] = useState(false);
+  const [isUsernameValid, setIsUsernameValid] = useState(true);
+  const [isPasswordValid, setIsPasswordValid] = useState(true);
   const navigate = useNavigate();
   const { _Login } = useContext(AuthContext);
 
@@ -75,10 +77,14 @@ export default function Login() {
         progress: undefined,
       });
 
+      setIsUsernameValid(true);
+      setIsPasswordValid(true);
       setShowSplash(true);
     } catch (error) {
       console.error("Login error", error);
       setError("Email atau password salah. Silakan coba lagi.");
+      setIsUsernameValid(false);
+      setIsPasswordValid(false);
     } finally {
       setLoading(false);
     }
@@ -123,7 +129,7 @@ export default function Login() {
               <div className="gap-y-[1rem]">
                 <h1 className="text-[0.75rem] font-bold">Username</h1>
                 <input
-                  className="md:w-[27.125rem] w-[19rem] h-[3.438rem] bg-white shadow-xl py-3 px-3 rounded-xl"
+                  className={`md:w-[27.125rem] w-[19rem] h-[3.438rem] bg-white shadow-xl py-3 px-3 rounded-xl ${isUsernameValid ? 'border-green-500' : 'border-red-500'}`}
                   type="username"
                   name="username"
                   value={username}
@@ -133,7 +139,7 @@ export default function Login() {
                 <div className="mt-[1.188rem]">
                   <h1 className="text-[0.75rem] font-bold">Password</h1>
                   <input
-                    className="md:w-[27.125rem] w-[19rem] h-[3.438rem] bg-white shadow-xl py-3 px-3 rounded-xl"
+                    className={`md:w-[27.125rem] w-[19rem] h-[3.438rem] bg-white shadow-xl py-3 px-3 rounded-xl ${isPasswordValid ? 'border-green-500' : 'border-red-500'}`}
                     type={showPass ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
