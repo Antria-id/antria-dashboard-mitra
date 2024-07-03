@@ -19,6 +19,7 @@ export default function Dashboard() {
   const [employeeCount, setEmployeeCount] = useState(0);
   const [feedbackCount, setFeedbackCount] = useState(0);
   const [totalIncome, setTotalIncome] = useState(0);
+  const [visitorCount, setVisitorCount] = useState(0);
 
   useEffect(() => {
     const fetchEmployeeData = async () => {
@@ -63,9 +64,21 @@ export default function Dashboard() {
       }
     };
 
+    const fetchVisitorData = async () => {
+      try {
+        const response = await fetch("https://development.verni.yt/pesanan");
+        const data = await response.json();
+        const visitorCount = data.filter((order) => order.takeaway).length;
+        setVisitorCount(visitorCount);
+      } catch (error) {
+        console.error("Error fetching visitor data:", error);
+      }
+    };
+
     fetchEmployeeData();
     fetchFeedbackData();
     fetchIncomeData();
+    fetchVisitorData();
   }, []);
 
   const tabsAnalytics = [
@@ -200,7 +213,7 @@ export default function Dashboard() {
     {
       icon: <MdPeopleAlt size={50} color="white" />,
       tag: "Jumlah Pengunjung",
-      data: <Data n={300} />,
+      data: <Data n={visitorCount} />,
     },
     {
       icon: <MdPeopleAlt size={50} color="white" />,
