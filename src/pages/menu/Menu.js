@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FaPlus, FaChevronRight, FaChevronLeft } from "react-icons/fa";
-import Add from "../../component/form/Add";
-import Crud from "../../component/form/Crud";
+import Add from "../../feature/form/Add";
+import Crud from "../../feature/form/Crud";
 
 export default function Menu() {
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);

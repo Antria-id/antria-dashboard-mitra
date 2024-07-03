@@ -3,13 +3,13 @@ import axios from "axios";
 import ArrowBackIosSharpIcon from "@mui/icons-material/ArrowBackIosSharp";
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import Loading from "../../assets/Loading.gif";
-import Profile from "../../assets/Profile.png";
 import { TiUserDelete } from "react-icons/ti";
 import { FaRegAddressCard } from "react-icons/fa6";
 import "../../index.css";
 import Button from "../button/Button";
-import AddUser from "../form/AddUser";
+import AddUser from "../../feature/form/AddUser";
 import UserProfile from "../../assets/Profile.png";
+import Search from "../search/Search";
 
 export default function Tabel() {
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
@@ -107,14 +107,11 @@ export default function Tabel() {
   return (
     <div className="overflow-auto">
       <div className="sm:flex flex justify-between sm:justify-between sm:mb-3 mb-[1rem] sm:gap-0 gap-5">
-        <div>
-          <input
-            className="px-4 py-2 border border-gray-500 rounded-lg text-black focus:outline-none placeholder-gray-400"
-            type="text"
-            placeholder="Masukkan Username"
-            onChange={handleFilter}
-          />
-        </div>
+        <Search
+          data={data}
+          placeholder="Search Products"
+          onChange={handleFilter}
+        />
         <Button
           text="Tambah Karyawan"
           txtColor="text-white font"

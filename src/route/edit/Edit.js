@@ -1,6 +1,6 @@
 import React from "react";
 import Navigation from "../../component/navigation/Navigation";
-import Edit from "../../component/form/Edit";
+import Edit from "../../feature/form/Edit";
 
 export default function EditRoute() {
   return (

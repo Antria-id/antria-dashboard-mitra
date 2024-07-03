@@ -1,38 +1,26 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import { MdDelete } from "react-icons/md";
 import axios from "axios";
-import Button from "../button/Button";
+import Button from "../../component/button/Button";
 import Upload from "../../assets/Download.gif";
 
-export default function Edit({ isOpen, onClose, item }) {
+export default function Add({ isOpen, onClose }) {
   const [selectedImage, setSelectedImage] = useState(null);
   const fileUploadRef = useRef();
   const [formData, setFormData] = useState({
     nama_produk: "",
     deskripsi_produk: "",
-    harga: "", // Initialize harga as an integer
+    harga: "",
     gambar: "",
   });
-
-  useEffect(() => {
-    if (item) {
-      setFormData({
-        nama_produk: item.nama_produk,
-        deskripsi_produk: item.deskripsi_produk,
-        harga: parseInt(item.harga, 10), // Parse harga as an integer
-        gambar: item.gambar,
-      });
-      setSelectedImage(`https://development.verni.yt/image/${item.gambar}`);
-    }
-  }, [item]);
 
   const handleClose = () => {
     setSelectedImage(null);
     setFormData({
       nama_produk: "",
       deskripsi_produk: "",
-      harga: 0, // Reset harga as an integer
+      harga: "",
       gambar: "",
     });
     if (typeof onClose === "function") {
@@ -63,47 +51,22 @@ export default function Edit({ isOpen, onClose, item }) {
     }));
   };
 
-  const handleJSONSubmission = async () => {
-    const hargaInt = parseInt(formData.harga, 10);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const hargaInt = parseInt(formData.harga);
     if (isNaN(hargaInt)) {
       console.error("Invalid price value");
       return;
     }
-
-    const jsonFormData = {
-      nama_produk: formData.nama_produk,
-      deskripsi_produk: formData.deskripsi_produk,
-      harga: hargaInt,
-    };
-
-    try {
-      const response = await axios.put(
-        `https://development.verni.yt/produk/${item.id}`,
-        jsonFormData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log("JSON data submitted successfully", response.data);
-    } catch (error) {
-      console.error("Error submitting JSON data:", error);
-      alert("Failed to submit JSON data. Please try again later.");
-    }
-  };
-
-  const handleImageSubmission = async () => {
-    if (!formData.gambar) {
-      return;
-    }
-
     const formDataToSend = new FormData();
+    formDataToSend.append("nama_produk", formData.nama_produk);
+    formDataToSend.append("deskripsi_produk", formData.deskripsi_produk);
+    formDataToSend.append("harga", hargaInt);
     formDataToSend.append("gambar", formData.gambar);
-
+    formDataToSend.append("mitraId", 2);
     try {
-      const response = await axios.put(
-        `https://development.verni.yt/produk/${item.id}`,
+      const response = await axios.post(
+        "https://development.verni.yt/produk",
         formDataToSend,
         {
           headers: {
@@ -111,19 +74,13 @@ export default function Edit({ isOpen, onClose, item }) {
           },
         }
       );
-      console.log("Image uploaded successfully", response.data);
+      console.log("Data submitted successfully", response.data);
+      handleClose();
+      window.location.reload();
     } catch (error) {
-      console.error("Error uploading image:", error);
-      alert("Failed to upload image. Please try again later.");
+      console.error("Error submitting data:", error);
+      alert("Failed to submit data. Please try again later.");
     }
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    await handleJSONSubmission();
-    await handleImageSubmission();
-    handleClose();
-    window.location.reload();
   };
 
   if (!isOpen) {
@@ -134,7 +91,7 @@ export default function Edit({ isOpen, onClose, item }) {
     const { name, value } = event.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: name === "harga" ? parseInt(value, 10) : value,
+      [name]: name === "nama_produk" ? value.toUpperCase() : value,
     }));
   };
 
@@ -195,7 +152,7 @@ export default function Edit({ isOpen, onClose, item }) {
             <h2 className="text-white font-semibold">Foto Produk</h2>
             <label>
               <input
-                id="file-update"
+                id="file-upload"
                 name="gambar"
                 type="file"
                 accept=".png,.jpg,.jpeg"
@@ -223,7 +180,7 @@ export default function Edit({ isOpen, onClose, item }) {
                   className="flex flex-col items-center justify-center w-full sm:h-48 h-[14rem] bg-white rounded-lg cursor-pointer"
                   onClick={handleImageUpload}
                 >
-                  <img className="w-[5rem] h-[5rem]" src={Upload} alt="Upload" />
+                  <img className="w-[5rem] h-[5rem]" src={Upload} />
                   <p>Unggah Foto</p>
                 </button>
               )}
@@ -234,7 +191,7 @@ export default function Edit({ isOpen, onClose, item }) {
               txtColor="text-black font-bold"
               txtSize="sm:w-full w-80 sm:h-10"
               position="flex justify-center items-center"
-              text="Update"
+              text="Add"
               size=" sm:w-full w-[19rem] h-[2.938rem]"
               bgColor="bg-white"
             />

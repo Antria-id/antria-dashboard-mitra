@@ -1,8 +1,7 @@
 import React, { useRef, useState } from "react";
 import { IoMdClose } from "react-icons/io";
-import { MdDriveFolderUpload, MdDelete } from "react-icons/md";
 import axios from "axios";
-import Button from "../button/Button";
+import Button from "../../component/button/Button";
 
 export default function AddUser({ isOpen, onClose }) {
   const [selectedImage, setSelectedImage] = useState(null);

@@ -4,11 +4,11 @@ import { FaRegUser } from "react-icons/fa";
 import axios from "axios";
 import Profile from "../../assets/Profile.gif";
 
-export default function Feedback({ onRatingChange }) {
+export default function Feedback() {
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
-    const reviewIds = [1, 2, 3]; // Example review IDs
+    const reviewIds = [1, 2, 3];
 
     const fetchReviews = async () => {
       try {

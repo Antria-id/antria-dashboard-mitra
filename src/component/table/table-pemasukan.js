@@ -3,12 +3,11 @@ import axios from "axios";
 import * as XLSX from "xlsx";
 import ArrowBackIosSharpIcon from "@mui/icons-material/ArrowBackIosSharp";
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
-import { BsSearch } from "react-icons/bs";
-import Loading from "../../assets/Loading.gif"
-import XLS from "../../assets/XLS.svg";
+import Loading from "../../assets/Loading.gif";
 import "../../index.css";
 import Button from "../button/Button";
 import { SiMicrosoftexcel } from "react-icons/si";
+import Search from "../search/Search";
 
 export default function Tabel() {
   const [data, setData] = useState([]);
@@ -31,12 +30,16 @@ export default function Tabel() {
     setError(null);
     try {
       const response = await axios.get(
-        "https://development.verni.yt/pesanan/mitra/2"
+        "https://development.verni.yt/pesanan/mitra/1"
       );
       if (response.status === 200) {
-        const receivedData = response.data; // Assuming response.data contains the list of users
-        setData(receivedData);
-        setFilteredData(receivedData);
+        const receivedData = response.data;
+        const transformedData = receivedData.map((item) => {
+          const menuOrder = item.oderlist.map((order) => order.produk.nama_produk).join(", ");
+          return { ...item, menuOrder, harga: item.oderlist.reduce((acc, order) => acc + (order.produk.harga * order.quantity), 0) };
+        });
+        setData(transformedData);
+        setFilteredData(transformedData);
       }
     } catch (err) {
       setError("Error fetching data");
@@ -44,9 +47,10 @@ export default function Tabel() {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchData();
-  }, []); 
+  }, []);
 
   const handleFilter = (event) => {
     const searchTerm = event.target.value.toLowerCase();
@@ -91,13 +95,11 @@ export default function Tabel() {
   return (
     <div className="overflow-auto">
       <div className="sm:flex flex sm:justify-between sm:gap-0 gap-4 mb-3">
-        <input
-          className="px-4 py-2 border border-gray-500 rounded-lg text-black focus:outline-none placeholder-gray-400"
-          type="text"
-          placeholder="Masukkan Invoice"
+        <Search
+          data={data}
+          placeholder="Search Products"
           onChange={handleFilter}
         />
-        <BsSearch className="relative right-6 text-white top-2" size={20} />
         <Button
           text="Download Data"
           txtColor="text-white font"
@@ -126,7 +128,6 @@ export default function Tabel() {
               <th className="px-4 py-2">Menu Order</th>
               <th className="px-4 py-2">Pembayaran</th>
               <th className="px-4 py-2">Biaya</th>
-              <th className="px-4 py-2">Pemesan</th>
               <th className="px-4 py-2">Status</th>
             </tr>
           </thead>
@@ -135,11 +136,16 @@ export default function Tabel() {
               <tr key={index} className="border-b hover:bg-gray-100">
                 <td className="px-4 py-2">{item.invoice}</td>
                 <td className="px-4 py-2">{item.created_at}</td>
-                <td className="px-4 py-2">{item.nama_produk}</td>
+                <td className="px-4 py-2">{item.menuOrder}</td>
                 <td className="px-4 py-2">{item.payment}</td>
                 <td className="px-4 py-2">Rp{item.harga}</td>
-                <td className="px-4 py-2">Ahmad Naufal</td>
-                <td className="px-4 py-2">{item.status}</td>
+                <td
+                  className={`px-4 py-2 ${
+                    item.status === "SUCCESS" ? "text-green-500" : item.status === "PENDING" ? "text-yellow-500" : ""
+                  }`}
+                >
+                  {item.status}
+                </td>
               </tr>
             ))}
           </tbody>

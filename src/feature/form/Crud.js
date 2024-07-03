@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaRegTrashAlt } from "react-icons/fa";
-import ErrorImage from "../../assets/Error.gif"; 
+import ErrorImage from "../../assets/Error.gif";
 import DeleteConfirmation from "./Delete";
 import Loading from "../../assets/Loading.gif";
-import Edit from "./Edit"; 
+import Edit from "./Edit";
 import NoData from "../../assets/NoData.gif";
+import Search from "../../component/search/Search";
 
 export default function Crud() {
   const [data, setData] = useState([]);
@@ -69,7 +70,6 @@ export default function Crud() {
     setIsEditOpen(false);
     setSelectedItem(null);
   };
-
   const handleFilter = (event) => {
     const searchTerm = event.target.value.toLowerCase();
     const filtered = data.filter((item) =>
@@ -88,14 +88,11 @@ export default function Crud() {
 
   return (
     <div className="container">
-      <div className="w-full mb-2">
-        <input
-          className="px-4 py-2 border border-gray-500 rounded-lg text-black focus:outline-none placeholder-gray-400"
-          type="text"
-          placeholder="Search Products"
-          onChange={handleFilter}
-        />
-      </div>
+      <Search
+        data={data}
+        placeholder="Search Products"
+        onChange={handleFilter}
+      />
       <div className="flex flex-col sm:flex-row gap-6 sm:w-[72.75rem] sm:h-[35.25rem] w-full h-full p-4 overflow-x-auto overscroll-y-none">
         {loading ? (
           <div className="flex flex-col justify-center items-center w-full h-full">
@@ -109,7 +106,11 @@ export default function Crud() {
           </div>
         ) : error ? (
           <div className="flex flex-col justify-center items-center w-full h-full">
-            <img className="w-[31.438rem] h-[28.875rem]" src={ErrorImage} alt="Error" />
+            <img
+              className="w-[31.438rem] h-[28.875rem]"
+              src={ErrorImage}
+              alt="Error"
+            />
             <p className="text-2xl font-bold text-red-500">{error}</p>
           </div>
         ) : filteredData.length > 0 ? (
@@ -142,7 +143,9 @@ export default function Crud() {
                   className="flex items-center justify-center w-[15.5rem] sm:w-[13rem] h-12 hover:bg-gradient-to-r hover:from-[#FFFF] hover:to-[#FFFF] bg-gradient-to-r from-[#9b59b6] to-[#e74c3c] rounded-lg"
                   onClick={() => handleEdit(item)}
                 >
-                  <h1 className="w-[15.5rem] sm:w-[13rem] text-white hover:text-[#9b59b6] font-semibold">Edit</h1>
+                  <h1 className="w-[15.5rem] sm:w-[13rem] text-white hover:text-[#9b59b6] font-semibold">
+                    Edit
+                  </h1>
                 </button>
               </div>
             </div>

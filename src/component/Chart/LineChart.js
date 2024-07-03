@@ -1,5 +1,6 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Line } from "react-chartjs-2";
+import axios from "axios";
 import {
   Chart as ChartJS,
   LineElement,
@@ -20,20 +21,23 @@ ChartJS.register(
   Legend
 );
 
-export default function LineChart (){
+export default function LineChart() {
   const chartRef = useRef(null);
-  const data = {
-    labels: ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"],
+  const [data, setData] = useState({
+    labels: [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ],
     datasets: [
       {
         label: "Pendapatan Rp",
-        data: [1000000, 2200000, 3400000, 2000000, 5200000, 6000000, 900000],
+        data: Array(12).fill(0), // Initialize with zeros
         borderWidth: 2,
         fill: true,
         tension: 0.8,
       },
     ],
-  };
+  });
 
   const options = {
     responsive: true,
@@ -56,23 +60,54 @@ export default function LineChart (){
     const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
 
     gradient.addColorStop(0, "#9b59b6");
-    gradient.addColorStop(1, "#e74c3c"); 
-    data.datasets[0].borderColor = gradient;
-    data.datasets[0].backgroundColor = gradient;
+    gradient.addColorStop(1, "#e74c3c");
+    chart.data.datasets[0].borderColor = gradient;
+    chart.data.datasets[0].backgroundColor = gradient;
 
     chart.update();
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("https://development.verni.yt/pesanan/mitra/1");
+        const orders = response.data;
+        const monthlyRevenue = Array(12).fill(0);
+
+        orders.forEach(order => {
+          const month = new Date(order.created_at).getMonth();
+          order.oderlist.forEach(item => {
+            monthlyRevenue[month] += item.produk.harga * item.quantity;
+          });
+        });
+
+        setData(prevData => ({
+          ...prevData,
+          datasets: [
+            {
+              ...prevData.datasets[0],
+              data: monthlyRevenue,
+            },
+          ],
+        }));
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const chart = chartRef.current;
     if (chart) {
       applyGradient(chart);
     }
-  }, [chartRef]);
+  }, [data]);
 
   return (
     <div className="w-full sm:h-full h-full max-h-full max-w-full sm:max-w-4xl mx-auto p-4">
       <Line ref={chartRef} data={data} options={options} />
     </div>
   );
-};
+}

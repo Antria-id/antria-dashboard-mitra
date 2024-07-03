@@ -13,11 +13,12 @@ import { VscFeedback } from "react-icons/vsc";
 import { IoAnalytics } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { ChevronRight } from "@mui/icons-material";
-import Feedback from "../../component/feedback/Feedback";
+import Feedback from "../../feature/feedback/Feedback";
 
 export default function Dashboard() {
   const [employeeCount, setEmployeeCount] = useState(0);
   const [feedbackCount, setFeedbackCount] = useState(0);
+  const [totalIncome, setTotalIncome] = useState(0);
 
   useEffect(() => {
     const fetchEmployeeData = async () => {
@@ -44,8 +45,27 @@ export default function Dashboard() {
       }
     };
 
+    const fetchIncomeData = async () => {
+      try {
+        const response = await fetch(
+          "https://development.verni.yt/pesanan/mitra/1"
+        );
+        const data = await response.json();
+        const total = data.reduce((acc, order) => {
+          const orderTotal = order.oderlist.reduce((sum, item) => {
+            return sum + item.quantity * item.produk.harga;
+          }, 0);
+          return acc + orderTotal;
+        }, 0);
+        setTotalIncome(total);
+      } catch (error) {
+        console.error("Error fetching income data:", error);
+      }
+    };
+
     fetchEmployeeData();
     fetchFeedbackData();
+    fetchIncomeData();
   }, []);
 
   const tabsAnalytics = [
@@ -174,7 +194,7 @@ export default function Dashboard() {
     {
       icon: <GrMoney size={50} color="white" />,
       tag: "Jumlah Pemasukan",
-      data: rupiah(500000),
+      data: rupiah(totalIncome),
       link: "/data-pemasukan",
     },
     {

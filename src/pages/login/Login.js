@@ -5,7 +5,7 @@ import Logo from "../../assets/Logo.png";
 import Button from "../../component/button/Button";
 import { useNavigate } from "react-router-dom";
 import { useTypewriter } from "react-simple-typewriter";
-import AuthContext from "../../component/context/AuthProvider";
+import AuthContext from "../../services/AuthProvider";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SplashScreen from "../../route/splashscreen/SplashScreen";

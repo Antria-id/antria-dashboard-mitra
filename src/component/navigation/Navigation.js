@@ -233,7 +233,7 @@ export default function Navigation({ onToggle }) {
               ))}
             </ul>
           </div>
-          <div
+          {/* <div
             size={`${expanded ? "w-[16rem]" : "w-[4rem]"}`}
             className="sound-wave flex justify-center items-center mb-5"
           >
@@ -242,7 +242,7 @@ export default function Navigation({ onToggle }) {
             <div></div>
             <div></div>
             <div></div>
-          </div>
+          </div> */}
         </aside>
       </div>
       {/* Bottom Navigation */}
