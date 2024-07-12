@@ -1,10 +1,16 @@
 import React from "react";
-import '../button/Button.css';
+import "../button/Button.css";
 
 export default function Button(props) {
   return (
     <button
-      className={` ${props.bgColor} ${props.size} rounded-xl shadow-white bg-transparent hover:shadow-xl`}
+      className={`
+        ${props.bgColor} 
+        ${props.size} 
+        rounded-xl 
+        shadow-white 
+        bg-transparent 
+        hover:shadow-xl`}
       type="submit"
       onClick={props.onClick}
     >

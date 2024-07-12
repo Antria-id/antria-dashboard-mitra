@@ -6,8 +6,6 @@ import Button from "../../component/button/Button";
 import { useNavigate } from "react-router-dom";
 import { useTypewriter } from "react-simple-typewriter";
 import AuthContext from "../../services/AuthProvider";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import SplashScreen from "../../route/splashscreen/SplashScreen";
 
 export default function Login() {
@@ -67,16 +65,6 @@ export default function Login() {
         localStorage.removeItem("password");
       }
 
-      toast.success("Login berhasil!", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-
       setIsUsernameValid(true);
       setIsPasswordValid(true);
       setShowSplash(true);
@@ -114,7 +102,7 @@ export default function Login() {
 
   return (
     <div className="w-full h-full bg-[#F6F5F5]">
-      <ToastContainer />
+     
       <div className="flex justify-center items-center h-screen">
         <div className="md:w-[30.313rem] w-[22rem] h-[35.75rem] bg-white rounded-xl shadow-xl">
           <img className="ml-[1.563rem] mt-[2.2rem]" src={Logo} alt="Logo" />
@@ -129,17 +117,21 @@ export default function Login() {
               <div className="gap-y-[1rem]">
                 <h1 className="text-[0.75rem] font-bold">Username</h1>
                 <input
-                  className={`md:w-[27.125rem] w-[19rem] h-[3.438rem] bg-white shadow-xl py-3 px-3 rounded-xl ${isUsernameValid ? 'border-green-500' : 'border-red-500'}`}
+                  className={`md:w-[27.125rem] w-[19rem] h-[3.438rem] bg-white shadow-xl py-3 px-3 rounded-xl ${
+                    isUsernameValid ? "border-green-500" : "border-red-500"
+                  }`}
                   type="username"
                   name="username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="Masukan nama akun anda"
                 />
-                <div className="mt-[1.188rem]">
+                <div className="relative mt-[1.188rem]">
                   <h1 className="text-[0.75rem] font-bold">Password</h1>
                   <input
-                    className={`md:w-[27.125rem] w-[19rem] h-[3.438rem] bg-white shadow-xl py-3 px-3 rounded-xl ${isPasswordValid ? 'border-green-500' : 'border-red-500'}`}
+                    className={`md:w-[27.125rem] w-[19rem] h-[3.438rem] bg-white shadow-xl py-3 px-3 rounded-xl ${
+                      isPasswordValid ? "border-green-500" : "border-red-500"
+                    }`}
                     type={showPass ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -147,7 +139,7 @@ export default function Login() {
                     placeholder="Masukan password anda"
                   />
                   <button
-                    className="absolute sm:right-[38rem] right-[3.4rem] mt-[1rem]"
+                    className="absolute right-[3rem] -bottom-[0rem] transform -translate-y-1/2"
                     onClick={buttonPass}
                   >
                     {showPass ? (
@@ -165,11 +157,17 @@ export default function Login() {
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
                   />
-                  <label htmlFor="rememberMe" className="ml-2 text-[0.75rem] font-semibold">
+                  <label
+                    htmlFor="rememberMe"
+                    className="ml-2 text-[0.75rem] font-semibold"
+                  >
                     Simpan Riwayat Login
                   </label>
                 </div>
-                <div className="sm:pr-0 pr-[3rem] mt-[4rem]">
+                <button
+                  data-cy="submit"
+                  className="sm:pr-0 pr-[3rem] mt-[4rem]"
+                >
                   <Button
                     text="Masuk"
                     size="sm:w-[27.125rem] w-[19rem] h-[2.938rem]"
@@ -179,7 +177,7 @@ export default function Login() {
                     position="sm:flex sm:justify-center sm:items-center flex justify-center items-center"
                     onClick={handleLogin}
                   />
-                </div>
+                </button>
                 {error && <p className="text-red-500">{error}</p>}
               </div>
             </div>

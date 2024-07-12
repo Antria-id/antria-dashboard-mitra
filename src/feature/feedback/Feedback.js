@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { FaStar } from "react-icons/fa";
-import { FaRegUser } from "react-icons/fa";
 import axios from "axios";
 import Profile from "../../assets/Profile.gif";
 

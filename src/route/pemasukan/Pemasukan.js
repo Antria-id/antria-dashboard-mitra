@@ -1,11 +1,11 @@
 import React from "react";
-import Navigation from "../../component/navigation/Navigation";
 import Pemasukan from "../../pages/pemasukan/Pemasukan";
+import Sidebar from "../../component/navigation/Sidebar";
 
 export default function pemasukanRoute() {
   return (
     <div className="flex bg-[#F6F5F5] h-full">
-      <Navigation/>
+      <Sidebar/>
       <div className="w-full">
         <Pemasukan />
       </div>

@@ -81,7 +81,7 @@ export default function Menu() {
           className="sm:flex flex justify-between sm:w-[75rem] w-[28.4rem] overflow-x-scroll ml-2 pt-[2.125rem] pb-[1.125rem]"
           ref={scrollableDivRef}
         >
-          <Crud setHasData={setHasData} /> {/* Pass setHasData to Crud */}
+          <Crud setHasData={setHasData} />
         </div>
         {hasData && canScrollRight && (
           <button
