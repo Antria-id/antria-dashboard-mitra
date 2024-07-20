@@ -62,6 +62,7 @@ export default function LineChart() {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false, // Allow chart to adjust its height and width
     plugins: {
       legend: {
         position: "top",
@@ -131,8 +132,10 @@ export default function LineChart() {
   }, [data]);
 
   return (
-    <div className="w-full sm:h-full h-full max-h-full max-w-full sm:max-w-4xl mx-auto p-4">
-      <Line ref={chartRef} data={data} options={options} />
+    <div className="w-full p-4 mx-auto">
+      <div className="relative h-72 sm:h-80 md:h-96">
+        <Line ref={chartRef} data={data} options={options} />
+      </div>
     </div>
   );
 }

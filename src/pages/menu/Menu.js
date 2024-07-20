@@ -52,7 +52,7 @@ export default function Menu() {
       <h1 className="text-2xl pl-6 pt-8 font-semibold">
         Data Menu
       </h1>
-      <div className="fixed bottom-16 sm:bottom-14 right-8 z-30">
+      <div className="fixed bottom-16 sm:bottom-14 right-14 z-0 sm:z-0">
         <button
           onClick={() => setIsPopUpOpen(true)}
           className="w-14 h-14 sm:w-20 sm:h-20 mt-6 sm:mt-14 rounded-full bg-gradient-to-b from-[#9b59b6] to-[#e74c3c] shadow-xl flex justify-center items-center"
@@ -60,10 +60,9 @@ export default function Menu() {
           <FaPlus size={30} color="white" />
         </button>
       </div>
-      <div className="z-0">
+      <div className="z-20 sm:z-20">
         <Add isOpen={isPopUpOpen} onClose={() => setIsPopUpOpen(false)} />
       </div>
-
       <div className="flex justify-between items-center mx-4 sm:mx-2">
         {hasData && canScrollLeft && (
           <button

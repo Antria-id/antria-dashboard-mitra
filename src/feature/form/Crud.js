@@ -119,7 +119,7 @@ export default function Crud() {
           />
         </div>
       )}
-      <div className="flex flex-col sm:flex-row gap-6 sm:w-[72.75rem] sm:h-[35.25rem] w-full h-full p-4 overflow-x-auto overscroll-y-none">
+      <div className="flex flex-col sm:flex-row gap-6 sm:w-[72.75rem] sm:h-[35.25rem] w-full h-full p-4 overflow-x-auto overscroll-y-">
         {loading ? (
           <div className="flex flex-col justify-center items-center w-full h-full">
             <div className="w-[31.438rem] h-[28.875rem]">

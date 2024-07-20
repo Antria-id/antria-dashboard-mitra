@@ -73,6 +73,7 @@ export default function BarChart() {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false, // Allow chart to adjust its height and width
     plugins: {
       legend: {
         position: 'top',
@@ -85,8 +86,10 @@ export default function BarChart() {
   };
 
   return (
-    <div className="w-full">
-      <Bar data={chartData} options={options} />
+    <div className="w-full p-4 mx-auto">
+      <div className="relative h-64 sm:h-80 md:h-96">
+        <Bar data={chartData} options={options} />
+      </div>
     </div>
   );
 }

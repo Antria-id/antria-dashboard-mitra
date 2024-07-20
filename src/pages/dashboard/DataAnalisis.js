@@ -116,8 +116,8 @@ export default function DataAnalisis() {
       label: "Income Analytics",
       icon: <IoAnalytics size={28} />,
       content: (
-        <div className="flex flex-col justify-start w-full sm:w-[34rem] sm:h-[32rem] h-[26rem] overflow-y-scroll gap-2 sm:gap-4">
-          <div className="bg-gray-200 rounded-xl p-4 w-full h-[16rem] sm:h-[22.7rem]">
+        <div className="flex flex-col justify-start w-full sm:w-[34rem] sm:h-[36rem] h-[40rem] overflow-y-scroll gap-2 sm:gap-4">
+          <div className="bg-gray-200 rounded-xl p-4 w-full h-[24rem] sm:h-[28.7rem]">
             <h1 className="text-[1.5rem] font-semibold">Total Pendapatan</h1>
             <div className="sm:h-[30rem] h-[40rem]">
               <LineChart />
@@ -141,8 +141,8 @@ export default function DataAnalisis() {
       label: "Order System Analytics",
       icon: <IoAnalytics size={28} />,
       content: (
-        <div className="flex flex-col justify-start w-full sm:w-[34rem] sm:h-[32rem] overflow-y-scroll gap-2 sm:gap-4">
-          <div className="bg-gray-200 rounded-xl p-4 w-full h-[13rem] sm:h-[25.2rem]">
+        <div className="flex flex-col justify-start w-full sm:w-[34rem] sm:h-[34rem] h-[40rem] overflow-y-scroll gap-2 sm:gap-4">
+          <div className="bg-gray-200 rounded-xl p-4 w-full h-[24rem] sm:h-[28.7rem]">
             <h1 className="text-[1.5rem] font-semibold">
               Sistem Order Bulanan
             </h1>
@@ -294,7 +294,7 @@ export default function DataAnalisis() {
             ))}
           </div>
           <div className="flex flex-col sm:flex-row w-full gap-4">
-            <div className="flex flex-col w-full sm:h-[5.7rem] pl-6 sm:w-auto gap-4">
+            <div className="flex flex-col w-full sm:h-[5.7rem] h-[48rem] pl-6 sm:w-auto gap-4">
               <Tab tabs={tabsAnalytics} />
             </div>
             <Tab tabs={tabsFeedback} />
