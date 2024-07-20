@@ -8,7 +8,7 @@ import "../../index.css";
 import Button from "../button/Button";
 import { SiMicrosoftexcel } from "react-icons/si";
 import Search from "../search/Search";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 export default function Tabel() {
   const [data, setData] = useState([]);
@@ -140,7 +140,7 @@ export default function Tabel() {
       {loading ? (
         <div className="flex flex-col justify-center items-center">
           <div className="w-[31.438rem] h-[28.875rem]">
-            <img src={Loading} alt="Page not found" />
+            <img src={Loading} alt="Loading" />
           </div>
         </div>
       ) : error ? (

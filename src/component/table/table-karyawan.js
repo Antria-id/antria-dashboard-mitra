@@ -10,7 +10,7 @@ import Button from "../button/Button";
 import AddUser from "../../feature/form/AddUser";
 import UserProfile from "../../assets/Profile.png";
 import Search from "../search/Search";
-import {jwtDecode} from "jwt-decode"; // Import jwt-decode library
+import { jwtDecode } from "jwt-decode"; // Import jwt-decode library
 
 export default function Tabel() {
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
@@ -139,7 +139,7 @@ export default function Tabel() {
       {loading ? (
         <div className="flex flex-col justify-center items-center">
           <div className="w-[31.438rem] h-[28.875rem]">
-            <img src={Loading} alt="Page not found" />
+            <img src={Loading} alt="Loading..." />
           </div>
         </div>
       ) : error ? (
@@ -182,9 +182,9 @@ export default function Tabel() {
                       className="text-red-500 hover:underline"
                       onClick={() => handleDelete(item.id)}
                     >
-                      <div className="flex flex-row gap-2">
+                      <div className="flex flex-row gap-2 items-center">
                         <TiUserDelete size={25} />
-                        <h1>Hapus Akun</h1>
+                        <span>Hapus Akun</span>
                       </div>
                     </button>
                   </td>

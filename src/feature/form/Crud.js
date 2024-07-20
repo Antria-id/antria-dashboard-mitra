@@ -110,11 +110,15 @@ export default function Crud() {
 
   return (
     <div className="container">
-      <Search
-        data={data}
-        placeholder="Search Products"
-        onChange={handleFilter}
-      />
+      {data.length > 0 && (
+        <div className="ml-4">
+          <Search
+            data={data}
+            placeholder="Search Products"
+            onChange={handleFilter}
+          />
+        </div>
+      )}
       <div className="flex flex-col sm:flex-row gap-6 sm:w-[72.75rem] sm:h-[35.25rem] w-full h-full p-4 overflow-x-auto overscroll-y-none">
         {loading ? (
           <div className="flex flex-col justify-center items-center w-full h-full">
@@ -153,9 +157,9 @@ export default function Crud() {
                 <h2
                   className="text-md"
                   style={{
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
                   }}
                 >
                   {item.deskripsi_produk}
