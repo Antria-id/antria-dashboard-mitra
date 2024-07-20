@@ -1,0 +1,19 @@
+.animated-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 40px; /* Adjust size as needed */
+    height: 40px; /* Adjust size as needed */
+    background-image: url('../../assets//LogoCursor.png');
+    background-size: cover;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1000;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease, background-image 0.3s ease;
+  }
+  
+  .animated-cursor:hover {
+    background-image: url('../../assets//LogoCursor.png');
+  }
+  

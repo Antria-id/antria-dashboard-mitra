@@ -1,9 +1,17 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { IoMdClose } from "react-icons/io";
 import { MdDelete } from "react-icons/md";
 import axios from "axios";
 import Button from "../../component/button/Button";
 import Upload from "../../assets/Download.gif";
+
+// Utility function to extract `mitraId` from JWT token
+const extractMitraIdFromToken = (token) => {
+  if (!token) return null;
+  const base64Payload = token.split('.')[1];
+  const payload = JSON.parse(atob(base64Payload));
+  return payload.mitraId || null;
+};
 
 export default function Add({ isOpen, onClose }) {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -14,6 +22,15 @@ export default function Add({ isOpen, onClose }) {
     harga: "",
     gambar: "",
   });
+  const [mitraId, setMitraId] = useState(null);
+
+  const token = localStorage.getItem("authToken");
+
+  useEffect(() => {
+    // Extract `mitraId` from token when component mounts
+    const id = extractMitraIdFromToken(token);
+    setMitraId(id);
+  }, [token]);
 
   const handleClose = () => {
     setSelectedImage(null);
@@ -58,12 +75,16 @@ export default function Add({ isOpen, onClose }) {
       console.error("Invalid price value");
       return;
     }
+    if (!mitraId) {
+      console.error("Mitra ID is not available");
+      return;
+    }
     const formDataToSend = new FormData();
     formDataToSend.append("nama_produk", formData.nama_produk);
     formDataToSend.append("deskripsi_produk", formData.deskripsi_produk);
     formDataToSend.append("harga", hargaInt);
     formDataToSend.append("gambar", formData.gambar);
-    formDataToSend.append("mitraId", 2);
+    formDataToSend.append("mitraId", mitraId);
     try {
       const response = await axios.post(
         "https://development.verni.yt/produk",
@@ -71,6 +92,7 @@ export default function Add({ isOpen, onClose }) {
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
           },
         }
       );

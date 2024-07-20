@@ -18,23 +18,23 @@ describe('<Card />', () => {
     );
   });
 
-  it('renders', () => {
+  it('ter-render', () => { // renders
     cy.get('button').should('exist');
   });
 
-  it('displays the correct icon', () => {
+  it('menampilkan ikon yang benar', () => { // displays the correct icon
     cy.get('button').contains('Icon');
   });
 
-  it('displays the correct tag', () => {
+  it('menampilkan tag yang benar', () => { // displays the correct tag
     cy.get('h1').contains('Tag');
   });
 
-  it('displays the correct data', () => {
+  it('menampilkan data yang benar', () => { // displays the correct data
     cy.get('h2').contains('Data');
   });
 
-  it('applies the correct link', () => {
+  it('menerapkan tautan yang benar', () => { // applies the correct link
     cy.get('a').should('have.attr', 'href', '/test-link');
   });
 });

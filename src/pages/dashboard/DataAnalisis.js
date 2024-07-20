@@ -4,82 +4,112 @@ import Card from "../../component/card/Card";
 import { MdPeopleAlt } from "react-icons/md";
 import { GrMoney } from "react-icons/gr";
 import { UserData } from "../../data/Data";
-import LineChart from "../../component/Chart/LineChart";
-import BarChart from "../../component/Chart/BarChart";
-import PieChart from "../../component/Chart/PieChart";
+import LineChart from "../../feature/Chart/LineChart";
+import BarChart from "../../feature/Chart/BarChart";
+import PieChart from "../../feature/Chart/PieChart";
 import Tab from "../../component/tab/Tab";
-import { FaHome, FaTable } from "react-icons/fa";
+import { FaTable } from "react-icons/fa";
 import { VscFeedback } from "react-icons/vsc";
 import { IoAnalytics } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { ChevronRight } from "@mui/icons-material";
 import Feedback from "../../feature/feedback/Feedback";
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
-export default function Dashboard() {
+// Axios instance with token handling
+const axiosInstance = axios.create({
+  baseURL: "https://development.verni.yt",
+});
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+export default function DataAnalisis() {
   const [employeeCount, setEmployeeCount] = useState(0);
   const [feedbackCount, setFeedbackCount] = useState(0);
   const [totalIncome, setTotalIncome] = useState(0);
   const [visitorCount, setVisitorCount] = useState(0);
+  const [mitraId, setMitraId] = useState(null); // State to hold mitraId
 
   useEffect(() => {
-    const fetchEmployeeData = async () => {
-      try {
-        const response = await fetch(
-          "https://development.verni.yt/karyawan/mitra/2"
-        );
-        const data = await response.json();
-        setEmployeeCount(data.length);
-      } catch (error) {
-        console.error("Error fetching employee data:", error);
-      }
-    };
-
-    const fetchFeedbackData = async () => {
-      try {
-        const response = await fetch(
-          "https://development.verni.yt/reviews/mitra/1"
-        );
-        const data = await response.json();
-        setFeedbackCount(data.length);
-      } catch (error) {
-        console.error("Error fetching feedback data:", error);
-      }
-    };
-
-    const fetchIncomeData = async () => {
-      try {
-        const response = await fetch(
-          "https://development.verni.yt/pesanan/mitra/1"
-        );
-        const data = await response.json();
-        const total = data.reduce((acc, order) => {
-          const orderTotal = order.oderlist.reduce((sum, item) => {
-            return sum + item.quantity * item.produk.harga;
-          }, 0);
-          return acc + orderTotal;
-        }, 0);
-        setTotalIncome(total);
-      } catch (error) {
-        console.error("Error fetching income data:", error);
-      }
-    };
-
-    const fetchVisitorData = async () => {
-      try {
-        const response = await fetch("https://development.verni.yt/pesanan");
-        const data = await response.json();
-        const visitorCount = data.filter((order) => order.takeaway).length;
-        setVisitorCount(visitorCount);
-      } catch (error) {
-        console.error("Error fetching visitor data:", error);
-      }
-    };
-
-    fetchEmployeeData();
-    fetchFeedbackData();
-    fetchIncomeData();
-    fetchVisitorData();
+    // Decode JWT token to get mitraId
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      setMitraId(decodedToken.mitraId); // Adjust if `mitraId` key is different
+    }
   }, []);
+
+  useEffect(() => {
+    if (mitraId) {
+      const fetchEmployeeData = async () => {
+        try {
+          const response = await axiosInstance.get(
+            `/karyawan/mitra/${mitraId}`
+          );
+          const data = response.data;
+          setEmployeeCount(data.length);
+        } catch (error) {
+          console.error("Error fetching employee data:", error);
+        }
+      };
+
+      const fetchFeedbackData = async () => {
+        try {
+          const response = await axiosInstance.get(`/reviews/mitra/${mitraId}`);
+          const data = response.data;
+          setFeedbackCount(data.length);
+        } catch (error) {
+          console.error("Error fetching feedback data:", error);
+        }
+      };
+
+      const fetchIncomeData = async () => {
+        try {
+          const response = await axiosInstance.get(`/pesanan/mitra/${mitraId}`);
+          const data = response.data;
+          const total = data.reduce((acc, order) => {
+            if (order.status === "SUCCESS") {
+              const orderTotal = order.oderlist.reduce((sum, item) => {
+                return sum + item.quantity * item.produk.harga;
+              }, 0);
+              return acc + orderTotal;
+            }
+            return acc;
+          }, 0);
+          setTotalIncome(total);
+        } catch (error) {
+          console.error("Error fetching income data:", error);
+        }
+      };
+
+      const fetchVisitorData = async () => {
+        try {
+          const response = await axiosInstance.get(`/pesanan/mitra/${mitraId}`);
+          const data = response.data;
+          const visitorCount = data.filter((order) => order.takeaway).length;
+          setVisitorCount(visitorCount);
+        } catch (error) {
+          console.error("Error fetching visitor data:", error);
+        }
+      };
+
+      fetchEmployeeData();
+      fetchFeedbackData();
+      fetchIncomeData();
+      fetchVisitorData();
+    }
+  }, [mitraId]); // Depend on mitraId to refetch when it changes
 
   const tabsAnalytics = [
     {
@@ -114,13 +144,13 @@ export default function Dashboard() {
         <div className="flex flex-col justify-start w-full sm:w-[34rem] sm:h-[32rem] overflow-y-scroll gap-2 sm:gap-4">
           <div className="bg-gray-200 rounded-xl p-4 w-full h-[13rem] sm:h-[25.2rem]">
             <h1 className="text-[1.5rem] font-semibold">
-              Order System Mounthly
+              Sistem Order Bulanan
             </h1>
             <BarChart />
           </div>
           <div className="bg-gray-200 rounded-xl pl-6 w-full h-[20rem] sm:h-[30.7rem]">
             <h1 className="text-[1.5rem] font-semibold pt-4">
-              Order System On Going
+              Sistem Order Hari ini
             </h1>
             <div className="relative bottom-[2.5rem]">
               <PieChart />
@@ -137,7 +167,7 @@ export default function Dashboard() {
       icon: <VscFeedback size={28} />,
       content: (
         <div>
-          <Feedback />
+          <Feedback mitraId={mitraId} />
         </div>
       ),
     },
@@ -147,7 +177,7 @@ export default function Dashboard() {
     labels: [],
     datasets: [
       {
-        label: "Pendapatan",
+        label: "Jumlah pendapatan yang didapat:",
         data: [],
         backgroundColor: [
           "rgba(75,192,192,1)",
@@ -195,6 +225,7 @@ export default function Dashboard() {
 
     return <animated.div>{number.to((n) => n.toFixed(0))}</animated.div>;
   };
+
   const rupiah = (harga) => {
     return new Intl.NumberFormat("id", {
       style: "currency",
@@ -227,7 +258,9 @@ export default function Dashboard() {
       data: <Data n={feedbackCount} />,
     },
   ];
+
   const [expanded, setExpanded] = useState(true);
+
   return (
     <aside
       className={`bg-white 
@@ -246,7 +279,7 @@ export default function Dashboard() {
         overflow-y-auto
       `}
     >
-      <h1 className="text-2xl pl-6 pt-4 pb-4 font-semibold">Data Analytics</h1>
+      <h1 className="text-2xl pl-6 pt-4 pb-4 font-semibold">Data Analsis</h1>
       <div className="flex flex-col gap-4 sm:gap-6">
         <div className="flex flex-col gap-4">
           <div className="flex flex-col sm:flex-row gap-4 sm:ml-6 ml-3">

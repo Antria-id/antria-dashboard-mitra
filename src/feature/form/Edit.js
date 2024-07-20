@@ -5,15 +5,30 @@ import axios from "axios";
 import Button from "../../component/button/Button";
 import Upload from "../../assets/Download.gif";
 
+// Function to extract the mitraId from the JWT token
+const getMitraIdFromToken = (token) => {
+  if (!token) return null;
+  try {
+    const decodedToken = JSON.parse(atob(token.split('.')[1]));
+    return decodedToken.mitraId;
+  } catch (e) {
+    console.error("Failed to decode token:", e);
+    return null;
+  }
+};
+
 export default function Edit({ isOpen, onClose, item }) {
   const [selectedImage, setSelectedImage] = useState(null);
   const fileUploadRef = useRef();
   const [formData, setFormData] = useState({
     nama_produk: "",
     deskripsi_produk: "",
-    harga: "", // Initialize harga as an integer
+    harga: "",
     gambar: "",
   });
+
+  const token = localStorage.getItem("authToken");
+  const mitraId = getMitraIdFromToken(token);
 
   useEffect(() => {
     if (item) {
@@ -74,6 +89,7 @@ export default function Edit({ isOpen, onClose, item }) {
       nama_produk: formData.nama_produk,
       deskripsi_produk: formData.deskripsi_produk,
       harga: hargaInt,
+      mitraId: mitraId, // Add mitraId to JSON submission
     };
 
     try {
@@ -83,6 +99,7 @@ export default function Edit({ isOpen, onClose, item }) {
         {
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -108,6 +125,7 @@ export default function Edit({ isOpen, onClose, item }) {
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
           },
         }
       );

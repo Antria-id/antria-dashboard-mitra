@@ -1,12 +1,22 @@
+// src/components/BarChart.jsx
 import React, { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import { decodeToken } from '../../utils/DecodeToken';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const fetchData = async () => {
+  const token = localStorage.getItem('authToken');
+  const decodedToken = decodeToken(token);
+  const mitraId = decodedToken ? decodedToken.mitraId : 1; // Default to 1 if not found
+
   try {
-    const response = await fetch('https://development.verni.yt/pesanan');
+    const response = await fetch(`https://development.verni.yt/pesanan/mitra/${mitraId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     const data = await response.json();
     return data;
   } catch (error) {
@@ -49,7 +59,7 @@ const processData = (data) => {
   };
 };
 
-const BarChart = () => {
+export default function BarChart() {
   const [chartData, setChartData] = useState({ labels: [], datasets: [] });
 
   useEffect(() => {
@@ -69,7 +79,7 @@ const BarChart = () => {
       },
       title: {
         display: true,
-        text: 'Monthly Orders',
+        text: 'Data Transaksi Bulanan',
       },
     },
   };
@@ -79,6 +89,4 @@ const BarChart = () => {
       <Bar data={chartData} options={options} />
     </div>
   );
-};
-
-export default BarChart;
+}

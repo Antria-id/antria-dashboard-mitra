@@ -7,6 +7,7 @@ import Loading from "../../assets/Loading.gif";
 import Edit from "./Edit";
 import NoData from "../../assets/NoData.gif";
 import Search from "../../component/search/Search";
+import { jwtDecode } from "jwt-decode";
 
 export default function Crud() {
   const [data, setData] = useState([]);
@@ -18,16 +19,28 @@ export default function Crud() {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
 
+  const token = localStorage.getItem("authToken");
+  const mitraId = token ? jwtDecode(token).mitraId : null;
+
   const fetchData = async () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get(
-        "https://development.verni.yt/produk/mitra/2"
-      );
-      if (response.status === 200) {
-        setData(response.data);
-        setFilteredData(response.data); // Initialize filteredData with fetched data
+      if (mitraId) {
+        const response = await axios.get(
+          `https://development.verni.yt/produk/mitra/${mitraId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (response.status === 200) {
+          setData(response.data);
+          setFilteredData(response.data); // Initialize filteredData with fetched data
+        }
+      } else {
+        setError("Mitra ID not found in token");
       }
     } catch (error) {
       setError("Error fetching data");
@@ -38,13 +51,21 @@ export default function Crud() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [mitraId]);
 
   const handleDelete = async (id) => {
     try {
-      await axios.put(`https://development.verni.yt/produk/${id}`, {
-        show_produk: false,
-      });
+      await axios.put(
+        `https://development.verni.yt/produk/${id}`,
+        {
+          show_produk: false,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       fetchData();
     } catch (error) {
       setError("Error deleting data");
@@ -70,6 +91,7 @@ export default function Crud() {
     setIsEditOpen(false);
     setSelectedItem(null);
   };
+
   const handleFilter = (event) => {
     const searchTerm = event.target.value.toLowerCase();
     const filtered = data.filter((item) =>
@@ -99,7 +121,7 @@ export default function Crud() {
             <div className="w-[31.438rem] h-[28.875rem]">
               <img
                 src={Loading}
-                alt="Page not found"
+                alt="Loading"
                 className="w-full h-full object-cover"
               />
             </div>
@@ -128,9 +150,17 @@ export default function Crud() {
               </div>
               <div className="flex flex-col p-4">
                 <h1 className="text-lg font-semibold">{item.nama_produk}</h1>
-                <h2 className="text-md">{item.deskripsi_produk}</h2>
+                <h2
+                  className="text-md"
+                  style={{
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                >
+                  {item.deskripsi_produk}
+                </h2>
                 <h2 className="text-md pt-[1.8rem]">{rupiah(item.harga)}</h2>
-                <h2 className="text-md">Jumlah {item.kuantitas}</h2>
               </div>
               <div className="flex flex-row-reverse justify-between p-4">
                 <button
@@ -140,7 +170,7 @@ export default function Crud() {
                   <FaRegTrashAlt color="white" size={20} />
                 </button>
                 <button
-                  className="flex items-center justify-center w-[15.5rem] sm:w-[13rem] h-12 bg-gradient-to-r from-[#9b59b6] to-[#e74c3c] rounded-lg"
+                  className="flex items-center justify-center w-[14.5rem] sm:w-[13rem] h-12 bg-gradient-to-r from-[#9b59b6] to-[#e74c3c] rounded-lg"
                   onClick={() => handleEdit(item)}
                 >
                   <h1 className="w-[15.5rem] sm:w-[13rem] text-white font-semibold">
@@ -155,7 +185,7 @@ export default function Crud() {
             <div className="w-[31.438rem] h-[28.875rem]">
               <img
                 src={NoData}
-                alt="Page not found"
+                alt="No Data"
                 className="w-full h-full object-cover bg-transparent"
               />
             </div>

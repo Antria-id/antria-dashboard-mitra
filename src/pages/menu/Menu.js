@@ -7,7 +7,7 @@ export default function Menu() {
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
-  const [hasData, setHasData] = useState(false); // New state to track data presence
+  const [hasData, setHasData] = useState(false);
   const scrollableDivRef = useRef(null);
 
   const handleScroll = () => {
@@ -35,7 +35,7 @@ export default function Menu() {
   };
 
   useEffect(() => {
-    handleScroll(); // Initial check
+    handleScroll();
     const scrollableDiv = scrollableDivRef.current;
     if (scrollableDiv) {
       scrollableDiv.addEventListener("scroll", handleScroll);
@@ -48,44 +48,40 @@ export default function Menu() {
   }, []);
 
   return (
-    <aside
-      className={`bg-[#FCFCFF] mt-[1.5rem] rounded-xl shadow-2xl z-0 transition-all mx-auto duration-300 sm:w-[77rem] w-[24.4rem] sm:h-[51.563rem] h-[43.2rem]`}
-    >
-      <h1 className="text-[2rem] pl-[1.875rem] pt-[2.125rem] font-semibold">
+    <aside className="bg-[#FCFCFF] mt-6 rounded-xl shadow-2xl z-0 transition-all mx-auto duration-300 w-full sm:w-[77rem] h-auto sm:h-[51.563rem]">
+      <h1 className="text-2xl pl-6 pt-8 font-semibold">
         Data Menu
       </h1>
-      <div className="fixed sm:bottom-[3.5rem] sm:left-[88rem] bottom-[6.5rem] left-[17rem] z-30">
+      <div className="fixed bottom-16 sm:bottom-14 right-8 z-30">
         <button
           onClick={() => setIsPopUpOpen(true)}
-          className="sm:w-[5.25rem] w-[3.5rem] h-[3.5rem] sm:h-[5.25rem] sm:mt-[4.5rem] mt-[1.5rem] ml-[1.875rem] rounded-full bg-gradient-to-b from-[#9b59b6] to-[#e74c3c] shadow-xl"
+          className="w-14 h-14 sm:w-20 sm:h-20 mt-6 sm:mt-14 rounded-full bg-gradient-to-b from-[#9b59b6] to-[#e74c3c] shadow-xl flex justify-center items-center"
         >
-          <div className="sm:w-[5.25rem] w-[3.5rem] h-[3.5rem] sm:h-[5.25rem] flex flex-row justify-center items-center gap-6">
-            <FaPlus size={30} color="white" />
-          </div>
+          <FaPlus size={30} color="white" />
         </button>
       </div>
       <div className="z-0">
         <Add isOpen={isPopUpOpen} onClose={() => setIsPopUpOpen(false)} />
       </div>
-   
-      <div className="sm:flex flex sm:justify-between justify-between items-center lg:mx-[1rem] mx-[0.3rem]">
+
+      <div className="flex justify-between items-center mx-4 sm:mx-2">
         {hasData && canScrollLeft && (
           <button
-            className="sm:z-0 z-0 sm:relative relative sm:left-2 left-3 sm:flex flex sm:justify-center justify-center items-center sm:w-[3.25rem] w-[4rem] h-[4rem] sm:h-[2.5rem] bg-gradient-to-b from-[#9b59b6] to-[#e74c3c] rounded-full"
+            className="flex justify-center items-center w-10 h-10 sm:w-14 sm:h-14 bg-gradient-to-b from-[#9b59b6] to-[#e74c3c] rounded-full"
             onClick={handleScrollLeft}
           >
             <FaChevronLeft color="white" size={24} />
           </button>
         )}
         <div
-          className="sm:flex flex justify-between sm:w-[75rem] w-[28.4rem] overflow-x-scroll ml-2 pt-[2.125rem] pb-[1.125rem]"
+          className="flex justify-between w-full overflow-x-scroll pt-8 pb-4"
           ref={scrollableDivRef}
         >
           <Crud setHasData={setHasData} />
         </div>
         {hasData && canScrollRight && (
           <button
-            className=" sm:z-0 z-0 sm:relative relative sm:right-4 right-4 sm:flex flex sm:justify-center justify-center items-center sm:w-[3.25rem] w-[4rem] h-[4rem] sm:h-[2.5rem] bg-gradient-to-b from-[#9b59b6] to-[#e74c3c] rounded-full"
+            className="flex justify-center items-center w-10 h-10 sm:w-14 sm:h-14 bg-gradient-to-b from-[#9b59b6] to-[#e74c3c] rounded-full"
             onClick={handleScrollRight}
           >
             <FaChevronRight color="white" size={24} />

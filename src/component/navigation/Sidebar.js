@@ -26,8 +26,8 @@ export default function Sidebar({ onToggle }) {
 
   const menuItems = [
     {
-      to: "/data-analytics",
-      text: "Data Analytics",
+      to: "/data-analisis",
+      text: "Data Analisis",
       icon: <IoAnalytics size={22} />,
     },
     {

@@ -1,6 +1,7 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { IoMdClose } from "react-icons/io";
 import axios from "axios";
+import {jwtDecode} from "jwt-decode"; // Import jwt-decode for decoding JWT tokens
 import Button from "../../component/button/Button";
 
 export default function AddUser({ isOpen, onClose }) {
@@ -15,8 +16,25 @@ export default function AddUser({ isOpen, onClose }) {
     handphone: "",
     alamat: "",
     isOwner: false,
-    mitraId: 2,
+    mitraId: 2, // Default mitraId; will be updated based on JWT
   });
+
+  const token = localStorage.getItem("authToken");
+
+  useEffect(() => {
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        const mitraId = decodedToken.mitraId || 2; // Fallback to default if mitraId is not available
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          mitraId: mitraId,
+        }));
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
+    }
+  }, [token]);
 
   const handleClose = () => {
     setSelectedImage(null);
@@ -87,6 +105,7 @@ export default function AddUser({ isOpen, onClose }) {
         {
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
         }
       );

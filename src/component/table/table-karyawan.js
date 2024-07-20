@@ -4,12 +4,13 @@ import ArrowBackIosSharpIcon from "@mui/icons-material/ArrowBackIosSharp";
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import Loading from "../../assets/Loading.gif";
 import { TiUserDelete } from "react-icons/ti";
-import { FaRegAddressCard } from "react-icons/fa6";
+import { FaRegAddressCard } from "react-icons/fa";
 import "../../index.css";
 import Button from "../button/Button";
 import AddUser from "../../feature/form/AddUser";
 import UserProfile from "../../assets/Profile.png";
 import Search from "../search/Search";
+import {jwtDecode} from "jwt-decode"; // Import jwt-decode library
 
 export default function Tabel() {
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
@@ -19,6 +20,10 @@ export default function Tabel() {
   const [recordPerPage, setRecordPerPage] = useState(5);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const token = localStorage.getItem("authToken");
+  const decodedToken = jwtDecode(token); // Decode the token
+  const mitraId = decodedToken.mitraId; // Extract mitraId from the decoded token
 
   const lastIndex = currentPage * recordPerPage;
   const firstIndex = lastIndex - recordPerPage;
@@ -33,7 +38,12 @@ export default function Tabel() {
     setError(null);
     try {
       const response = await axios.get(
-        "https://development.verni.yt/karyawan/mitra/2"
+        `https://development.verni.yt/karyawan/mitra/${mitraId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       if (response.status === 200) {
         const receivedData = response.data; // Assuming response.data contains the list of users
@@ -77,12 +87,15 @@ export default function Tabel() {
 
   const handleDelete = async (id) => {
     try {
-      console.log(`Attempting to delete user with ID: ${id}`);
       const response = await axios.delete(
-        `https://development.verni.yt/karyawan/${id}`
+        `https://development.verni.yt/karyawan/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       if (response.status === 200) {
-        console.log(`Successfully deleted user with ID: ${id}`);
         const updatedData = data.filter((item) => item.id !== id);
         const updatedFilteredData = filteredData.filter(
           (item) => item.id !== id
@@ -90,11 +103,9 @@ export default function Tabel() {
         setData(updatedData);
         setFilteredData(updatedFilteredData);
       } else {
-        console.log("Failed to delete the user", response);
         alert("Failed to delete the user");
       }
     } catch (err) {
-      console.error("Error deleting user:", err);
       alert("Failed to delete the user");
     }
   };
@@ -134,55 +145,54 @@ export default function Tabel() {
       ) : error ? (
         <div className="text-center text-red-500 mt-4">{error}</div>
       ) : (
-        <table className="w-full border-collapse text-left">
-          <thead>
-            <tr className="bg-gradient-to-r from-[#9b59b6] to-[#e74c3c] text-white">
-              <th className="px-4 py-2">Profile</th>
-              <th className="px-4 py-2">Username</th>
-              <th className="px-4 py-2">Email</th>
-              <th className="px-4 py-2">No Handphone</th>
-              <th className="px-4 py-2">Alamat</th>
-              <th className="px-4 py-2">Tanggal Terdaftar</th>
-              <th className="px-4 py-2">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {records.map((item, index) => (
-              <tr key={index} className="border-b hover:bg-gray-100">
-                <td className="px-4 py-2">
-                  <img
-                    src={
-                      item.profile_picture
-                        ? `https://development.verni.yt/image/${item.profile_picture}`
-                        : UserProfile
-                    }
-                    alt="Profile"
-                    className="w-10 h-10 rounded-full"
-                  />
-                </td>
-                <td className="px-4 py-2">{item.username}</td>
-                <td className="px-4 py-2">{item.email}</td>
-                <td className="px-4 py-2">{item.handphone}</td>
-                <td className="px-4 py-2">{item.alamat}</td>
-                <td className="px-4 py-2">{item.created_at}</td>
-                <td className="px-4 py-2">
-                  <button
-                    className="text-red-500 hover:underline"
-                    onClick={() => {
-                      console.log(`Delete button clicked for ID: ${item.id}`);
-                      handleDelete(item.id);
-                    }}
-                  >
-                    <div className="flex flex-row gap-2">
-                      <TiUserDelete size={25} />
-                      <h1>Hapus Akun</h1>
-                    </div>
-                  </button>
-                </td>
+        <div className="table-container" style={{ maxHeight: "500px", overflowY: "auto" }}>
+          <table className="w-full border-collapse text-left">
+            <thead>
+              <tr className="bg-gradient-to-r from-[#9b59b6] to-[#e74c3c] text-white">
+                <th className="px-4 py-2">Profile</th>
+                <th className="px-4 py-2">Username</th>
+                <th className="px-4 py-2">Email</th>
+                <th className="px-4 py-2">No Handphone</th>
+                <th className="px-4 py-2">Alamat</th>
+                <th className="px-4 py-2">Tanggal Terdaftar</th>
+                <th className="px-4 py-2">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {records.map((item, index) => (
+                <tr key={index} className="border-b hover:bg-gray-100">
+                  <td className="px-4 py-2">
+                    <img
+                      src={
+                        item.profile_picture
+                          ? `https://development.verni.yt/image/${item.profile_picture}`
+                          : UserProfile
+                      }
+                      alt="Profile"
+                      className="w-10 h-10 rounded-full"
+                    />
+                  </td>
+                  <td className="px-4 py-2">{item.username}</td>
+                  <td className="px-4 py-2">{item.email}</td>
+                  <td className="px-4 py-2">{item.handphone}</td>
+                  <td className="px-4 py-2">{item.alamat}</td>
+                  <td className="px-4 py-2">{item.created_at}</td>
+                  <td className="px-4 py-2">
+                    <button
+                      className="text-red-500 hover:underline"
+                      onClick={() => handleDelete(item.id)}
+                    >
+                      <div className="flex flex-row gap-2">
+                        <TiUserDelete size={25} />
+                        <h1>Hapus Akun</h1>
+                      </div>
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
 
       <nav className="flex justify-between items-center mt-5 mb-3">

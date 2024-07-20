@@ -9,7 +9,7 @@ export default function SplashScreen() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigate("/data-analytics");
+      navigate("/data-analisis");
     }, 3000);
 
     return () => clearTimeout(timer);

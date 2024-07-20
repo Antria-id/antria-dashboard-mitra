@@ -1,3 +1,4 @@
+// src/components/LineChart.jsx
 import React, { useEffect, useRef, useState } from "react";
 import { Line } from "react-chartjs-2";
 import axios from "axios";
@@ -11,6 +12,8 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { decodeToken } from "../../utils/DecodeToken";
+
 ChartJS.register(
   LineElement,
   CategoryScale,
@@ -19,6 +22,24 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend
+);
+
+// Axios instance with token handling
+const axiosInstance = axios.create({
+  baseURL: 'https://development.verni.yt',
+});
+
+axiosInstance.interceptors.request.use(
+  config => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  }
 );
 
 export default function LineChart() {
@@ -70,7 +91,11 @@ export default function LineChart() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("https://development.verni.yt/pesanan/mitra/1");
+        const token = localStorage.getItem('authToken');
+        const decodedToken = decodeToken(token);
+        const mitraId = decodedToken ? decodedToken.mitraId : 1; // Default to 1 if not found
+
+        const response = await axiosInstance.get(`/pesanan/mitra/${mitraId}`);
         const orders = response.data;
         const monthlyRevenue = Array(12).fill(0);
 

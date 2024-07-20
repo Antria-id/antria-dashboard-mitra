@@ -8,6 +8,7 @@ import "../../index.css";
 import Button from "../button/Button";
 import { SiMicrosoftexcel } from "react-icons/si";
 import Search from "../search/Search";
+import {jwtDecode} from "jwt-decode";
 
 export default function Tabel() {
   const [data, setData] = useState([]);
@@ -16,6 +17,9 @@ export default function Tabel() {
   const [recordPerPage, setRecordPerPage] = useState(5);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const token = localStorage.getItem("authToken");
+  const mitraId = token ? jwtDecode(token).mitraId : null;
 
   const lastIndex = currentPage * recordPerPage;
   const firstIndex = lastIndex - recordPerPage;
@@ -29,17 +33,37 @@ export default function Tabel() {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get(
-        "https://development.verni.yt/pesanan/mitra/1"
-      );
-      if (response.status === 200) {
-        const receivedData = response.data;
-        const transformedData = receivedData.map((item) => {
-          const menuOrder = item.oderlist.map((order) => order.produk.nama_produk).join(", ");
-          return { ...item, menuOrder, harga: item.oderlist.reduce((acc, order) => acc + (order.produk.harga * order.quantity), 0) };
-        });
-        setData(transformedData);
-        setFilteredData(transformedData);
+      if (mitraId) {
+        const response = await axios.get(
+          `https://development.verni.yt/pesanan/mitra/${mitraId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (response.status === 200) {
+          const receivedData = response.data.filter(
+            (item) => item.status === "SUCCESS"
+          );
+          const transformedData = receivedData.map((item) => {
+            const menuOrder = item.oderlist
+              .map((order) => order.produk.nama_produk)
+              .join(", ");
+            return {
+              ...item,
+              menuOrder,
+              harga: item.oderlist.reduce(
+                (acc, order) => acc + order.produk.harga * order.quantity,
+                0
+              ),
+            };
+          });
+          setData(transformedData);
+          setFilteredData(transformedData);
+        }
+      } else {
+        setError("Mitra ID not found in token");
       }
     } catch (err) {
       setError("Error fetching data");
@@ -50,7 +74,7 @@ export default function Tabel() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [mitraId]);
 
   const handleFilter = (event) => {
     const searchTerm = event.target.value.toLowerCase();
@@ -92,6 +116,8 @@ export default function Tabel() {
     pageNumbers.push(i);
   }
 
+  const totalAmount = filteredData.reduce((acc, item) => acc + item.harga, 0);
+
   return (
     <div className="overflow-auto">
       <div className="sm:flex flex sm:justify-between sm:gap-0 gap-4 mb-3">
@@ -120,38 +146,48 @@ export default function Tabel() {
       ) : error ? (
         <div className="text-center text-red-500 mt-4">{error}</div>
       ) : (
-        <table className="w-full border-collapse text-left">
-          <thead>
-            <tr className="bg-gradient-to-r from-[#9b59b6] to-[#e74c3c] text-white">
-              <th className="px-4 py-2">ID Pesanan</th>
-              <th className="px-4 py-2">Waktu Order</th>
-              <th className="px-4 py-2">Menu Order</th>
-              <th className="px-4 py-2">Pembayaran</th>
-              <th className="px-4 py-2">Biaya</th>
-              <th className="px-4 py-2">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {records.map((item, index) => (
-              <tr key={index} className="border-b hover:bg-gray-100">
-                <td className="px-4 py-2">{item.invoice}</td>
-                <td className="px-4 py-2">{item.created_at}</td>
-                <td className="px-4 py-2">{item.menuOrder}</td>
-                <td className="px-4 py-2">{item.payment}</td>
-                <td className="px-4 py-2">Rp{item.harga}</td>
-                <td
-                  className={`px-4 py-2 ${
-                    item.status === "SUCCESS" ? "text-green-500" : item.status === "PENDING" ? "text-yellow-500" : ""
-                  }`}
-                >
-                  {item.status}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <>
+          <div className="table-container" style={{ maxHeight: "500px", overflowY: "auto" }}>
+            <table className="w-full border-collapse text-left">
+              <thead>
+                <tr className="bg-gradient-to-r from-[#9b59b6] to-[#e74c3c] text-white">
+                  <th className="px-4 py-2">ID Pesanan</th>
+                  <th className="px-4 py-2">Waktu Order</th>
+                  <th className="px-4 py-2">Menu Order</th>
+                  <th className="px-4 py-2">Pembayaran</th>
+                  <th className="px-4 py-2">Biaya</th>
+                  <th className="px-4 py-2">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {records.map((item, index) => (
+                  <tr key={index} className="border-b hover:bg-gray-100">
+                    <td className="px-4 py-2 font-bold">{item.invoice}</td>
+                    <td className="px-4 py-2">{item.created_at}</td>
+                    <td className="px-4 py-2">{item.menuOrder}</td>
+                    <td className="px-4 py-2">{item.payment}</td>
+                    <td className="px-4 py-2">Rp{item.harga}</td>
+                    <td
+                      className={`px-4 py-2 ${
+                        item.status === "SUCCESS"
+                          ? "text-green-500 font-bold"
+                          : item.status === "PENDING"
+                          ? "text-yellow-500"
+                          : ""
+                      }`}
+                    >
+                      {item.status}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="mt-4">
+            <strong>Total Pendapatan: Rp{totalAmount}</strong>
+          </div>
+        </>
       )}
-
       <nav className="flex justify-between items-center mt-5 mb-3">
         <div className="flex items-center">
           <select
@@ -174,9 +210,7 @@ export default function Tabel() {
             <ArrowBackIosSharpIcon />
           </button>
           {pageNumbers
-            .filter(
-              (number) => number >= currentPage && number < currentPage + 5
-            )
+            .filter((number) => number >= currentPage && number < currentPage + 5)
             .map((number) => (
               <button
                 className={`px-3 ${

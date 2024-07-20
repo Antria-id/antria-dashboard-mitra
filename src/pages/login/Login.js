@@ -35,7 +35,8 @@ export default function Login() {
     setShowPass((prevState) => !prevState);
   };
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
     if (!username || !password) {
       setError("Mohon isi email dan password Anda");
       return;
@@ -51,8 +52,17 @@ export default function Login() {
         }
       );
       const accessToken = response.data.access_token;
+      console.log(accessToken);
       localStorage.setItem("authToken", accessToken);
       const decoded = jwtDecode(accessToken);
+
+      if (!decoded.payload.isOwner) {
+        setError("Anda tidak memiliki izin untuk masuk.");
+        setIsUsernameValid(false);
+        setIsPasswordValid(false);
+        return;
+      }
+
       console.log(decoded.payload);
       localStorage.setItem("authToken", accessToken);
       _Login(accessToken);
@@ -102,7 +112,6 @@ export default function Login() {
 
   return (
     <div className="w-full h-full bg-[#F6F5F5]">
-     
       <div className="flex justify-center items-center h-screen">
         <div className="md:w-[30.313rem] w-[22rem] h-[35.75rem] bg-white rounded-xl shadow-xl">
           <img className="ml-[1.563rem] mt-[2.2rem]" src={Logo} alt="Logo" />
@@ -113,14 +122,14 @@ export default function Login() {
             <h2 className="mt-[0.1rem] ml-[1.563rem] font-semibold text-[#8A8A8A] text-[0.75rem]">
               Masukan data akun mitra yang sudah terdaftar
             </h2>
-            <div className="sm:flex sm:flex-col sm:justify-center justify-center ml-[1.4rem] mt-[1.5rem]">
+            <form onSubmit={handleLogin} className="sm:flex sm:flex-col sm:justify-center justify-center ml-[1.4rem] mt-[1.5rem]">
               <div className="gap-y-[1rem]">
                 <h1 className="text-[0.75rem] font-bold">Username</h1>
                 <input
                   className={`md:w-[27.125rem] w-[19rem] h-[3.438rem] bg-white shadow-xl py-3 px-3 rounded-xl ${
                     isUsernameValid ? "border-green-500" : "border-red-500"
                   }`}
-                  type="username"
+                  type="text"
                   name="username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
@@ -139,6 +148,7 @@ export default function Login() {
                     placeholder="Masukan password anda"
                   />
                   <button
+                    type="button"
                     className="absolute right-[3rem] -bottom-[0rem] transform -translate-y-1/2"
                     onClick={buttonPass}
                   >
@@ -165,6 +175,7 @@ export default function Login() {
                   </label>
                 </div>
                 <button
+                  type="submit"
                   data-cy="submit"
                   className="sm:pr-0 pr-[3rem] mt-[4rem]"
                 >
@@ -175,12 +186,11 @@ export default function Login() {
                     txtColor="text-white"
                     txtSize="sm:w-[27.125rem] w-[19rem] h-[2.938rem]"
                     position="sm:flex sm:justify-center sm:items-center flex justify-center items-center"
-                    onClick={handleLogin}
                   />
                 </button>
                 {error && <p className="text-red-500">{error}</p>}
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>

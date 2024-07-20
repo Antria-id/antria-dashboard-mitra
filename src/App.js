@@ -14,6 +14,7 @@ import MenuRoute from "./route/menu/Menu";
 import EditRoute from "./route/edit/Edit";
 import PrivateRoutes from "./utils/PrivateRoutes";
 import PageNotFound from "./pages/notfound/PageNotFound";
+import AnimatedCursor from "./feature/cursor/AnimatedCursor"
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -24,7 +25,7 @@ function AnimatedRoutes() {
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route element={<PrivateRoutes />}>
-          <Route path="/data-analytics" element={<DashboardRoute />} exact />
+          <Route path="/data-analisis" element={<DashboardRoute />} exact />
           <Route path="/data-akun" element={<KaryawanRoute />} exact />
           <Route path="/data-pemasukan" element={<PemasukanRoute />} exact />
           <Route path="/data-menu" element={<MenuRoute />} exact />
@@ -40,6 +41,7 @@ function AnimatedRoutes() {
 function App() {
   return (
     <Router>
+      <AnimatedCursor /> {/* Add the AnimatedCursor component */}
       <AnimatedRoutes />
     </Router>
   );

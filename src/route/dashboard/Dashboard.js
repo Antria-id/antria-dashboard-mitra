@@ -1,5 +1,5 @@
 import React from "react";
-import Dashboard from "../../pages/dashboard/Dashboard";
+import Dashboard from "../../pages/dashboard/DataAnalisis";
 import Sidebar from "../../component/navigation/Sidebar";
 
 export default function DashboardRoute() {
