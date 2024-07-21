@@ -22,7 +22,6 @@ export default function Sidebar({ onToggle }) {
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [visible, setVisible] = useState(true);
 
-  // Handle logout and redirection
   const handleLogout = () => {
     localStorage.removeItem("authToken");
     window.location.href = "/Login";

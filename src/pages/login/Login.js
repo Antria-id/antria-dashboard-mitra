@@ -127,7 +127,7 @@ export default function Login() {
                 <h1 className="text-[0.75rem] font-bold">Username</h1>
                 <input
                   className={`md:w-[27.125rem] w-[19rem] h-[3.438rem] bg-white shadow-xl py-3 px-3 rounded-xl ${
-                    isUsernameValid ? "border-green-500 border-4 " : "border-red-500 border-4"
+                    username === "" ? "" : isUsernameValid ? "border-green-500 border-4" : "border-red-500 border-4"
                   }`}
                   type="text"
                   name="username"
@@ -139,7 +139,7 @@ export default function Login() {
                   <h1 className="text-[0.75rem] font-bold">Password</h1>
                   <input
                     className={`md:w-[27.125rem] w-[19rem] h-[3.438rem] bg-white shadow-xl py-3 px-3 rounded-xl ${
-                      isPasswordValid ? "border-green-500 border-4" : "border-red-500 border-4"
+                      password === "" ? "" : isPasswordValid ? "border-green-500 border-4" : "border-red-500 border-4"
                     }`}
                     type={showPass ? "text" : "password"}
                     value={password}

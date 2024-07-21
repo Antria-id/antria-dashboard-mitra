@@ -123,7 +123,7 @@ export default function Tabel() {
       <div className="sm:flex flex sm:justify-between sm:gap-0 gap-4 mb-3">
         <Search
           data={data}
-          placeholder="Search Products"
+          placeholder="Search Invoice"
           onChange={handleFilter}
         />
         <Button

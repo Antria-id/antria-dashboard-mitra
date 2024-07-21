@@ -76,7 +76,7 @@ export default function Feedback({ mitraId }) { // Accept mitraId as a prop
               </div>
               <div className="flex flex-col justify-center flex-grow">
                 <h1 className="text-lg sm:text-xl font-bold">{review.username}</h1>
-                <h1 className="text-base sm:text-lg font-light">{review.komentar}</h1>
+                <h1 className="text-base text-justify sm:text-lg font-light">{review.komentar}</h1>
               </div>
               <div className="flex items-center">
                 {[...Array(5)].map((_, i) => {

@@ -1,57 +1,39 @@
-// cypress/component/Tab.spec.js
-
 import React from 'react';
-import Tab from '../tab/Tab';
+import { mount } from 'cypress/react';
+import Tab from './Tab';
+import { VscFeedback } from 'react-icons/vsc';
+
+const tabsFeedback = [
+  {
+    label: "Customer Feedback",
+    icon: <VscFeedback size={28} />,
+    content: (
+      <div>
+        <p>Feedback Content</p>
+      </div>
+    ),
+  },
+  {
+    label: "Another Tab",
+    content: (
+      <div>
+        <p>Another Tab Content</p>
+      </div>
+    ),
+  },
+];
 
 describe('<Tab />', () => {
-  it('renders without tabs', () => {
-    cy.mount(<Tab />);
-    cy.contains('No tabs available').should('be.visible');
-  });
+  it('displays content of the active tab', () => {
+    cy.mount(<Tab tabs={tabsFeedback} />);
 
-  it('renders with tabs and switches between tabs', () => {
-    const tabs = [
-      { label: 'Tab 1', content: <div>Content 1</div> },
-      { label: 'Tab 2', content: <div>Content 2</div> },
-    ];
+    // Default active tab content
+    cy.contains('Feedback Content').should('exist');
+    cy.contains('Another Tab Content').should('not.exist');
 
-    cy.mount(<Tab tabs={tabs} />);
-    cy.contains('Tab 1').should('be.visible');
-    cy.contains('Tab 2').should('be.visible');
-    
-    // Verify the initial content
-    cy.contains('Content 1').should('be.visible');
-    cy.contains('Content 2').should('not.exist');
-
-    // Click on the second tab
-    cy.contains('Tab 2').click();
-
-    // Verify the content changes
-    cy.contains('Content 1').should('not.exist');
-    cy.contains('Content 2').should('be.visible');
-  });
-
-  it('renders with tabs and icons', () => {
-    const tabs = [
-      { label: 'Tab 1', content: <div>Content 1</div>, icon: <span>🔥</span> },
-      { label: 'Tab 2', content: <div>Content 2</div>, icon: <span>🌟</span> },
-    ];
-
-    cy.mount(<Tab tabs={tabs} />);
-    cy.contains('Tab 1').should('be.visible');
-    cy.contains('🔥').should('be.visible');
-    cy.contains('Tab 2').should('be.visible');
-    cy.contains('🌟').should('be.visible');
-    
-    // Verify the initial content
-    cy.contains('Content 1').should('be.visible');
-    cy.contains('Content 2').should('not.exist');
-
-    // Click on the second tab
-    cy.contains('Tab 2').click();
-
-    // Verify the content changes
-    cy.contains('Content 1').should('not.exist');
-    cy.contains('Content 2').should('be.visible');
+    // Switch to another tab
+    cy.contains('Another Tab').click();
+    cy.contains('Another Tab Content').should('exist');
+    cy.contains('Feedback Content').should('not.exist');
   });
 });

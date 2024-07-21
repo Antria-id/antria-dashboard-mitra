@@ -1,32 +1,63 @@
 // src/components/BarChart.jsx
-import React, { useEffect, useState } from 'react';
-import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
-import { decodeToken } from '../../utils/DecodeToken';
+import React, { useEffect, useState } from "react";
+import { Bar } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { decodeToken } from "../../utils/DecodeToken";
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const fetchData = async () => {
-  const token = localStorage.getItem('authToken');
+  const token = localStorage.getItem("authToken");
   const decodedToken = decodeToken(token);
   const mitraId = decodedToken ? decodedToken.mitraId : 1; // Default to 1 if not found
 
   try {
-    const response = await fetch(`https://development.verni.yt/pesanan/mitra/${mitraId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await fetch(
+      `https://development.verni.yt/pesanan/mitra/${mitraId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error fetching data:', error);
+    console.error("Error fetching data:", error);
     return [];
   }
 };
 
 const processData = (data) => {
-  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const months = [
+    "JAN",
+    "FEB",
+    "MAR",
+    "APR",
+    "MAY",
+    "JUN",
+    "JUL",
+    "AUG",
+    "SEP",
+    "OCT",
+    "NOV",
+    "DEC",
+  ];
   const initialData = {
     online: Array(12).fill(0),
     offline: Array(12).fill(0),
@@ -35,9 +66,9 @@ const processData = (data) => {
   data.forEach((order) => {
     const date = new Date(order.created_at);
     const month = date.getMonth();
-    if (order.pemesanan === 'ONLINE') {
+    if (order.pemesanan === "ONLINE") {
       initialData.online[month] += 1;
-    } else if (order.pemesanan === 'OFFLINE') {
+    } else if (order.pemesanan === "OFFLINE") {
       initialData.offline[month] += 1;
     }
   });
@@ -46,14 +77,14 @@ const processData = (data) => {
     labels: months,
     datasets: [
       {
-        label: 'Online',
+        label: "Online",
         data: initialData.online,
-        backgroundColor: '#A252A0',
+        backgroundColor: "#A252A0",
       },
       {
-        label: 'Offline',
+        label: "Offline",
         data: initialData.offline,
-        backgroundColor: '#E74C4C',
+        backgroundColor: "#E74C4C",
       },
     ],
   };
@@ -76,11 +107,11 @@ export default function BarChart() {
     maintainAspectRatio: false, // Allow chart to adjust its height and width
     plugins: {
       legend: {
-        position: 'top',
+        position: "top",
       },
       title: {
         display: true,
-        text: 'Data Transaksi Bulanan',
+        text: "Data Transaksi Bulanan",
       },
     },
   };

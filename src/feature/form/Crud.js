@@ -153,7 +153,16 @@ export default function Crud() {
                 />
               </div>
               <div className="flex flex-col p-4">
-                <h1 className="text-lg font-semibold">{item.nama_produk}</h1>
+                <h1
+                  className="text-lg font-semibold"
+                  style={{
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {item.nama_produk}
+                </h1>
                 <h2
                   className="text-md"
                   style={{

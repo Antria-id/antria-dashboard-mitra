@@ -120,7 +120,7 @@ export default function Tabel() {
       <div className="sm:flex flex justify-between sm:justify-between sm:mb-3 mb-[1rem] sm:gap-0 gap-5">
         <Search
           data={data}
-          placeholder="Search Products"
+          placeholder="Search Account"
           onChange={handleFilter}
         />
         <Button
@@ -206,7 +206,7 @@ export default function Tabel() {
             <option value={10}>10</option>
             <option value={20}>20</option>
           </select>
-          <p className="ml-4">Menampilkan Data Akun Mitra</p>
+          <p className="ml-4">Menampilkan Data Karyawan</p>
         </div>
         <div className="flex">
           <button

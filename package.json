@@ -22,6 +22,7 @@
     "framer-motion": "^11.2.10",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
+    "moment-timezone": "^0.5.45",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
@@ -70,6 +71,7 @@
     ]
   },
   "devDependencies": {
+    "@cypress/react18": "^2.0.1",
     "@testing-library/cypress": "^10.0.2",
     "cypress": "^13.13.1",
     "tailwindcss": "^3.4.1"

@@ -1,11 +1,12 @@
-// src/components/PieChart.jsx
 import React, { useEffect, useState } from 'react';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import axios from 'axios';
 import { decodeToken } from '../../utils/DecodeToken';
+import moment from 'moment-timezone';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
+
 const axiosInstance = axios.create({
   baseURL: 'https://development.verni.yt',
 });
@@ -28,30 +29,37 @@ export default function PieChart(props) {
   const [offlineCount, setOfflineCount] = useState(0);
 
   useEffect(() => {
-    // Function to fetch data from the API
     const fetchData = async () => {
       const token = localStorage.getItem('authToken');
       const decodedToken = decodeToken(token);
       const mitraId = decodedToken ? decodedToken.mitraId : 1; // Default to 1 if not found
 
-      try {
-        const response = await axiosInstance.get(`/pesanan/mitra/${mitraId}`);
-        const data = response.data;
-        let online = 0;
-        let offline = 0;
+      const lastFetchDate = localStorage.getItem('lastFetchDate');
+      const now = moment().tz('Asia/Jakarta');
+      const today = now.format('YYYY-MM-DD');
 
-        data.forEach(order => {
-          if (order.pemesanan === 'ONLINE') {
-            online++;
-          } else if (order.pemesanan === 'OFFLINE') {
-            offline++;
-          }
-        });
+      if (!lastFetchDate || moment(lastFetchDate).tz('Asia/Jakarta').isBefore(now, 'day')) {
+        try {
+          const response = await axiosInstance.get(`/pesanan/mitra/${mitraId}`);
+          const data = response.data;
+          let online = 0;
+          let offline = 0;
 
-        setOnlineCount(online);
-        setOfflineCount(offline);
-      } catch (error) {
-        console.error('Error fetching data:', error);
+          data.forEach(order => {
+            if (order.pemesanan === 'ONLINE') {
+              online++;
+            } else if (order.pemesanan === 'OFFLINE') {
+              offline++;
+            }
+          });
+
+          setOnlineCount(online);
+          setOfflineCount(offline);
+
+          localStorage.setItem('lastFetchDate', today);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
       }
     };
 
