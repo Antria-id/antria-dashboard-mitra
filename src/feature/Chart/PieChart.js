@@ -3,7 +3,6 @@ import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import axios from 'axios';
 import { decodeToken } from '../../utils/DecodeToken';
-import moment from 'moment-timezone';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -35,10 +34,10 @@ export default function PieChart(props) {
       const mitraId = decodedToken ? decodedToken.mitraId : 1; // Default to 1 if not found
 
       const lastFetchDate = localStorage.getItem('lastFetchDate');
-      const now = moment().tz('Asia/Jakarta');
-      const today = now.format('YYYY-MM-DD');
+      const now = new Date();
+      const today = now.toISOString().split('T')[0]; // Format: YYYY-MM-DD
 
-      if (!lastFetchDate || moment(lastFetchDate).tz('Asia/Jakarta').isBefore(now, 'day')) {
+      if (!lastFetchDate || lastFetchDate !== today) {
         try {
           const response = await axiosInstance.get(`/pesanan/mitra/${mitraId}`);
           const data = response.data;
