@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import {
-  FaUser,
-  FaSignOutAlt,
-  FaChevronLeft,
-  FaChevronRight,
-} from "react-icons/fa";
+import { FaUser, FaSignOutAlt, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { MdOutlineMenuBook } from "react-icons/md";
 import { GrMoney } from "react-icons/gr";
 import { IoAnalytics } from "react-icons/io5";
@@ -13,7 +8,9 @@ import Logo from "../../assets/Logo.png";
 import Button from "../button/Button";
 import SignOut from "../../assets/Logout.gif";
 import BottomNav from "./BottomNav";
-import "./navigation.css";
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+import Upload from "../../assets/Download.gif";
 
 export default function Sidebar({ onToggle }) {
   const location = useLocation();
@@ -21,21 +18,49 @@ export default function Sidebar({ onToggle }) {
   const [expanded, setExpanded] = useState(true);
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [visible, setVisible] = useState(true);
+  const [userProfile, setUserProfile] = useState({
+    gambar_toko: Upload, // Default image until fetched
+    nama_toko: "Loading...", // Default text until fetched
+  });
+
+  const token = localStorage.getItem("authToken");
+  const mitraId = token ? jwtDecode(token).mitraId : null;
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      if (mitraId) {
+        try {
+          const response = await axios.get(
+            `https://development.verni.yt/mitra/${mitraId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          if (response.status === 200) {
+            const data = response.data;
+            setUserProfile({
+              gambar_toko: `https://development.verni.yt/image/${data.gambar_toko}`,
+              nama_toko: data.nama_toko,
+            });
+          } else {
+            console.error("Failed to fetch profile data");
+          }
+        } catch (error) {
+          console.error("Error fetching profile data:", error);
+        }
+      }
+    };
+
+    fetchProfileData();
+  }, [mitraId, token]);
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
     window.location.href = "/Login";
   };
 
-  // Menu items for the sidebar
-  const menuItems = [
-    { to: "/data-analisis", text: "Data Analisis", icon: <IoAnalytics size={22} /> },
-    { to: "/data-akun", text: "Data Akun", icon: <FaUser size={22} /> },
-    { to: "/data-pemasukan", text: "Data Pemasukan", icon: <GrMoney size={22} /> },
-    { to: "/data-menu", text: "Data Menu", icon: <MdOutlineMenuBook size={22} /> },
-  ];
-
-  // Handle scroll events for showing/hiding sidebar
   const handleScroll = () => {
     const currentScrollPos = window.pageYOffset;
     setVisible(
@@ -50,11 +75,18 @@ export default function Sidebar({ onToggle }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [prevScrollPos, visible]);
 
-  // Toggle sidebar expansion
   const toggleSidebar = () => {
     setExpanded((prev) => !prev);
-    if (onToggle) onToggle(!expanded); // Notify parent
+    if (onToggle) onToggle(!expanded);
   };
+
+  // Menu items for the sidebar
+  const menuItems = [
+    { to: "/data-analisis", text: "Data Analisis", icon: <IoAnalytics size={22} /> },
+    { to: "/data-akun", text: "Data Akun", icon: <FaUser size={22} /> },
+    { to: "/data-pemasukan", text: "Data Pemasukan", icon: <GrMoney size={22} /> },
+    { to: "/data-menu", text: "Data Menu", icon: <MdOutlineMenuBook size={22} /> },
+  ];
 
   return (
     <>
@@ -62,10 +94,8 @@ export default function Sidebar({ onToggle }) {
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-            <div className="flex flex-col justify-center items-center w-full h-full">
-              <div className="w-[31.438rem] h-[28.875rem]">
-                <img src={SignOut} alt="Walking" className="w-full h-full object-cover" />
-              </div>
+            <div className="w-[31.438rem] h-[28.875rem]">
+              <img src={SignOut} alt="Walking" className="w-full h-full object-cover" />
             </div>
             <h2 className="text-lg font-bold mb-4">Apakah kamu yakin ingin keluar?</h2>
             <div className="flex justify-center space-x-4">
@@ -116,8 +146,11 @@ export default function Sidebar({ onToggle }) {
             <div className="flex justify-between w-full p-4">
               {expanded && (
                 <div className="flex items-center space-x-3">
-                  <FaUser size={25} color="white" />
-                  <h1 className="text-white font-bold">Admin</h1>
+                  {/* User Profile */}
+                  <Link to="/profile-restoran">
+                    <img className="w-[2.3rem] h-[2.3rem] rounded-full" src={userProfile.gambar_toko} alt="Profile" />
+                  </Link>
+                  <h1 className="text-white font-bold">{userProfile.nama_toko}</h1>
                 </div>
               )}
               <button onClick={() => setShowPopup(true)}>
@@ -142,10 +175,8 @@ export default function Sidebar({ onToggle }) {
                     />
                   </Link>
                   {!expanded && (
-                    <div className="absolute left-full ml-[-0.5rem] mt-[-2.6rem] hidden group-hover:block active:bg-gradient-to-r active:from-[#9b59b6] active:to-[#e74c3c] text-center bg-gradient-to-r from-[#9b59b6] to-[#e74c3c] active:font-bold text-white text-sm rounded-md w-[10rem] z-auto h-[2.688rem]">
-                      <h1 className="flex justify-center items-center h-[2.688rem] font-bold">
-                        <Link to={menuItem.to}>{menuItem.text}</Link>
-                      </h1>
+                    <div className="absolute left-full ml-[-0.5rem] mt-[-2.6rem] hidden group-hover:block active:bg-gradient-to-r active:from-[#9b59b6] active:to-[#e74c3c] w-[14rem] rounded-lg bg-white shadow-lg">
+                      <p className="p-4">{menuItem.text}</p>
                     </div>
                   )}
                 </li>

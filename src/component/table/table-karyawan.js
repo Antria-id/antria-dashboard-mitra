@@ -184,7 +184,7 @@ export default function Tabel() {
                     >
                       <div className="flex flex-row gap-2 items-center">
                         <TiUserDelete size={25} />
-                        <span>Hapus Akun</span>
+                        <span>Non Aktif</span>
                       </div>
                     </button>
                   </td>
