@@ -8,7 +8,7 @@ import "../../index.css";
 import Button from "../button/Button";
 import { SiMicrosoftexcel } from "react-icons/si";
 import Search from "../search/Search";
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
 
 export default function Tabel() {
   const [data, setData] = useState([]);
@@ -111,6 +111,11 @@ export default function Tabel() {
     }
   };
 
+  const formatDate = (dateString) => {
+    const options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
+    return new Date(dateString).toLocaleDateString("en-GB", options);
+  };
+
   const pageNumbers = [];
   for (let i = 1; i <= totalPages; i++) {
     pageNumbers.push(i);
@@ -163,7 +168,7 @@ export default function Tabel() {
                 {records.map((item, index) => (
                   <tr key={index} className="border-b hover:bg-gray-100">
                     <td className="px-4 py-2 font-bold">{item.invoice}</td>
-                    <td className="px-4 py-2">{item.created_at}</td>
+                    <td className="px-5 py-2">{formatDate(item.created_at)}</td>
                     <td className="px-4 py-2">{item.menuOrder}</td>
                     <td className="px-4 py-2">{item.payment}</td>
                     <td className="px-4 py-2">Rp{item.harga}</td>

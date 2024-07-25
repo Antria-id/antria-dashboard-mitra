@@ -5,7 +5,7 @@ import { MdDelete } from "react-icons/md";
 import Button from "../../component/button/Button";
 import Upload from "../../assets/Download.gif";
 import Map from "../../assets/Map.png";
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode"; 
 
 export default function Profile() {
   const [profile, setProfile] = useState(null);
@@ -17,8 +17,8 @@ export default function Profile() {
     jam_buka: "",
     jam_tutup: "",
     gambar_toko: null,
-    hari_buka: [],
-    linkGmaps: "", // Added linkGmaps
+    hari_buka: "", // Changed to string
+    linkGmaps: "",
   });
   const [selectedImage, setSelectedImage] = useState(null);
   const fileUploadRef = useRef();
@@ -54,8 +54,8 @@ export default function Profile() {
           jam_buka: data.jam_buka,
           jam_tutup: data.jam_tutup,
           gambar_toko: null,
-          hari_buka: data.hari_buka || [],
-          linkGmaps: data.linkGmaps || "", // Ensure this is initialized
+          hari_buka: data.hari_buka || "",
+          linkGmaps: data.linkGmaps || "",
         });
         setSelectedImage(
           `https://development.verni.yt/image/${data.gambar_toko}`
@@ -98,14 +98,15 @@ export default function Profile() {
 
   const handleDayChange = (day) => {
     setFormData((prevData) => {
-      const isDaySelected = prevData.hari_buka.includes(day);
+      const daysArray = prevData.hari_buka ? prevData.hari_buka.split(",") : [];
+      const isDaySelected = daysArray.includes(day);
       const updatedHariBuka = isDaySelected
-        ? prevData.hari_buka.filter((d) => d !== day)
-        : [...prevData.hari_buka, day];
+        ? daysArray.filter((d) => d !== day)
+        : [...daysArray, day];
 
       return {
         ...prevData,
-        hari_buka: updatedHariBuka,
+        hari_buka: updatedHariBuka.join(","),
       };
     });
   };
@@ -120,8 +121,8 @@ export default function Profile() {
     if (formData.gambar_toko) {
       formDataToSend.append("gambar_toko", formData.gambar_toko);
     }
-    formDataToSend.append("hari_buka", JSON.stringify(formData.hari_buka)); // Convert array to JSON string
-    formDataToSend.append("linkGmaps", formData.linkGmaps); // Append linkGmaps
+    formDataToSend.append("hari_buka", formData.hari_buka);
+    formDataToSend.append("linkGmaps", formData.linkGmaps);
 
     try {
       const response = await axios.put(
@@ -172,7 +173,7 @@ export default function Profile() {
       <div className="flex flex-col sm:flex-row gap-x-[1rem]">
         <div className="flex flex-col">
           {/* Card Profile */}
-          <div className="w-full sm:w-[38.5rem] h-[10rem] ml-6 mt-[2rem] rounded-lg bg-gradient-to-r from-[#9b59b6] to-[#e74c3c]">
+          <div className="w-[22rem] sm:w-[38.5rem] sm:h-[10rem] h-[25rem] ml-6 mt-[2rem] rounded-lg bg-gradient-to-r from-[#9b59b6] to-[#e74c3c]">
             <div className="w-full sm:w-[38.5rem] h-[10rem] flex flex-col sm:flex-row gap-x-4 ml-[1rem] pt-[1rem]">
               <img
                 className="w-[8rem] h-[8rem] rounded-full"
@@ -186,7 +187,7 @@ export default function Profile() {
                 <h1 className="text-2xl text-white font-semibold">
                   {formData.nama_toko}
                 </h1>
-                <p className="w-full sm:w-[27rem] text-justify text-[1rem] text-white font-normal ">
+                <p className="w-[18.5rem] sm:w-[27rem] text-justify text-[1rem] text-white font-normal ">
                   {formData.deskripsi_toko}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-[1rem] sm:gap-[10rem]">
@@ -210,7 +211,7 @@ export default function Profile() {
                   href={
                     formData.linkGmaps ||
                     "https://maps.app.goo.gl/1whSdu9ySgy5zs5t8"
-                  } // Use linkGmaps from formData
+                  }
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -286,7 +287,7 @@ export default function Profile() {
                       <input
                         type="checkbox"
                         id={day}
-                        checked={formData.hari_buka.includes(day)}
+                        checked={formData.hari_buka.split(",").includes(day)}
                         onChange={() => handleDayChange(day)}
                       />
                       <label htmlFor={day} className="ml-2 text-black">
