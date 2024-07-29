@@ -28,7 +28,7 @@ const fetchData = async () => {
 
   try {
     const response = await fetch(
-      `https://development.verni.yt/pesanan/mitra/${mitraId}`,
+      `http://antriaapi.verni.yt/pesanan/mitra/${mitraId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

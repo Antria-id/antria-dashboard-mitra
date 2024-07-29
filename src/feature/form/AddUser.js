@@ -100,7 +100,7 @@ export default function AddUser({ isOpen, onClose }) {
     };
     try {
       const response = await axios.post(
-        "https://development.verni.yt/karyawan",
+        "http://antriaapi.verni.yt/karyawan",
         payload,
         {
           headers: {

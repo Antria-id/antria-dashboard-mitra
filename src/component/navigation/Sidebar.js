@@ -39,7 +39,7 @@ export default function Sidebar({ onToggle }) {
       if (mitraId) {
         try {
           const response = await axios.get(
-            `https://development.verni.yt/mitra/${mitraId}`,
+            `http://antriaapi.verni.yt/mitra/${mitraId}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -49,7 +49,7 @@ export default function Sidebar({ onToggle }) {
           if (response.status === 200) {
             const data = response.data;
             setUserProfile({
-              gambar_toko: `https://development.verni.yt/image/${data.gambar_toko}`,
+              gambar_toko: `http://antriaapi.verni.yt/image/${data.gambar_toko}`,
               nama_toko: data.nama_toko,
             });
           } else {

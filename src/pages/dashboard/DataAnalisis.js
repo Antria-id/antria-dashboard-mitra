@@ -19,7 +19,7 @@ import { jwtDecode } from "jwt-decode";
 
 // Axios instance with token handling
 const axiosInstance = axios.create({
-  baseURL: "https://development.verni.yt",
+  baseURL: "http://antriaapi.verni.yt",
 });
 axiosInstance.interceptors.request.use(
   (config) => {

@@ -28,7 +28,7 @@ export default function Crud() {
     try {
       if (mitraId) {
         const response = await axios.get(
-          `https://development.verni.yt/produk/mitra/${mitraId}`,
+          `http://antriaapi.verni.yt/produk/mitra/${mitraId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -56,7 +56,7 @@ export default function Crud() {
   const handleDelete = async (id) => {
     try {
       await axios.put(
-        `https://development.verni.yt/produk/${id}`,
+        `http://antriaapi.verni.yt/produk/${id}`,
         {
           show_produk: false,
         },
@@ -148,7 +148,7 @@ export default function Crud() {
               <div className="w-full h-48 sm:w-[18.875rem] sm:h-[31.563rem] rounded-t-lg overflow-hidden">
                 <img
                   className="w-full h-full object-cover"
-                  src={`https://development.verni.yt/image/${item.gambar}`}
+                  src={`http://antriaapi.verni.yt/image/${item.gambar}`}
                   alt="Product"
                 />
               </div>

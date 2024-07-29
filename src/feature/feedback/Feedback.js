@@ -6,7 +6,7 @@ import Rate from '../../assets/Rating.gif';
 
 // Axios instance with token handling
 const axiosInstance = axios.create({
-  baseURL: 'https://development.verni.yt',
+  baseURL: 'http://antriaapi.verni.yt',
 });
 axiosInstance.interceptors.request.use(
   config => {
@@ -68,7 +68,7 @@ export default function Feedback({ mitraId }) { // Accept mitraId as a prop
         reviews.map((review, index) => (
           <div
             key={index}
-            className="w-full max-w-md sm:max-w-lg lg:max-w-xl bg-white border border-gray-300 shadow-xl hover:shadow-2xl rounded-xl p-4 mb-4"
+            className="w-[32rem] mr-[2rem] max-w-md sm:max-w-lg lg:max-w-xl bg-white border border-gray-300 shadow-xl hover:shadow-2xl rounded-xl p-4 mt-4"
           >
             <div className="flex flex-row w-full h-full gap-4">
               <div className="flex-shrink-0">

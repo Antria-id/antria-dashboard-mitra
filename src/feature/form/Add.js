@@ -5,10 +5,9 @@ import axios from "axios";
 import Button from "../../component/button/Button";
 import Upload from "../../assets/Download.gif";
 
-// Utility function to extract `mitraId` from JWT token
 const extractMitraIdFromToken = (token) => {
   if (!token) return null;
-  const base64Payload = token.split('.')[1];
+  const base64Payload = token.split(".")[1];
   const payload = JSON.parse(atob(base64Payload));
   return payload.mitraId || null;
 };
@@ -87,7 +86,7 @@ export default function Add({ isOpen, onClose }) {
     formDataToSend.append("mitraId", mitraId);
     try {
       const response = await axios.post(
-        "https://development.verni.yt/produk",
+        `http://antriaapi.verni.yt/produk`,
         formDataToSend,
         {
           headers: {

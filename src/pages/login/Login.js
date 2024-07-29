@@ -45,7 +45,7 @@ export default function Login() {
     try {
       setLoading(true);
       const response = await axios.post(
-        "https://development.verni.yt/auth/login/mitra",
+        "http://antriaapi.verni.yt/auth/login/mitra",
         {
           username,
           password,

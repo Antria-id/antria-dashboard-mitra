@@ -38,7 +38,7 @@ export default function Edit({ isOpen, onClose, item }) {
         harga: parseInt(item.harga, 10), // Parse harga as an integer
         gambar: item.gambar,
       });
-      setSelectedImage(`https://development.verni.yt/image/${item.gambar}`);
+      setSelectedImage(`http://antriaapi.verni.yt/image/${item.gambar}`);
     }
   }, [item]);
 
@@ -94,7 +94,7 @@ export default function Edit({ isOpen, onClose, item }) {
 
     try {
       const response = await axios.put(
-        `https://development.verni.yt/produk/${item.id}`,
+        `http://antriaapi.verni.yt/produk/${item.id}`,
         jsonFormData,
         {
           headers: {
@@ -120,7 +120,7 @@ export default function Edit({ isOpen, onClose, item }) {
 
     try {
       const response = await axios.put(
-        `https://development.verni.yt/produk/${item.id}`,
+        `http://antriaapi.verni.yt/produk/${item.id}`,
         formDataToSend,
         {
           headers: {

@@ -38,7 +38,7 @@ export default function Tabel() {
     setError(null);
     try {
       const response = await axios.get(
-        `https://development.verni.yt/karyawan/mitra/${mitraId}`,
+        `http://antriaapi.verni.yt/karyawan/mitra/${mitraId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -88,7 +88,7 @@ export default function Tabel() {
   const handleDelete = async (id) => {
     try {
       const response = await axios.delete(
-        `https://development.verni.yt/karyawan/${id}`,
+        `http://antriaapi.verni.yt/karyawan/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -165,7 +165,7 @@ export default function Tabel() {
                     <img
                       src={
                         item.profile_picture
-                          ? `https://development.verni.yt/image/${item.profile_picture}`
+                          ? `http://antriaapi.verni.yt/image/${item.profile_picture}`
                           : UserProfile
                       }
                       alt="Profile"

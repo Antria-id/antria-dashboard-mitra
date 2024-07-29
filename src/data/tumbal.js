@@ -25,11 +25,11 @@ export default function Edit() {
 
   const fetchProductDataItem = async () => {
     try {
-      const response = await fetch(`https://development.verni.yt/produk/${id}`);
+      const response = await fetch(`http://antriaapi.verni.yt/produk/${id}`);
       const data = await response.json();
       setDataItem(data);
       if (data.gambar) {
-        setSelectedImage(`https://development.verni.yt/image/${data.gambar}`);
+        setSelectedImage(`http://antriaapi.verni.yt/image/${data.gambar}`);
       }
     } catch (error) {
       console.error("Error fetching product data:", error);
@@ -56,7 +56,7 @@ export default function Edit() {
       }
 
       const response = await axios.put(
-        `https://development.verni.yt/produk/${id}`,
+        `http://antriaapi.verni.yt/produk/${id}`,
         formData
       );
 
@@ -195,7 +195,7 @@ export default function Edit() {
                         className="sm:w-[18.75rem] sm:h-[18rem] rounded-[1.4rem]"
                         src={
                           selectedImage ||
-                          `https://development.verni.yt/image/${dataItem.gambar}`
+                          `http://antriaapi.verni.yt/image/${dataItem.gambar}`
                         }
                         alt="Product"
                       />

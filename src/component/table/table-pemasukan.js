@@ -35,7 +35,7 @@ export default function Tabel() {
     try {
       if (mitraId) {
         const response = await axios.get(
-          `https://development.verni.yt/pesanan/mitra/${mitraId}`,
+          `http://antriaapi.verni.yt/pesanan/mitra/${mitraId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

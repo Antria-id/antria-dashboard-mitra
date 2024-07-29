@@ -7,7 +7,7 @@ import { decodeToken } from '../../utils/DecodeToken';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const axiosInstance = axios.create({
-  baseURL: 'https://development.verni.yt',
+  baseURL: 'http://antriaapi.verni.yt',
 });
 
 axiosInstance.interceptors.request.use(
@@ -37,7 +37,7 @@ export default function PieChart(props) {
       const now = new Date();
       const today = now.toISOString().split('T')[0]; // Format: YYYY-MM-DD
 
-      if (!lastFetchDate || lastFetchDate !== today) {
+      if (!lastFetchDate || lastFetchDate !== !today) {
         try {
           const response = await axiosInstance.get(`/pesanan/mitra/${mitraId}`);
           const data = response.data;

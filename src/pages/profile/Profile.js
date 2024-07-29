@@ -38,7 +38,7 @@ export default function Profile() {
     setError(null);
     try {
       const response = await axios.get(
-        `https://development.verni.yt/mitra/${mitraId}`,
+        `https://antriaapi.verni.yt/mitra/${mitraId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -58,7 +58,7 @@ export default function Profile() {
           linkGmaps: data.linkGmaps || "",
         });
         setSelectedImage(
-          `https://development.verni.yt/image/${data.gambar_toko}`
+          `http://antriaapi.verni.yt/image/${data.gambar_toko}`
         );
       } else {
         setError("Failed to fetch profile data");
@@ -126,7 +126,7 @@ export default function Profile() {
 
     try {
       const response = await axios.put(
-        `https://development.verni.yt/mitra/${mitraId}`,
+        `https://antriaapi.verni.yt/mitra/${mitraId}`,
         formDataToSend,
         {
           headers: {
@@ -169,7 +169,7 @@ export default function Profile() {
 
   return (
     <aside className="bg-white sm:w-[77rem] w-full sm:h-[51.563rem] h-auto mt-[1.5rem] rounded-xl shadow-2xl z-0 transition-all mx-auto duration-300 sm:overflow-y-hidden overflow-y-auto">
-      <h1 className="text-2xl pl-6 pt-[2rem] pb-4 font-semibold">Profile</h1>
+      <h1 className="text-2xl pl-6 pt-[2rem] pb-4 font-semibold">Informasi Mitra</h1>
       <div className="flex flex-col sm:flex-row gap-x-[1rem]">
         <div className="flex flex-col">
           {/* Card Profile */}
@@ -179,7 +179,7 @@ export default function Profile() {
                 className="w-[8rem] h-[8rem] rounded-full"
                 src={
                   selectedImage ||
-                  `https://development.verni.yt/image/${formData.gambar_toko}`
+                  `https://antriaapi.verni.yt/image/${formData.gambar_toko}`
                 }
                 alt="Profile"
               />
@@ -229,7 +229,7 @@ export default function Profile() {
         {/* Form Profile */}
         <div className="w-full sm:w-[33.5rem] h-auto sm:h-[43rem] mt-[2rem] flex flex-col bg-gradient-to-r from-[#9b59b6] to-[#e74c3c] rounded-lg overflow-y-auto">
           <h1 className="text-[1.5rem] mt-[1rem] ml-[1.5rem] text-white font-bold">
-            Edit Profile
+            Edit Informasi Mitra
           </h1>
           <form
             onSubmit={handleSubmit}
