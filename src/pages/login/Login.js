@@ -52,7 +52,7 @@ export default function Login() {
         }
       );
       const accessToken = response.data.access_token;
-      console.log(accessToken);
+      // console.log(accessToken);
       localStorage.setItem("authToken", accessToken);
       const decoded = jwtDecode(accessToken);
 
