@@ -4,6 +4,7 @@ import { MdDelete } from "react-icons/md";
 import axios from "axios";
 import Button from "../../component/button/Button";
 import Upload from "../../assets/Download.gif";
+import "./styles.css"; // Import the CSS file
 
 const extractMitraIdFromToken = (token) => {
   if (!token) return null;
@@ -22,6 +23,8 @@ export default function Add({ isOpen, onClose }) {
     gambar: "",
   });
   const [mitraId, setMitraId] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isButtonClicked, setIsButtonClicked] = useState(false); // State for animation
 
   const token = localStorage.getItem("authToken");
 
@@ -69,13 +72,19 @@ export default function Add({ isOpen, onClose }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setIsSubmitting(true);
+    setIsButtonClicked(true); // Trigger the animation
+    setTimeout(() => setIsButtonClicked(false), 600); // Reset the animation after 0.6s
+
     const hargaInt = parseInt(formData.harga);
     if (isNaN(hargaInt)) {
       console.error("Invalid price value");
+      setIsSubmitting(false);
       return;
     }
     if (!mitraId) {
       console.error("Mitra ID is not available");
+      setIsSubmitting(false);
       return;
     }
     const formDataToSend = new FormData();
@@ -101,6 +110,8 @@ export default function Add({ isOpen, onClose }) {
     } catch (error) {
       console.error("Error submitting data:", error);
       alert("Failed to submit data. Please try again later.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -140,7 +151,7 @@ export default function Add({ isOpen, onClose }) {
           <div className="w-full">
             <h2 className="text-white font-semibold">Nama Produk</h2>
             <input
-              className="w-full h-10 px-3 py-2 bg-white rounded-lg"
+              className="w-full h-10 px-3 py-2 bg-[#FCFCFD] rounded-lg"
               name="nama_produk"
               value={formData.nama_produk}
               onChange={handleInputChange}
@@ -150,7 +161,7 @@ export default function Add({ isOpen, onClose }) {
           <div className="w-full">
             <h2 className="text-white font-semibold">Deskripsi Produk</h2>
             <textarea
-              className="w-full sm:h-24 h-[7rem] px-3 py-2 bg-white rounded-lg"
+              className="w-full sm:h-24 h-[7rem] px-3 py-2 bg-[#FCFCFD] rounded-lg"
               name="deskripsi_produk"
               value={formData.deskripsi_produk}
               onChange={handleInputChange}
@@ -160,7 +171,7 @@ export default function Add({ isOpen, onClose }) {
           <div className="w-full">
             <h2 className="text-white font-semibold">Harga</h2>
             <input
-              className="w-full h-10 px-3 py-2 bg-white rounded-lg"
+              className="w-full h-10 px-3 py-2 bg-[#FCFCFD] rounded-lg"
               name="harga"
               type="number"
               min="0"
@@ -177,7 +188,7 @@ export default function Add({ isOpen, onClose }) {
                 name="gambar"
                 type="file"
                 accept=".png,.jpg,.jpeg"
-                className="hidden"
+                className="hidden bg-[#FCFCFD]"
                 ref={fileUploadRef}
                 onChange={uploadImageDisplay}
               />
@@ -213,8 +224,10 @@ export default function Add({ isOpen, onClose }) {
               txtSize="sm:w-full w-80 sm:h-10"
               position="flex justify-center items-center"
               text="Add"
-              size=" sm:w-full w-[19rem] h-[2.938rem]"
+              size="sm:w-full w-[19rem] h-[2.938rem]"
               bgColor="bg-white"
+              disabled={isSubmitting}
+              className={isButtonClicked ? "pulse" : ""} // Apply the animation class
             />
           </div>
         </form>

@@ -4,8 +4,7 @@ import { HiChevronDown, HiChevronUp } from "react-icons/hi";
 import { MdDelete } from "react-icons/md";
 import Button from "../../component/button/Button";
 import Upload from "../../assets/Download.gif";
-import Map from "../../assets/Map.png";
-import {jwtDecode} from "jwt-decode"; 
+import { jwtDecode } from "jwt-decode";
 
 export default function Profile() {
   const [profile, setProfile] = useState(null);
@@ -13,11 +12,11 @@ export default function Profile() {
   const [error, setError] = useState(null);
   const [formData, setFormData] = useState({
     nama_toko: "",
-    deskripsi_toko: "",
+    alamat: "",
     jam_buka: "",
     jam_tutup: "",
     gambar_toko: null,
-    hari_buka: "", // Changed to string
+    hari_buka: "",
     linkGmaps: "",
   });
   const [selectedImage, setSelectedImage] = useState(null);
@@ -50,16 +49,14 @@ export default function Profile() {
         setProfile(data);
         setFormData({
           nama_toko: data.nama_toko,
-          deskripsi_toko: data.deskripsi_toko,
+          alamat: data.alamat,
           jam_buka: data.jam_buka,
           jam_tutup: data.jam_tutup,
           gambar_toko: null,
           hari_buka: data.hari_buka || "",
           linkGmaps: data.linkGmaps || "",
         });
-        setSelectedImage(
-          `http://antriaapi.verni.yt/image/${data.gambar_toko}`
-        );
+        setSelectedImage(`http://antriaapi.verni.yt/image/${data.gambar_toko}`);
       } else {
         setError("Failed to fetch profile data");
       }
@@ -113,9 +110,21 @@ export default function Profile() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (
+      !formData.nama_toko ||
+      !formData.alamat ||
+      !formData.jam_buka ||
+      !formData.jam_tutup ||
+      !formData.hari_buka ||
+      !formData.linkGmaps
+    ) {
+      alert("Please fill all the fields before submitting.");
+      return;
+    }
+
     const formDataToSend = new FormData();
     formDataToSend.append("nama_toko", formData.nama_toko);
-    formDataToSend.append("deskripsi_toko", formData.deskripsi_toko);
+    formDataToSend.append("alamat", formData.alamat);
     formDataToSend.append("jam_buka", formData.jam_buka);
     formDataToSend.append("jam_tutup", formData.jam_tutup);
     if (formData.gambar_toko) {
@@ -169,7 +178,9 @@ export default function Profile() {
 
   return (
     <aside className="bg-white sm:w-[77rem] w-full sm:h-[51.563rem] h-auto mt-[1.5rem] rounded-xl shadow-2xl z-0 transition-all mx-auto duration-300 sm:overflow-y-hidden overflow-y-auto">
-      <h1 className="text-2xl pl-6 pt-[2rem] pb-4 font-semibold">Informasi Mitra</h1>
+      <h1 className="text-2xl pl-6 pt-[2rem] pb-4 font-semibold">
+        Informasi Mitra
+      </h1>
       <div className="flex flex-col sm:flex-row gap-x-[1rem]">
         <div className="flex flex-col">
           {/* Card Profile */}
@@ -188,7 +199,7 @@ export default function Profile() {
                   {formData.nama_toko}
                 </h1>
                 <p className="w-[18.5rem] sm:w-[27rem] text-justify text-[1rem] text-white font-normal ">
-                  {formData.deskripsi_toko}
+                  {formData.alamat}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-[1rem] sm:gap-[10rem]">
                   <h1 className="text-[1rem] text-white font-bold">
@@ -202,27 +213,49 @@ export default function Profile() {
             </div>
           </div>
           <h1 className="text-2xl pl-6 pt-[2rem] font-semibold">
-            Lokasi Restoran
+            Gambar Toko
           </h1>
           <div className="w-full sm:w-[38.5rem] h-auto sm:h-[28.4rem] ml-6 mt-[0.5rem] rounded-lg bg-gradient-to-r from-[#9b59b6] to-[#e74c3c]">
-            <div className="w-full sm:w-[38.5rem] h-auto sm:h-[31rem] flex flex-col ">
-              <div className="w-full sm:w-[38.5rem] flex justify-center items-center mt-[0.6rem]">
-                <a
-                  href={
-                    formData.linkGmaps ||
-                    "https://maps.app.goo.gl/1whSdu9ySgy5zs5t8"
-                  }
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img
-                    className="flex justify-center w-full sm:w-[37rem] h-auto sm:h-[27rem] rounded-lg cursor-pointer"
-                    src={Map}
-                    alt="Map"
-                  />
-                </a>
-              </div>
-              
+            <div className="w-full sm:w-[35.5rem] h-auto sm:h-[28.4rem] ml-6 mt-[0.5rem] rounded-lg">
+              <label>
+                <input
+                  id="file-upload"
+                  name="gambar_toko"
+                  type="file"
+                  accept=".png,.jpg,.jpeg"
+                  className="hidden"
+                  ref={fileUploadRef}
+                  onChange={handleImageUpload}
+                />
+                {selectedImage ? (
+                  <div className="relative">
+                    <img
+                      src={selectedImage}
+                      alt="Selected"
+                      className="w-[40rem] h-auto sm:h-[27.4rem] object-cover rounded-lg"
+                    />
+                    <button
+                      className="absolute top-0 right-0 mt-1 mr-1"
+                      type="button"
+                      onClick={handleDeleteImage}
+                    >
+                      <MdDelete size={24} color="white" />
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    className="flex flex-col items-center justify-center w-full sm:h-[27.4rem] h-[14rem] bg-white rounded-lg cursor-pointer"
+                    onClick={() => fileUploadRef.current.click()}
+                  >
+                    <img
+                      className="w-[5rem] h-[5rem]"
+                      src={Upload}
+                      alt="Upload"
+                    />
+                    <p>Unggah Foto</p>
+                  </button>
+                )}
+              </label>
             </div>
           </div>
         </div>
@@ -233,7 +266,7 @@ export default function Profile() {
           </h1>
           <form
             onSubmit={handleSubmit}
-            className="flex flex-col gap-4 ml-[1.5rem]"
+            className="flex flex-col gap-[1.3rem] ml-[1.5rem] mt-[0.5rem]"
             encType="multipart/form-data"
           >
             <div className="w-full">
@@ -244,16 +277,18 @@ export default function Profile() {
                 value={formData.nama_toko}
                 onChange={handleInputChange}
                 placeholder="Masukkan Nama Toko"
+                required
               />
             </div>
             <div className="w-full">
-              <h2 className="text-white font-semibold">Deskripsi Toko</h2>
+              <h2 className="text-white font-semibold">Alamat Toko</h2>
               <textarea
-                className="w-full sm:w-[30rem] h-[7rem] sm:h-24 px-3 py-2 bg-white rounded-lg"
-                name="deskripsi_toko"
-                value={formData.deskripsi_toko}
+                className="w-full sm:w-[30rem] h-[7rem] sm:h-36 px-3 py-2 bg-white rounded-lg"
+                name="alamat"
+                value={formData.alamat}
                 onChange={handleInputChange}
                 placeholder="Masukkan Deskripsi Toko"
+                required
               />
             </div>
             <div className="w-full">
@@ -299,12 +334,14 @@ export default function Profile() {
               )}
             </div>
             <div className="w-full">
+              <h2 className="text-white font-semibold">Link Google Map</h2>
               <input
                 className="w-full sm:w-[30rem] h-10 px-3 py-2 bg-white rounded-lg"
                 name="linkGmaps"
                 value={formData.linkGmaps}
                 onChange={handleInputChange}
                 placeholder="Masukkan Link Google Map"
+                required
               />
             </div>
             <div className="flex flex-col sm:flex-row gap-x-0 sm:gap-x-5">
@@ -316,6 +353,7 @@ export default function Profile() {
                   name="jam_buka"
                   value={formData.jam_buka}
                   onChange={handleInputChange}
+                  required
                 />
               </div>
               <div className="w-full">
@@ -326,50 +364,9 @@ export default function Profile() {
                   name="jam_tutup"
                   value={formData.jam_tutup}
                   onChange={handleInputChange}
+                  required
                 />
               </div>
-            </div>
-            <div className="w-full sm:w-[30rem]">
-              <h2 className="text-white font-semibold">Foto Toko</h2>
-              <label>
-                <input
-                  id="file-upload"
-                  name="gambar_toko"
-                  type="file"
-                  accept=".png,.jpg,.jpeg"
-                  className="hidden"
-                  ref={fileUploadRef}
-                  onChange={handleImageUpload}
-                />
-                {selectedImage ? (
-                  <div className="relative">
-                    <img
-                      src={selectedImage}
-                      alt="Selected"
-                      className="w-full h-48 object-cover rounded-lg"
-                    />
-                    <button
-                      className="absolute top-0 right-0 mt-1 mr-1"
-                      type="button"
-                      onClick={handleDeleteImage}
-                    >
-                      <MdDelete size={24} color="white" />
-                    </button>
-                  </div>
-                ) : (
-                  <button
-                    className="flex flex-col items-center justify-center w-full sm:h-48 h-[14rem] bg-white rounded-lg cursor-pointer"
-                    onClick={() => fileUploadRef.current.click()}
-                  >
-                    <img
-                      className="w-[5rem] h-[5rem]"
-                      src={Upload}
-                      alt="Upload"
-                    />
-                    <p>Unggah Foto</p>
-                  </button>
-                )}
-              </label>
             </div>
             <div className="w-full mt-6 mb-6">
               <Button

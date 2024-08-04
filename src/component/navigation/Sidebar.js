@@ -208,10 +208,8 @@ export default function Sidebar({ onToggle }) {
                   to="/profile-restoran"
                   className="flex items-center space-x-3"
                 >
-                  {/* User Profile */}
-
                   <img
-                    className="w-[2.3rem] h-[2.3rem] rounded-full"
+                    className="w-[2.5rem] h-[2.5rem] rounded-full"
                     src={userProfile.gambar_toko}
                     alt="Profile"
                   />
@@ -261,7 +259,7 @@ export default function Sidebar({ onToggle }) {
                     />
                   </button>
                   {!expanded && (
-                    <div className="absolute left-full ml-[-0.5rem] mt-[-2.6rem] hidden group-hover:block active:bg-gradient-to-r active:from-[#9b59b6] active:to-[#e74c3c] w-[14rem] rounded-lg bg-white shadow-lg">
+                    <div className="absolute left-full ml-[-0.5rem] mt-[-2.6rem] hidden group-hover:block active:bg-gradient-to-r active:from-[#9b59b6] active:to-[#e74c3c] w-[10.5rem] rounded-lg bg-gradient-to-r from-[#9b59b6] text-white font-bold to-[#e74c3c] shadow-lg">
                       <p className="p-4">{menuItem.text}</p>
                     </div>
                   )}

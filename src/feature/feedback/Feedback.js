@@ -31,7 +31,7 @@ export default function Feedback({ mitraId }) { // Accept mitraId as a prop
         const data = response.data;
 
         const fetchedReviews = data.map((review) => {
-          const scaledRating = Math.ceil(review.rating / 20); // Convert 0-100 rating to 1-5
+          const scaledRating = Math.ceil(review.rating); // Convert 0-100 rating to 1-5
           return {
             komentar: review.komentar,
             rating: scaledRating,

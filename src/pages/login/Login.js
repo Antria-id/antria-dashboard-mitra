@@ -3,7 +3,7 @@ import axios from "axios";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import Logo from "../../assets/Logo.png";
 import Button from "../../component/button/Button";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTypewriter } from "react-simple-typewriter";
 import AuthContext from "../../services/AuthProvider";
 import SplashScreen from "../../route/splashscreen/SplashScreen";
@@ -52,7 +52,7 @@ export default function Login() {
         }
       );
       const accessToken = response.data.access_token;
-      // console.log(accessToken);
+      console.log(accessToken);
       localStorage.setItem("authToken", accessToken);
       const decoded = jwtDecode(accessToken);
 
@@ -122,12 +122,19 @@ export default function Login() {
             <h2 className="mt-[0.1rem] ml-[1.563rem] font-semibold text-[#8A8A8A] text-[0.75rem]">
               Masukan data akun mitra yang sudah terdaftar
             </h2>
-            <form onSubmit={handleLogin} className="sm:flex sm:flex-col sm:justify-center justify-center ml-[1.4rem] mt-[1.5rem]">
+            <form
+              onSubmit={handleLogin}
+              className="sm:flex sm:flex-col sm:justify-center justify-center ml-[1.4rem] mt-[1.5rem]"
+            >
               <div className="gap-y-[1rem]">
                 <h1 className="text-[0.75rem] font-bold">Username</h1>
                 <input
                   className={`md:w-[27.125rem] w-[19rem] h-[3.438rem] bg-white shadow-xl py-3 px-3 rounded-xl ${
-                    username === "" ? "" : isUsernameValid ? "border-green-500 border-4" : "border-red-500 border-4"
+                    username === ""
+                      ? ""
+                      : isUsernameValid
+                      ? "border-green-500 border-4"
+                      : "border-red-500 border-4"
                   }`}
                   type="text"
                   name="username"
@@ -139,7 +146,11 @@ export default function Login() {
                   <h1 className="text-[0.75rem] font-bold">Password</h1>
                   <input
                     className={`md:w-[27.125rem] w-[19rem] h-[3.438rem] bg-white shadow-xl py-3 px-3 rounded-xl ${
-                      password === "" ? "" : isPasswordValid ? "border-green-500 border-4" : "border-red-500 border-4"
+                      password === ""
+                        ? ""
+                        : isPasswordValid
+                        ? "border-green-500 border-4"
+                        : "border-red-500 border-4"
                     }`}
                     type={showPass ? "text" : "password"}
                     value={password}
@@ -149,7 +160,7 @@ export default function Login() {
                   />
                   <button
                     type="button"
-                    className="absolute right-[3rem] -bottom-[0rem] transform -translate-y-1/2"
+                    className="absolute right-[2.4rem] top-[60%] transform -translate-y-1/2"
                     onClick={buttonPass}
                   >
                     {showPass ? (
@@ -159,26 +170,29 @@ export default function Login() {
                     )}
                   </button>
                 </div>
-                <div className="flex flex-row-reverse items-center mt-[1.188rem] mr-[1.8rem] gap-x-[0.4rem]">
-                  <input
-                    className="w-[1rem] h-[1rem] cursor-pointer bg-gradient-to-r from-[#9b59b6] to-[#e74c3c]"
-                    type="checkbox"
-                    id="rememberMe"
-                    checked={rememberMe}
-                    onChange={(e) => setRememberMe(e.target.checked)}
-                  />
-                  <label
-                    htmlFor="rememberMe"
-                    className="ml-2 text-[0.75rem] font-semibold"
-                  >
-                    Simpan Riwayat Login
-                  </label>
+                <div className="flex justify-between items-center mt-[1.5rem]">
+                  <Link to="/lupa-password">
+                    <h1 className="text-[0.75rem] font-bold hover:text-blue-500 hover:underline">
+                      Lupa password?
+                    </h1>
+                  </Link>
+                  <div className="flex flex-row-reverse gap-2 items-center mr-[2.4rem]">
+                    <input
+                      className="w-[1rem] h-[1rem] cursor-pointer bg-gradient-to-r from-[#9b59b6] to-[#e74c3c]"
+                      type="checkbox"
+                      id="rememberMe"
+                      checked={rememberMe}
+                      onChange={(e) => setRememberMe(e.target.checked)}
+                    />
+                    <label
+                      htmlFor="rememberMe"
+                      className="ml-2 text-[0.75rem] font-semibold"
+                    >
+                      Simpan Riwayat Login
+                    </label>
+                  </div>
                 </div>
-                <button
-                  type="submit"
-                  data-cy="submit"
-                  className="sm:pr-0 pr-[3rem] mt-[4rem]"
-                >
+                <button type="submit" data-cy="submit" className="mt-[4rem]">
                   <Button
                     text="Masuk"
                     size="sm:w-[27.125rem] w-[19rem] h-[2.938rem]"

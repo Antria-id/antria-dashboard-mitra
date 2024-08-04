@@ -3,7 +3,7 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  useLocation
+  useLocation,
 } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import Login from "./pages/login/Login";
@@ -15,7 +15,10 @@ import MenuRoute from "./route/menu/Menu";
 import EditRoute from "./route/edit/Edit";
 import PrivateRoutes from "./utils/PrivateRoutes";
 import PageNotFound from "./pages/notfound/PageNotFound";
-import AnimatedCursor from "./feature/cursor/AnimatedCursor"
+import AnimatedCursor from "./feature/cursor/AnimatedCursor";
+import LupaPassword from "./pages/login/LupaPass";
+import KodeOTP from "./pages/login/KodeOTP";
+import ResetPassword from "./pages/login/ResetPass";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -25,16 +28,19 @@ function AnimatedRoutes() {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/lupa-password" element={<LupaPassword />} />
+        <Route path="/kode-otp" element={<KodeOTP/>} />
+        <Route path="/reset-password" element={<ResetPassword/>} />
         <Route element={<PrivateRoutes />}>
-          <Route path="/profile-restoran" element={<ProfileRoute /> } exact/>
+          <Route path="/profile-restoran" element={<ProfileRoute />} exact />
           <Route path="/data-analisis" element={<DashboardRoute />} exact />
           <Route path="/data-akun" element={<KaryawanRoute />} exact />
           <Route path="/data-pemasukan" element={<PemasukanRoute />} exact />
           <Route path="/data-menu" element={<MenuRoute />} exact />
-          <Route path="/edit-page/:id" element={<EditRoute/>} exact />
+          <Route path="/edit-page/:id" element={<EditRoute />} exact />
         </Route>
         {/* Route untuk halaman 404 */}
-        <Route path='*' element={<PageNotFound />} />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </AnimatePresence>
   );
