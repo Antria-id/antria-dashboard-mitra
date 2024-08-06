@@ -8,7 +8,7 @@ import "../../index.css";
 import Button from "../button/Button";
 import { SiMicrosoftexcel } from "react-icons/si";
 import Search from "../search/Search";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 export default function Tabel() {
   const [data, setData] = useState([]);
@@ -116,6 +116,14 @@ export default function Tabel() {
     return new Date(dateString).toLocaleDateString("en-GB", options);
   };
 
+  const rupiah = (harga) => {
+    return new Intl.NumberFormat("id", {
+      style: "currency",
+      currency: "IDR",
+      maximumFractionDigits: 0,
+    }).format(harga);
+  };
+
   const pageNumbers = [];
   for (let i = 1; i <= totalPages; i++) {
     pageNumbers.push(i);
@@ -171,7 +179,7 @@ export default function Tabel() {
                     <td className="px-5 py-2">{formatDate(item.created_at)}</td>
                     <td className="px-4 py-2">{item.menuOrder}</td>
                     <td className="px-4 py-2">{item.payment}</td>
-                    <td className="px-4 py-2">Rp{item.harga}</td>
+                    <td className="px-4 py-2">{rupiah(item.harga)}</td>
                     <td
                       className={`px-4 py-2 ${
                         item.status === "SUCCESS"
@@ -189,7 +197,7 @@ export default function Tabel() {
             </table>
           </div>
           <div className="mt-4">
-            <strong>Total Pendapatan: Rp{totalAmount}</strong>
+            <strong>Total Pendapatan: {rupiah(totalAmount)}</strong>
           </div>
         </>
       )}
@@ -220,7 +228,7 @@ export default function Tabel() {
               <button
                 className={`px-3 ${
                   currentPage === number
-                    ? "hover:bg-gradient-to-r hover:from-[#9b59b6] hover:to-[#e74c3c] hover:text-white hover:font-semibold hover:rounded-xl"
+                    ? "hover:bg-gradient-to-r hover:from-[#9b59b6] hover:to-[#e74c3c] text-white bg-gradient-to-r from-[#9b59b6] to-[#e74c3c] rounded-md"
                     : ""
                 }`}
                 key={number}
