@@ -4,7 +4,7 @@
   left: 0;
   width: 20px; /* Adjust size as needed */
   height: 20px; /* Adjust size as needed */
-  background-color: #FFFF; /* Set the color of the circle */
+  background-color: transparent; /* Set the color of the circle */
   border-radius: 50%;
   pointer-events: none;
   z-index: 1000;
