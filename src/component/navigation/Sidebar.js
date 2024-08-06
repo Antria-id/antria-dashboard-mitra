@@ -209,7 +209,7 @@ export default function Sidebar({ onToggle }) {
                   className="flex items-center space-x-3"
                 >
                   <img
-                    className="w-[2.5rem] h-[2.5rem] rounded-full"
+                    className="w-[3rem] h-[3rem] rounded-full"
                     src={userProfile.gambar_toko}
                     alt="Profile"
                   />

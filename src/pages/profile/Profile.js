@@ -215,8 +215,8 @@ export default function Profile() {
           <h1 className="text-2xl pl-6 pt-[2rem] font-semibold">
             Gambar Toko
           </h1>
-          <div className="w-full sm:w-[38.5rem] h-auto sm:h-[28.4rem] ml-6 mt-[0.5rem] rounded-lg bg-gradient-to-r from-[#9b59b6] to-[#e74c3c]">
-            <div className="w-full sm:w-[35.5rem] h-auto sm:h-[28.4rem] ml-6 mt-[0.5rem] rounded-lg">
+          <div className="w-[22rem] sm:w-[38.5rem] h-auto sm:h-[28.4rem] ml-6 mt-[0.5rem] rounded-lg bg-gradient-to-r from-[#9b59b6] to-[#e74c3c]">
+            <div className="w-[22rem] sm:w-[35.5rem] h-auto sm:h-[28.4rem] ml-6 mt-[0.5rem] rounded-lg">
               <label>
                 <input
                   id="file-upload"
@@ -232,7 +232,7 @@ export default function Profile() {
                     <img
                       src={selectedImage}
                       alt="Selected"
-                      className="w-[40rem] h-auto sm:h-[27.4rem] object-cover rounded-lg"
+                      className="sm:w-[40rem] w-[22rem] h-auto sm:h-[27.4rem] object-cover rounded-lg"
                     />
                     <button
                       className="absolute top-0 right-0 mt-1 mr-1"
@@ -244,7 +244,7 @@ export default function Profile() {
                   </div>
                 ) : (
                   <button
-                    className="flex flex-col items-center justify-center w-full sm:h-[27.4rem] h-[14rem] bg-white rounded-lg cursor-pointer"
+                    className="flex flex-col items-center justify-center sm:w-[40rem] w-[20rem] sm:h-[27.4rem] h-[14rem] bg-white rounded-lg cursor-pointer"
                     onClick={() => fileUploadRef.current.click()}
                   >
                     <img

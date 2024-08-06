@@ -53,46 +53,59 @@ export default function KodeOTP() {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="md:w-[30.313rem] w-[22rem] h-[35.75rem] bg-white rounded-xl shadow-xl">
-        <img className="ml-[1.563rem] mt-[2.2rem]" src={Logo} alt="Logo" />
-        <div className="flex flex-col justify-center h-[25rem] items-center gap-6">
+    <div className="flex justify-center items-center h-screen bg-gray-100">
+      <div className="w-full max-w-md p-8 bg-white rounded-xl shadow-xl">
+        <img className="mx-auto mb-6" src={Logo} alt="Logo" />
+        <div className="flex flex-col justify-center items-center gap-6">
           <IoMail size={64} />
-          <h1 className="text-[1rem]">
+          <h1 className="text-center text-lg">
             Kode OTP telah di kirim pada email anda{" "}
           </h1>
-          <form onSubmit={handleSubmit} className="flex flex-col items-center gap-6">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col items-center gap-6"
+          >
             <div className="flex gap-2">
-              {Array(4).fill("").map((_, index) => (
-                <input
-                  key={index}
-                  className="w-[3rem] h-[3rem] text-center text-[1.5rem] border-2 rounded-md"
-                  maxLength={1}
-                  value={otp[index] || ""}
-                  onChange={handleChange}
-                />
-              ))}
+              {Array(4)
+                .fill("")
+                .map((_, index) => (
+                  <input
+                    key={index}
+                    className="w-12 h-12 text-center text-xl border-2 rounded-md"
+                    maxLength={1}
+                    value={otp[index] || ""}
+                    onChange={handleChange}
+                  />
+                ))}
             </div>
             <div className="flex flex-col items-center gap-1">
               <h1>
                 Tidak mendapatkan kode?{" "}
-                <span className="text-blue-500">Kirim kembali</span>
+                <span className="text-blue-500 cursor-pointer">Kirim kembali</span>
               </h1>
             </div>
-            <button type="submit" disabled={loading} className="sm:w-[27.125rem] w-[19rem] h-[2.938rem]">
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full h-10"
+            >
               <Button
                 text="Konfirmasi Ubah Password"
-                size="sm:w-[27.125rem] w-[19rem] h-[2.938rem]"
-                bgColor="bg-gradient-to-r from-[#9b59b6] to-[#e74c3c]"
+                size="w-full h-full"
+                bgColor="bg-gradient-to-r from-purple-500 to-red-500"
                 txtColor="text-white"
-                txtSize="sm:w-[27.125rem] w-[19rem] h-[2.938rem]"
-                position="sm:flex sm:justify-center sm:items-center flex justify-center items-center"
+                txtSize="w-full h-full"
+                position="flex justify-center items-center"
               />
             </button>
           </form>
+          <div className="flex gap-3 my-4">
+            <div className="w-full h-px bg-gray-300"></div>
+          </div>
           {error && <p className="text-red-500">{error}</p>}
           <Link to="/lupa-password">
-            <h1 className="hover:text-blue-400 hover:underline">Ubah Email</h1>
+            <h1 className="text-center hover:text-blue-400 hover:underline">Ubah Email</h1>
           </Link>
         </div>
       </div>
