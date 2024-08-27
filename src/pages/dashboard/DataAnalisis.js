@@ -166,7 +166,7 @@ export default function DataAnalisis() {
       label: "Customer Feedback",
       icon: <VscFeedback size={28} />,
       content: (
-        <div>
+        <div className="h-[32rem] overflow-y-scroll">
           <Feedback mitraId={mitraId} />
         </div>
       ),
@@ -297,7 +297,9 @@ export default function DataAnalisis() {
             <div className="flex flex-col w-full sm:h-[5.7rem] h-[48rem] pl-6 sm:w-auto gap-4">
               <Tab tabs={tabsAnalytics} />
             </div>
-            <Tab tabs={tabsFeedback} />
+            <div>
+              <Tab tabs={tabsFeedback} />
+            </div>
           </div>
         </div>
       </div>
