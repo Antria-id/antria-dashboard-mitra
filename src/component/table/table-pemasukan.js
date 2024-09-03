@@ -140,13 +140,17 @@ export default function Tabel() {
           onChange={handleFilter}
         />
         <Button
-          text="Download Data"
+           text={
+            <>
+              <span className="hidden sm:block">Download Data</span>
+            </>
+          }
           txtColor="text-white font"
-          txtSize="sm:w-[12rem] w-[12rem] sm:h-[3rem] h-[2.5rem]"
+          txtSize="sm:w-[12rem] w-[6.5rem] sm:h-[3rem] h-[2.5rem]"
           icon={<SiMicrosoftexcel color="white" size={25} />}
           bgColor="bg-gradient-to-r from-[#9b59b6] to-[#e74c3c]"
           position="flex flex-row-reverse justify-center items-center gap-3"
-          size="sm:w-[12rem] w-[12rem] sm:h-[3rem] h-[2.5rem]"
+          size="sm:w-[12rem] w-[6.5rem] sm:h-[3rem] h-[2.5rem]"
           onClick={convertToXLS}
         />
       </div>

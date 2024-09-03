@@ -124,13 +124,17 @@ export default function Tabel() {
           onChange={handleFilter}
         />
         <Button
-          text="Tambah Karyawan"
+          text={
+            <>
+              <span className="hidden sm:block">Tambah Karyawan</span>
+            </>
+          }
           txtColor="text-white font"
-          txtSize="sm:w-[12rem] w-[12rem] sm:h-[3rem] h-[2.5rem]"
+          txtSize="sm:w-[12rem] w-[6rem] sm:h-[3rem] h-[2.5rem]"
           icon={<FaRegAddressCard color="white" size={25} />}
           bgColor="bg-gradient-to-r from-[#9b59b6] to-[#e74c3c]"
           position="flex flex-row-reverse justify-center items-center gap-x-2"
-          size="sm:w-[12rem] w-[12rem] sm:h-[3rem] h-[2.5rem]"
+          size="sm:w-[12rem] w-[6rem] sm:h-[3rem] h-[2.5rem]"
           onClick={() => setIsPopUpOpen(true)}
         />
         <AddUser isOpen={isPopUpOpen} onClose={() => setIsPopUpOpen(false)} />
