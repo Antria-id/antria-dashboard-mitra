@@ -145,7 +145,10 @@ export default function Tabel() {
       ) : error ? (
         <div className="text-center text-red-500 mt-4">{error}</div>
       ) : (
-        <div className="table-container" style={{ maxHeight: "500px", overflowY: "auto" }}>
+        <div
+          className="table-container"
+          style={{ maxHeight: "500px", overflowY: "auto" }}
+        >
           <table className="w-full border-collapse text-left">
             <thead>
               <tr className="bg-gradient-to-r from-[#9b59b6] to-[#e74c3c] text-white">
@@ -178,15 +181,17 @@ export default function Tabel() {
                   <td className="px-4 py-2">{item.alamat}</td>
                   <td className="px-4 py-2">{item.created_at}</td>
                   <td className="px-4 py-2">
-                    <button
-                      className="text-red-500 hover:underline"
-                      onClick={() => handleDelete(item.id)}
-                    >
-                      <div className="flex flex-row gap-2 items-center">
-                        <TiUserDelete size={25} />
-                        <span>Non Aktif</span>
-                      </div>
-                    </button>
+                    {!item.isOwner && ( // Check if the user is not the owner
+                      <button
+                        className="text-red-500 hover:underline"
+                        onClick={() => handleDelete(item.id)}
+                      >
+                        <div className="flex flex-row gap-2 items-center">
+                          <TiUserDelete size={25} />
+                          <span>Non Aktif</span>
+                        </div>
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}

@@ -9,8 +9,18 @@ import { jwtDecode } from "jwt-decode";
 function ProfileDropdown({ onLogout }) {
   return (
     <div className="absolute bottom-full mb-3 mr-4 w-48 bg-gradient-to-r from-[#9b59b6] to-[#e74c3c] rounded-md shadow-lg z-50">
-      <Link to="/profile-restoran" className="block px-4 py-2 text-white hover:bg-[#c47ddf]">Profile</Link>
-      <button onClick={onLogout} className="block w-full text-left px-4 py-2 text-white hover:bg-[#c47ddf]">Logout</button>
+      <Link
+        to="/profile-restoran"
+        className="block px-4 py-2 text-white hover:bg-[#c47ddf]"
+      >
+        Profile
+      </Link>
+      <button
+        onClick={onLogout}
+        className="block w-full text-left px-4 py-2 text-white hover:bg-[#c47ddf]"
+      >
+        Logout
+      </button>
     </div>
   );
 }
@@ -19,8 +29,8 @@ export default function BottomNav({ visible, menuItems, onLogout }) {
   const [profileDropdownVisible, setProfileDropdownVisible] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [userProfile, setUserProfile] = useState({
-    gambar_toko: '', // Default image until fetched
-    nama_toko: 'Loading...', // Default text until fetched
+    gambar_toko: "", // Default image until fetched
+    nama_toko: "Loading...", // Default text until fetched
   });
 
   const token = localStorage.getItem("authToken");
@@ -62,7 +72,15 @@ export default function BottomNav({ visible, menuItems, onLogout }) {
   };
 
   const toggleProfileDropdown = () => {
-    setProfileDropdownVisible(!profileDropdownVisible);
+    setProfileDropdownVisible((prev) => !prev);
+    if (profileDropdownVisible) {
+      setShowPopup(false); // Hide popup if dropdown is visible
+    }
+  };
+
+  const handleLogoutClick = () => {
+    setProfileDropdownVisible(false); // Hide profile dropdown
+    setShowPopup(true); // Show logout confirmation popup
   };
 
   return (
@@ -122,7 +140,9 @@ export default function BottomNav({ visible, menuItems, onLogout }) {
                 className="group-hover:text-[#9b59b6] transition-all duration-300 ease-in-out"
               />
             </button>
-            {profileDropdownVisible && <ProfileDropdown onLogout={() => setShowPopup(true)} />}
+            {profileDropdownVisible && (
+              <ProfileDropdown onLogout={handleLogoutClick} />
+            )}
           </div>
         </nav>
       </div>

@@ -166,7 +166,7 @@ export default function DataAnalisis() {
       label: "Customer Feedback",
       icon: <VscFeedback size={28} />,
       content: (
-        <div className="h-[32rem] overflow-y-scroll">
+        <div className="h-[33rem] overflow-y-scroll">
           <Feedback mitraId={mitraId} />
         </div>
       ),
